@@ -11,16 +11,17 @@ function createParticle(x, y) {
   return {
     x,
     y,
-    vx: (Math.random() - 0.5) * 3,
-    vy: (Math.random() - 0.5) * 3,
-    life: 0.75,
-    size: Math.random() * 2 + 4  
+    vx: (Math.random() - 0.5) * 4,
+    vy: (Math.random() - 0.5) * 4,
+    life: 1,
+    size: Math.random() * 2 + 10  
   }
 }
 
 function drawParticle(ctx, p) {
   ctx.globalAlpha = Math.pow(p.life, 2);    
-  ctx.fillStyle = `hsl(0, 100%, 60%)`
+  //ctx.fillStyle = `hsl(37, 100%, 60%)`
+  ctx.fillStyle=`hsl(${p.vx * 25}, 100%, 50%)`
   ctx.beginPath()
   ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
   ctx.fill()
@@ -31,7 +32,7 @@ function updateParticle(p) {
   p.vy += 0.01
   p.x += p.vx
   p.y += p.vy
-  p.life -= 0.005
+  p.life -= 0.01
 }
 
 function loop(){
@@ -51,7 +52,7 @@ function loop(){
 loop();
 
 canvas.addEventListener("mousemove", (e) => {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 4; i++) {
     particles.push(createParticle(e.clientX, e.clientY))
   }
 })
