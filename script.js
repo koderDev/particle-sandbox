@@ -5,56 +5,84 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = []
+let mouse = { x: canvas.width / 2, y: canvas.height / 2 }
 
+canvas.addEventListener("mousemove", (e) => {
+  mouse.x = e.clientX
+  mouse.y = e.clientY
+})
 
-function createParticle(x, y) {
+function createParticle() {
   return {
-    x,
-    y,
-    vx: (Math.random() - 0.5) * 4,
-    vy: (Math.random() - 0.5) * 4,
-    life: 1,
-    size: Math.random() * 2 + 6  
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 2,
+    vy: (Math.random() - 0.5) * 2,
+    life: 1.0,
+    size: Math.random() * 20 + 10
   }
 }
 
-function drawParticle(ctx, p) {
-  ctx.globalAlpha = Math.pow(p.life, 2);    
-  //ctx.fillStyle = `hsl(37, 100%, 60%)`
-  ctx.fillStyle=`hsl(${p.vx * 75}, 100%, 50%)`
-  ctx.beginPath()
-  ctx.arc(p.x, p.y, p.size*p.life, 0, Math.PI * 2)
-  ctx.fill()
-
-}
-
 function updateParticle(p) {
-  p.vy += 0.01
+  const dx = mouse.x - p.x
+  const dy = mouse.y - p.y
+  const dist = Math.sqrt(dx * dx + dy * dy)
+
+  // always pull towards mouse
+  p.vx += (dx / dist) * 0.5
+  p.vy += (dy / dist) * 0.5
+
+  // dampen so they dont overshoot too crazy
+  p.vx *= 0.92
+  p.vy *= 0.92
+
   p.x += p.vx
   p.y += p.vy
-  p.life -= 0.01
+
+  // respawn when too close to mouse
+  if (dist < 5) {
+    p.x = Math.random() * canvas.width
+    p.y = Math.random() * canvas.height
+    p.vx = (Math.random() - 0.5) * 2
+    p.vy = (Math.random() - 0.5) * 2
+  }
 }
 
-function loop(){
-  ctx.globalAlpha = 1
+function drawParticle(p) {
+  const dx = mouse.x - p.x
+  const dy = mouse.y - p.y
+  const dist = Math.sqrt(dx * dx + dy * dy)
+
+  // closer to mouse = brighter
+  const alpha = Math.min(1, 150 / dist)
+
+  const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size)
+  gradient.addColorStop(0, `hsla(200, 100%, 80%, ${alpha})`)
+  gradient.addColorStop(1, `hsla(200, 100%, 60%, 0)`)
+
+  ctx.globalAlpha = alpha * 0.8
+  ctx.fillStyle = gradient
+  ctx.beginPath()
+  ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+  ctx.fill()
+}
+
+function loop() {
+  ctx.globalAlpha = 0.15
   ctx.fillStyle = "#000"
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-  
-  particles = particles.filter(p => p.life > 0)
-  particles.forEach(particle => {
-    updateParticle(particle)
-    drawParticle(ctx, particle)
+
+  particles.forEach(p => {
+    updateParticle(p)
+    drawParticle(p)
   })
 
   requestAnimationFrame(loop)
 }
 
-loop();
+// spawn particles all over screen
+for (let i = 0; i < 80; i++) {
+  particles.push(createParticle())
+}
 
-canvas.addEventListener("mousemove", (e) => {
-  for (let i = 0; i < 4; i++) {
-    particles.push(createParticle(e.clientX, e.clientY))
-  }
-})
-//createParticle(200,200);
-//drawParticle(ctx,createParticle(200,200));
+loop()
