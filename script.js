@@ -62,6 +62,53 @@ function createParticle(x, y) {
   }
 }
 
+
+let blackHole = false
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "b" || e.key === "B") {
+    blackHole = !blackHole
+  }
+})
+
+function applyBlackHole() {
+  if (!blackHole) return
+  particles.forEach(p => {
+    const dx = mouse.x - p.x
+    const dy = mouse.y - p.y
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1
+
+    const force = 2000 / (dist * dist)
+    p.vx += (dx / dist) * force
+    p.vy += (dy / dist) * force
+
+    if (dist < 10) {
+        particles.splice(particles.indexOf(p), 1)
+    }
+  })
+}
+
+function drawBlackHole() {
+  if (!blackHole) return
+
+  // dark circle
+  ctx.globalAlpha = 1
+  ctx.beginPath()
+  ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2)
+  ctx.fillStyle = "#000"
+  ctx.fill()
+
+  // glow ring
+  const glow = ctx.createRadialGradient(mouse.x, mouse.y, 10, mouse.x, mouse.y, 60)
+  glow.addColorStop(0, "rgba(90, 1, 178, 0.62)")
+  glow.addColorStop(1, "rgba(0, 0, 0, 0)")
+  ctx.beginPath()
+  ctx.arc(mouse.x, mouse.y, 60, 0, Math.PI * 2)
+  ctx.fillStyle = glow
+  ctx.fill()
+}
+
+
 function applyGravity(p) {
   p.vy += parseFloat(pullSlider.value) * 0.3
 }
@@ -135,6 +182,9 @@ function loop() {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   resolveCollisions()
+    applyBlackHole() 
+    drawBlackHole()
+
 
   particles.forEach(p => {
     updateParticle(p)
