@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Particle Sandbox</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Sandbox</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+    <canvas id="canvas"></canvas>
 
-  <div id="ui">
-    <div id="hints">left click — spawn | right click — explode</div>
-    <div id="controls">
-      <label>gravity <input type="range" id="pull" min="0.1" max="2" step="0.1" value="0.5"> <span id="pull-val">0.5</span></label>
-      <label>friction <input type="range" id="dampen" min="0.80" max="0.99" step="0.01" value="0.92"> <span id="dampen-val">0.92</span></label>
-      <label>spawn <input type="range" id="count" min="10" max="200" step="10" value="50"> <span id="count-val">50</span></label>
-      <label>size <input type="range" id="size" min="5" max="40" step="1" value="15"> <span id="size-val">15</span></label>
+    <div id="panel">
+    <div id="title">particle sandbox</div>
+    <div id="hints">left click — spawn | right click — repulse</div>
+
+    <label>gravity
+        <div class="row">
+            <input type="range" id="pull" min="0" max="2" step="0.1" value="0.9">
+        </div>
+    </label>
+    <label>friction
+          <div class="row">
+            <input type="range" id="dampen" min="0.80" max="0.99" step="0.01" value="0.99">
+          </div>
+    </label>
+    <label>spawn amount
+       <div class="row">
+            <input type="range" id="count" min="10" max="200" step="10" value="50">
+        </div>
+    </label>
+    <label>particle size
+        <div class="row">
+            <input type="range" id="size" min="5" max="40" step="1" value="15">
+        </div>
+    </label>
+
+        <div id="counter">particles: <span id="pcount">0</span></div>
     </div>
-    <div id="counter">particles: <span id="pcount">0</span></div>
-  </div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
