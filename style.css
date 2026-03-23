@@ -7,3 +7,23 @@ canvas {
     display: block;
     background-color: #000000;
 }
+#controls {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: white;
+  font-family: monospace;
+  background: rgba(0,0,0,0.5);
+  padding: 14px;
+  border-radius: 8px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
