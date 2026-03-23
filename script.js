@@ -14,16 +14,16 @@ function createParticle(x, y) {
     vx: (Math.random() - 0.5) * 4,
     vy: (Math.random() - 0.5) * 4,
     life: 1,
-    size: Math.random() * 2 + 10  
+    size: Math.random() * 2 + 6  
   }
 }
 
 function drawParticle(ctx, p) {
   ctx.globalAlpha = Math.pow(p.life, 2);    
   //ctx.fillStyle = `hsl(37, 100%, 60%)`
-  ctx.fillStyle=`hsl(${p.vx * 25}, 100%, 50%)`
+  ctx.fillStyle=`hsl(${p.vx * 75}, 100%, 50%)`
   ctx.beginPath()
-  ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+  ctx.arc(p.x, p.y, p.size*p.life, 0, Math.PI * 2)
   ctx.fill()
 
 }
