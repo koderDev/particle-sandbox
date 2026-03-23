@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>particle sandbox by koderDev</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
-</head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet"></head>
 <body>
     <canvas id="canvas"></canvas>
 
     <div id="panel">
         <div id="title">particle sandbox</div>
-        <div id="hints">left click — spawn | right click — repulse</div>
+        <div id="hints">left click — spawn <br> right click — repulse</div>
 
         <label>gravity
             <div class="row">
@@ -24,14 +23,14 @@
         <label>friction
             <div class="row">
                 <input type="range" id="dampen" min="0.80" max="0.99" step="0.01" value="0.99">
-            </div>
+            </div>  
         </label>
-        <label>spawn amount
+        <label>spawn 
         <div class="row">
                 <input type="range" id="count" min="10" max="200" step="10" value="50">
             </div>
         </label>
-        <label>particle size
+        <label>size
             <div class="row">
                 <input type="range" id="size" min="5" max="40" step="1" value="15">
             </div>
