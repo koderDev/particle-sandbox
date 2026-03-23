@@ -12,6 +12,22 @@ const dampenSlider = document.getElementById("dampen")
 const sizeSlider = document.getElementById("size")
 const countSlider = document.getElementById("count")
 
+const pcount = document.getElementById("pcount")
+
+// inside loop() add:
+pcount.textContent = particles.length
+
+// live value display
+const sliders = [
+  { slider: pullSlider, display: document.getElementById("pull-val") },
+  { slider: dampenSlider, display: document.getElementById("dampen-val") },
+  { slider: sizeSlider, display: document.getElementById("size-val") },
+  { slider: countSlider, display: document.getElementById("count-val") },
+]
+sliders.forEach(({ slider, display }) => {
+  slider.addEventListener("input", () => display.textContent = slider.value)
+})
+
 canvas.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX
   mouse.y = e.clientY
@@ -125,12 +141,8 @@ function loop() {
     drawParticle(p)
   })
 
-  ctx.globalAlpha = 1
-  ctx.fillStyle = "white"
-  ctx.font = "14px monospace"
-  ctx.fillText(`particles: ${particles.length}`, 20, 50)
+  pcount.textContent = particles.length
 
   requestAnimationFrame(loop)
 }
-
 loop()
