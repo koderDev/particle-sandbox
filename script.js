@@ -35,9 +35,13 @@ let currentStory = 0
 let storyAlpha = 0
 let storyState = "fadein" // fadein, hold, fadeout
 let storyTimer = 0
+let storyMode = true
 
 
 function drawStory() {
+
+      if (!storyMode) return
+
   if (storyState === "fadein") {
     storyAlpha += 0.01
     if (storyAlpha >= 1) { storyAlpha = 1; storyState = "hold" }
@@ -112,13 +116,12 @@ let blackHole = false
 let trailMode = false
 
 const bhactive = document.getElementById("bhactive")
-
+const storystate = document.getElementById("storyActive")
 window.addEventListener("keydown", (e) => {
     if (e.key === "b" || e.key === "B") {
         blackHole = !blackHole
         bhactive.textContent = blackHole ? "ON" : "off"
         bhactive.style.color = blackHole ? "#a0f" : "#555"
-        bhactive.parentElement.style.color = blackHole ? "#7b7b7b" : "#555"
 
     }
 
@@ -126,7 +129,13 @@ window.addEventListener("keydown", (e) => {
         trailMode = !trailMode
         trailstate.textContent = trailMode ? "ON" : "off"
         trailstate.style.color = trailMode ? "#fa0" : "#555"
-        trailstate.parentElement.style.color = trailMode ? "#7b7b7b" : "#555"
+    }
+
+    if (e.key === "s" || e.key === "S") {
+    storyMode = !storyMode
+    storystate.textContent = storyMode ? "ON" : "off"
+    storystate.style.color = storyMode ? "#fff" : "#555"
+
     }
 
 })
