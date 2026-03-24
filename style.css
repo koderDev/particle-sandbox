@@ -16,7 +16,7 @@ canvas { display: block; background: #020e37; }
   color: rgb(255, 255, 255);
   background: #1e1e1e;
   padding: 14px;
-  width: 220px;
+  width: 260px;
 }
 
 #title {
@@ -58,6 +58,12 @@ label {
   color: rgb(255, 255, 255);
   width: 28px;
   text-align: right;
+}
+
+#modes {
+    color: #bcbcbc;
+    padding-top: 10px;
+    border-top: 1px solid #2a2a2a;
 }
 
 #counter {

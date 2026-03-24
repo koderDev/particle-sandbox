@@ -65,9 +65,15 @@ function createParticle(x, y) {
 
 let blackHole = false
 
+const bhactive = document.getElementById("bhactive")
+
 window.addEventListener("keydown", (e) => {
   if (e.key === "b" || e.key === "B") {
     blackHole = !blackHole
+    bhactive.textContent = blackHole ? "ON" : "off"
+    bhactive.style.color = blackHole ? "#a0f" : "#555"
+    bhactive.parentElement.style.color = blackHole ? "#7b7b7b" : "#555"
+
   }
 })
 
@@ -107,6 +113,7 @@ function drawBlackHole() {
   ctx.fillStyle = glow
   ctx.fill()
 }
+
 
 
 function applyGravity(p) {
