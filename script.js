@@ -123,6 +123,8 @@ let mergeMode = false
 const mergestate = document.getElementById("mergestate")
 const bhactive = document.getElementById("bhactive")
 const storystate = document.getElementById("storyActive")
+let bhAlpha = 0
+
 window.addEventListener("keydown", (e) => {
     if (e.key === "b" || e.key === "B") {
         blackHole = !blackHole
@@ -199,42 +201,73 @@ function resolveMergeOrCollide() {
 }
 
 function applyBlackHole() {
-  if (!blackHole) return
+  if (bhAlpha <= 0) return
   particles.forEach(p => {
     const dx = mouse.x - p.x
     const dy = mouse.y - p.y
     const dist = Math.sqrt(dx * dx + dy * dy) || 1
-
-    const force = 2000 / (dist * dist)
+    const force = (2000 * bhAlpha) / (dist * dist)
     p.vx += (dx / dist) * force
     p.vy += (dy / dist) * force
-
-    if (dist < 10) {
-        particles.splice(particles.indexOf(p), 1)
+    if (dist < 10 && blackHole) {
+      particles.splice(particles.indexOf(p), 1)
     }
   })
 }
 
 function drawBlackHole() {
-  if (!blackHole) return
+  if (!blackHole && bhAlpha <= 0) return
 
-  // dark circle
+  // fade in/out
+  if (blackHole && bhAlpha < 1) bhAlpha += 0.03
+  if (!blackHole && bhAlpha > 0) bhAlpha -= 0.03
+  bhAlpha = Math.max(0, Math.min(1, bhAlpha))
+
+  const time = Date.now() * 0.002
+
+  // orbiting particles
+  for (let i = 0; i < 8; i++) {
+    const angle = (i / 8) * Math.PI * 2 + time
+    const radius = 70 + Math.sin(time * 2 + i) * 8
+    const x = mouse.x + Math.cos(angle) * radius
+    const y = mouse.y + Math.sin(angle) * radius
+    const size = 5 + Math.sin(time * 3 + i) * 1.5
+    const hue = (i / 8) * 360
+
+    ctx.globalAlpha = bhAlpha * (0.6 + Math.sin(time + i) * 0.3)
+    ctx.fillStyle = `hsl(${hue}, 100%, 70%)`
+    ctx.beginPath()
+    ctx.arc(x, y, size, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.globalAlpha = bhAlpha * 0.1
+    ctx.strokeStyle = `hsl(${hue}, 100%, 70%)`
+    ctx.lineWidth = 0.5
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    ctx.lineTo(mouse.x, mouse.y)
+    ctx.stroke()
+  }
+
+    // dark circle - bigger and pure black
+    ctx.globalAlpha = bhAlpha
+    ctx.beginPath()
+    ctx.arc(mouse.x, mouse.y, 35, 0, Math.PI * 2) 
+    ctx.fillStyle = "#000"
+    ctx.fill()
+
+    // glow ring - bigger too
+    const glow = ctx.createRadialGradient(mouse.x, mouse.y, 15, mouse.x, mouse.y, 100)  // bigger spread
+    glow.addColorStop(0, `rgba(0, 0, 0, ${bhAlpha})`)                // black center
+    glow.addColorStop(0.3, `rgba(90, 1, 178, ${0.62 * bhAlpha})`)    // purple mid
+    glow.addColorStop(1, "rgba(0, 0, 0, 0)")
+    ctx.beginPath()
+    ctx.arc(mouse.x, mouse.y, 100, 0, Math.PI * 2)  // 60 -> 100
+    ctx.fillStyle = glow
+    ctx.fill()
+
   ctx.globalAlpha = 1
-  ctx.beginPath()
-  ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2)
-  ctx.fillStyle = "#000"
-  ctx.fill()
-
-  // glow ring
-  const glow = ctx.createRadialGradient(mouse.x, mouse.y, 10, mouse.x, mouse.y, 60)
-  glow.addColorStop(0, "rgba(90, 1, 178, 0.62)")
-  glow.addColorStop(1, "rgba(0, 0, 0, 0)")
-  ctx.beginPath()
-  ctx.arc(mouse.x, mouse.y, 60, 0, Math.PI * 2)
-  ctx.fillStyle = glow
-  ctx.fill()
 }
-
 
 
 function applyGravity(p) {
@@ -279,15 +312,15 @@ ctx.fillStyle = "#0a0a0a"
 
 //   resolveCollisions()
 resolveMergeOrCollide()
-    applyBlackHole() 
-    drawBlackHole()
 drawStory()
 
-  particles.forEach(p => {
-    updateParticle(p)
-    drawParticle(p)
-  })
-
+particles.forEach(p => {
+        updateParticle(p)
+        drawParticle(p)
+    })
+    
+    drawBlackHole()
+    applyBlackHole() 
   pcount.textContent = particles.length
 
   requestAnimationFrame(loop)
