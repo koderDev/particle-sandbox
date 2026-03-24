@@ -14,7 +14,7 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 - [x] Black hole mode i.e. mouse cursor -> black hole ;)
 - [x] Trail effect on particles
 - [x] Story mode - show quotes in the center of the screen
-- [ ] Merge particles when collide and form larger particles
+- [x] Merge particles when collide and form larger particles
 - [ ] Improve performance
 
 ### [1.0.0]

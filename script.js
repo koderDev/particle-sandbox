@@ -25,6 +25,11 @@ const stories = [
   "press B to tear open a black hole.",
   "they fear you.",
   "they trust you.",
+  "press T for particle trails.",
+  "trails = more chaos.",
+  "and after all of this",
+  "press M to merge the particles",
+  "will they all merge to be ONE?",
   "what will you do with this power?",
   "the universe watches.",
   "every particle has a purpose.",
@@ -114,7 +119,8 @@ function createParticle(x, y) {
 
 let blackHole = false
 let trailMode = false
-
+let mergeMode = false
+const mergestate = document.getElementById("mergestate")
 const bhactive = document.getElementById("bhactive")
 const storystate = document.getElementById("storyActive")
 window.addEventListener("keydown", (e) => {
@@ -138,7 +144,59 @@ window.addEventListener("keydown", (e) => {
 
     }
 
+    if (e.key === "m" || e.key === "M") {
+  mergeMode = !mergeMode
+  mergestate.textContent = mergeMode ? "ON" : "off"
+  mergestate.style.color = mergeMode ? "#0f0" : "#555"
+}
+
 })
+
+
+function resolveMergeOrCollide() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const a = particles[i]
+      const b = particles[j]
+      if (!a || !b) continue
+      const dx = b.x - a.x
+      const dy = b.y - a.y
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      const minDist = a.size + b.size
+
+      if (dist < minDist && dist > 0) {
+        if (mergeMode && a.size + b.size <= 80 && Math.abs(a.hue - b.hue) < 30) {
+        const totalMass = a.size + b.size
+        a.vx = (a.vx * a.size + b.vx * b.size) / totalMass
+        a.vy = (a.vy * a.size + b.vy * b.size) / totalMass
+        a.size = Math.min(totalMass * 0.6, 80)
+        a.hue = Math.random() * 360  
+        particles.splice(j, 1)
+        j--
+        } else {
+          const angle = Math.atan2(dy, dx)
+          const overlap = minDist - dist
+          a.x -= Math.cos(angle) * overlap / 2
+          a.y -= Math.sin(angle) * overlap / 2
+          b.x += Math.cos(angle) * overlap / 2
+          b.y += Math.sin(angle) * overlap / 2
+
+          const nx = dx / dist
+          const ny = dy / dist
+          const relVx = a.vx - b.vx
+          const relVy = a.vy - b.vy
+          const dot = relVx * nx + relVy * ny
+          if (dot > 0) {
+            a.vx -= dot * nx
+            a.vy -= dot * ny
+            b.vx += dot * nx
+            b.vy += dot * ny
+          }
+        }
+      }
+    }
+  }
+}
 
 function applyBlackHole() {
   if (!blackHole) return
@@ -190,39 +248,6 @@ function wallBounce(p) {
   if (p.y + p.size > canvas.height) { p.y = canvas.height - p.size; p.vy *= -0.7 }
 }
 
-function resolveCollisions() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const a = particles[i]
-      const b = particles[j]
-      const dx = b.x - a.x
-      const dy = b.y - a.y
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      const minDist = a.size + b.size
-
-      if (dist < minDist && dist > 0) {
-        const angle = Math.atan2(dy, dx)
-        const overlap = minDist - dist
-        a.x -= Math.cos(angle) * overlap / 2
-        a.y -= Math.sin(angle) * overlap / 2
-        b.x += Math.cos(angle) * overlap / 2
-        b.y += Math.sin(angle) * overlap / 2
-
-        const nx = dx / dist
-        const ny = dy / dist
-        const relVx = a.vx - b.vx
-        const relVy = a.vy - b.vy
-        const dot = relVx * nx + relVy * ny
-        if (dot > 0) {
-          a.vx -= dot * nx
-          a.vy -= dot * ny
-          b.vx += dot * nx
-          b.vy += dot * ny
-        }
-      }
-    }
-  }
-}
 
 function updateParticle(p) {
   applyGravity(p)
@@ -252,7 +277,8 @@ function loop() {
 ctx.fillStyle = "#0a0a0a"
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  resolveCollisions()
+//   resolveCollisions()
+resolveMergeOrCollide()
     applyBlackHole() 
     drawBlackHole()
 drawStory()
