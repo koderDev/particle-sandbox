@@ -2,15 +2,17 @@
 a simple particle sandbox made using javascript.
 
 ---
+## Changelogs
 
-## img logs 
+### [1.0.0]
 
-### v0.2
+- [x] Black hole mode i.e. mouse cursor -> black hole ;)
+- [ ] Trail effect on cursor
+- [ ] Merge particles when collide and form larger particles
+- [ ] Improve performance
 
-<img width="1366" height="659" alt="image" src="https://github.com/user-attachments/assets/ca33557e-20d9-4c4c-8d00-f37cad9a155c" />
+### [1.0.0]
 
----
-
-### v0.1
-
-<img width="1366" height="660" alt="image" src="https://github.com/user-attachments/assets/3547b677-c6fd-48de-94bb-47bb7acf8a97" />
+- [x] Particles spawn, repulse and collide
+- [x] Toggle particle properties using sliders
+- [x] Implemented core features
