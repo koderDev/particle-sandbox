@@ -43,6 +43,7 @@ let storyAlpha = 0
 let storyState = "fadein" // fadein, hold, fadeout
 let storyTimer = 0
 let storyMode = true
+let shockwaves = []
 
 
 function drawStory() {
@@ -98,6 +99,7 @@ canvas.addEventListener("click", (e) => {
 
 canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault()
+
   particles.forEach(p => {
     const dx = p.x - e.clientX
     const dy = p.y - e.clientY
@@ -105,7 +107,36 @@ canvas.addEventListener("contextmenu", (e) => {
     p.vx += (dx / dist) * 10
     p.vy += (dy / dist) * 10
   })
+
+  shockwaves.push({ x: e.clientX, y: e.clientY, radius: 0, alpha: 1 })
 })
+
+
+function drawShockwaves() {
+  shockwaves.forEach(s => {
+    s.radius += 6
+    s.alpha -= 0.025
+
+    ctx.globalAlpha = s.alpha
+    ctx.strokeStyle = `rgba(255, 255, 255, ${s.alpha})`
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2)
+    ctx.stroke()
+
+    // second inner ring
+    ctx.globalAlpha = s.alpha * 0.4
+    ctx.strokeStyle = `rgba(180, 100, 255, ${s.alpha})`
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.arc(s.x, s.y, s.radius * 0.6, 0, Math.PI * 2)
+    ctx.stroke()
+  })
+
+  ctx.globalAlpha = 1
+  shockwaves = shockwaves.filter(s => s.alpha > 0)
+}
+
 
 function createParticle(x, y) {
   return {
@@ -331,6 +362,8 @@ particles.forEach(p => {
     
     drawBlackHole()
     applyBlackHole() 
+
+    drawShockwaves()
   pcount.textContent = particles.length
 
   requestAnimationFrame(loop)

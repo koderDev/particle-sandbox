@@ -22,3 +22,4 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 - [x] Particles spawn, repulse and collide
 - [x] Toggle particle properties using sliders
 - [x] Implemented core features
+
