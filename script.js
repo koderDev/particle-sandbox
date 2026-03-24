@@ -25,6 +25,8 @@ const stories = [
   "press B to tear open a black hole.",
   "they fear you.",
   "they trust you.",
+  "want to flip gravity? press G",
+  "apples need not fall downwards ;)",
   "press T for particle trails.",
   "trails = more chaos.",
   "and after all of this",
@@ -64,8 +66,8 @@ function drawStory() {
 
   ctx.save()
   ctx.globalAlpha = storyAlpha * 0.8
-  ctx.fillStyle = "#b1b1b1"
-  ctx.font = "24px Space Grotesk"
+  ctx.fillStyle = "#e1e1e1"
+  ctx.font = "32px Space Grotesk"
   ctx.textAlign = "center"
   ctx.fillText(stories[currentStory], canvas.width / 2, canvas.height / 2)
   ctx.restore()
@@ -120,9 +122,11 @@ function createParticle(x, y) {
 let blackHole = false
 let trailMode = false
 let mergeMode = false
+let gravityFlip = false
 const mergestate = document.getElementById("mergestate")
 const bhactive = document.getElementById("bhactive")
 const storystate = document.getElementById("storyActive")
+const flipstate = document.getElementById("flipstate")
 let bhAlpha = 0
 
 window.addEventListener("keydown", (e) => {
@@ -152,6 +156,11 @@ window.addEventListener("keydown", (e) => {
   mergestate.style.color = mergeMode ? "#0f0" : "#555"
 }
 
+if (e.key === "g" || e.key === "G") {
+  gravityFlip = !gravityFlip
+  flipstate.textContent = gravityFlip ? "ON" : "off"
+  flipstate.style.color = gravityFlip ? "#0ff" : "#555"
+}
 })
 
 
@@ -271,7 +280,8 @@ function drawBlackHole() {
 
 
 function applyGravity(p) {
-  p.vy += parseFloat(pullSlider.value) * 0.3
+  const dir = gravityFlip ? -1 : 1
+  p.vy += dir * parseFloat(pullSlider.value) * 0.3
 }
 
 function wallBounce(p) {
