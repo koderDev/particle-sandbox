@@ -367,10 +367,10 @@ function drawConnections() {
       const dist = Math.sqrt(dx * dx + dy * dy)
 
       if (dist < 100) {
-        const alpha = (1 - dist / 100) * 0.4
+        const alpha = (1 - dist / 100) * 0.5
         ctx.globalAlpha = alpha
-        ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 70%)`
-        ctx.lineWidth = 0.5
+        ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 90%)`
+        ctx.lineWidth = 1
         ctx.beginPath()
         ctx.moveTo(a.x, a.y)
         ctx.lineTo(b.x, b.y)
