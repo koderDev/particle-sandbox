@@ -154,6 +154,11 @@ let blackHole = false
 let trailMode = false
 let mergeMode = false
 let gravityFlip = false
+
+let lineMode = true  // on by default
+const linestate = document.getElementById("linestate")
+
+
 const mergestate = document.getElementById("mergestate")
 const bhactive = document.getElementById("bhactive")
 const storystate = document.getElementById("storyActive")
@@ -191,6 +196,13 @@ if (e.key === "g" || e.key === "G") {
   gravityFlip = !gravityFlip
   flipstate.textContent = gravityFlip ? "ON" : "off"
   flipstate.style.color = gravityFlip ? "#0ff" : "#555"
+}
+
+// in keydown:
+if (e.key === "l" || e.key === "L") {
+  lineMode = !lineMode
+  linestate.textContent = lineMode ? "ON" : "off"
+  linestate.style.color = lineMode ? "#fff" : "#555"
 }
 })
 
@@ -345,6 +357,30 @@ function drawParticle(p) {
   ctx.fill()
 }
 
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const a = particles[i]
+      const b = particles[j]
+      const dx = b.x - a.x
+      const dy = b.y - a.y
+      const dist = Math.sqrt(dx * dx + dy * dy)
+
+      if (dist < 100) {
+        const alpha = (1 - dist / 100) * 0.4
+        ctx.globalAlpha = alpha
+        ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 70%)`
+        ctx.lineWidth = 0.5
+        ctx.beginPath()
+        ctx.moveTo(a.x, a.y)
+        ctx.lineTo(b.x, b.y)
+        ctx.stroke()
+      }
+    }
+  }
+  ctx.globalAlpha = 1
+}
+
 function loop() {
 //   ctx.globalAlpha = 1
   ctx.globalAlpha = trailMode ? 0.15 : 1  
@@ -358,6 +394,7 @@ drawStory()
 particles.forEach(p => {
         updateParticle(p)
         drawParticle(p)
+        if (lineMode) drawConnections()
     })
     
     drawBlackHole()
@@ -369,3 +406,5 @@ particles.forEach(p => {
   requestAnimationFrame(loop)
 }
 loop()
+
+

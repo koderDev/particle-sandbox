@@ -15,6 +15,7 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 - [x] Story mode - show quotes in the center of the screen
 - [x] Merge particles when collide and form larger particles
 - [x] Gravity flip mode (apples need not fall downwards) 🍎
+- [x] Line mode (show line between particles)
 - [ ] Improve performance
 
 ### [1.0.0]
@@ -22,4 +23,3 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 - [x] Particles spawn, repulse and collide
 - [x] Toggle particle properties using sliders
 - [x] Implemented core features
-
