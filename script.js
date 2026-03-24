@@ -14,10 +14,55 @@ const countSlider = document.getElementById("count")
 
 const pcount = document.getElementById("pcount")
 
-// inside loop() add:
 pcount.textContent = particles.length
 
-// live value display
+
+const stories = [
+  "you are the god of this universe.",
+  "these particles obey your will.",
+  "click to breathe life into the void.",
+  "right click to unleash chaos.",
+  "press B to tear open a black hole.",
+  "they fear you.",
+  "they trust you.",
+  "what will you do with this power?",
+  "the universe watches.",
+  "every particle has a purpose.",
+  "or maybe none of them do.",
+]
+
+let currentStory = 0
+let storyAlpha = 0
+let storyState = "fadein" // fadein, hold, fadeout
+let storyTimer = 0
+
+
+function drawStory() {
+  if (storyState === "fadein") {
+    storyAlpha += 0.01
+    if (storyAlpha >= 1) { storyAlpha = 1; storyState = "hold" }
+  } else if (storyState === "hold") {
+    storyTimer++
+    if (storyTimer > 180) { storyState = "fadeout"; storyTimer = 0 }
+  } else if (storyState === "fadeout") {
+    storyAlpha -= 0.01
+    if (storyAlpha <= 0) {
+      storyAlpha = 0
+      storyState = "fadein"
+      currentStory = (currentStory + 1) % stories.length
+    }
+  }
+
+  ctx.save()
+  ctx.globalAlpha = storyAlpha * 0.8
+  ctx.fillStyle = "#b1b1b1"
+  ctx.font = "24px Space Grotesk"
+  ctx.textAlign = "center"
+  ctx.fillText(stories[currentStory], canvas.width / 2, canvas.height / 2)
+  ctx.restore()
+}
+  
+
 const sliders = [
   { slider: pullSlider, display: document.getElementById("pull-val") },
   { slider: dampenSlider, display: document.getElementById("dampen-val") },
@@ -201,7 +246,7 @@ ctx.fillStyle = "#0a0a0a"
   resolveCollisions()
     applyBlackHole() 
     drawBlackHole()
-
+drawStory()
 
   particles.forEach(p => {
     updateParticle(p)
