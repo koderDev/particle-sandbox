@@ -64,17 +64,26 @@ function createParticle(x, y) {
 
 
 let blackHole = false
+let trailMode = false
 
 const bhactive = document.getElementById("bhactive")
 
 window.addEventListener("keydown", (e) => {
-  if (e.key === "b" || e.key === "B") {
-    blackHole = !blackHole
-    bhactive.textContent = blackHole ? "ON" : "off"
-    bhactive.style.color = blackHole ? "#a0f" : "#555"
-    bhactive.parentElement.style.color = blackHole ? "#7b7b7b" : "#555"
+    if (e.key === "b" || e.key === "B") {
+        blackHole = !blackHole
+        bhactive.textContent = blackHole ? "ON" : "off"
+        bhactive.style.color = blackHole ? "#a0f" : "#555"
+        bhactive.parentElement.style.color = blackHole ? "#7b7b7b" : "#555"
 
-  }
+    }
+
+    if (e.key === "t" || e.key === "T") {
+        trailMode = !trailMode
+        trailstate.textContent = trailMode ? "ON" : "off"
+        trailstate.style.color = trailMode ? "#fa0" : "#555"
+        trailstate.parentElement.style.color = trailMode ? "#7b7b7b" : "#555"
+    }
+
 })
 
 function applyBlackHole() {
@@ -184,8 +193,9 @@ function drawParticle(p) {
 }
 
 function loop() {
-  ctx.globalAlpha = 1
-  ctx.fillStyle = "#0a0a0a"
+//   ctx.globalAlpha = 1
+  ctx.globalAlpha = trailMode ? 0.15 : 1  
+ctx.fillStyle = "#0a0a0a"
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   resolveCollisions()
