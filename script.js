@@ -225,13 +225,15 @@ let shockwaves = [];
 
 let lineMode = false; // on by default
 const linestate = document.getElementById("linestate");
-
+let toastTimeout=null
 let interactMode = false;
 let grabbedParticle = null;
 const interactstate = document.getElementById("interactstate");
 const interactPopup = document.getElementById("interactPopup");
 
-
+let zeroGravity=false
+const zerogravstate=document.getElementById("zerogravstate");
+const trailstate=document.getElementById("trailstate");
 const mergestate = document.getElementById("mergestate");
 const bhactive = document.getElementById("bhactive");
 const storystate = document.getElementById("storyActive");
@@ -247,6 +249,7 @@ window.addEventListener("keydown", (e) => {
     blackHole = !blackHole;
     bhactive.textContent = blackHole ? "ON" : "off";
     bhactive.style.color = blackHole ? "#a0f" : "#555";
+    showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
     fireTrigger("b");
   }
 
@@ -254,7 +257,9 @@ window.addEventListener("keydown", (e) => {
     trailMode = !trailMode;
     trailstate.textContent = trailMode ? "ON" : "off";
     trailstate.style.color = trailMode ? "#fa0" : "#555";
+    showToast(trailMode ? "trail mode ON" : "trail mode OFF", trailMode)
     fireTrigger("t");
+    
 
     if(trailMode){
       if(lineMode){
@@ -286,6 +291,7 @@ window.addEventListener("keydown", (e) => {
     mergeMode = !mergeMode;
     mergestate.textContent = mergeMode ? "ON" : "off";
     mergestate.style.color = mergeMode ? "#0f0" : "#555";
+    showToast(mergeMode ? "merge mode ON" : "merge mode OFF", mergeMode)
     fireTrigger("m");
   }
 
@@ -293,6 +299,7 @@ window.addEventListener("keydown", (e) => {
     gravityFlip = !gravityFlip;
     flipstate.textContent = gravityFlip ? "ON" : "off";
     flipstate.style.color = gravityFlip ? "#0ff" : "#555";
+    showToast(gravityFlip ? "gravity flip ON" : "gravity flip OFF", gravityFlip)
     fireTrigger("g");
   }
 
@@ -304,32 +311,64 @@ window.addEventListener("keydown", (e) => {
     lineMode = !lineMode;
     linestate.textContent = lineMode ? "ON" : "off";
     linestate.style.color = lineMode ? "#fff" : "#555";
+    showToast(lineMode ? "line mode ON" : "line mode OFF", lineMode)
     fireTrigger("l");
   }
 
-  if (e.key === "i" || e.key === "I"){
-    if(blackHole){
-      showToast("turn off black hole first")
-      return
-    }
-    interactMode=!interactMode
-    interactstate.textContent=interactMode?"ON":"off";
-    interactstate.style.color = interactMode ? "#4cf" : "#555";
-    interactPopup.style.display=interactMode?"flex":"none"
-    if(!interactMode&&grabbedParticle) grabbedParticle=null;
-    canvas.style.cursor = interactMode?"grab":"default";
-    fireTrigger("i");
+  if (e.key === "i" || e.key === "I") {
+    if (blackHole) { showToast("turn off black hole first"); return }
+    interactMode = !interactMode
+    interactstate.textContent = interactMode ? "ON" : "off"
+    interactstate.style.color = interactMode ? "#4cf" : "#555"
+    interactPopup.style.display = interactMode ? "flex" : "none"
+    if (!interactMode && grabbedParticle) grabbedParticle = null
+    canvas.style.cursor = interactMode ? "grab" : "default"
+    showToast(interactMode ? "interact mode ON" : "interact mode OFF", interactMode)
+    fireTrigger("i")
+  }
 
+  if (e.key==="z"||e.key==="Z"){
+    zeroGravity=!zeroGravity
+    zerogravstate.textContent=zeroGravity?"ON":"off"
+    zerogravstate.style.color=zeroGravity?"#ff0":"#555"
+    pullSlider.value=zeroGravity?0:0.9
+    document.getElementById("pull-val").textContent=zeroGravity?0:0.9
+    showToast(zeroGravity?"zero gravity ON":"zero gravity OFF",zeroGravity)
+    fireTrigger("z")
   }
 });
 
 
 
-function showToast(msg){
+function showToast(msg, isOn=null){
   const toast=document.getElementById("toast")
+
+  if(toastTimeout){
+    clearTimeout(toastTimeout)
+    toastTimeout=null
+  }
   toast.textContent=msg
   toast.style.opacity="1"
-  setTimeout(()=>toast.style.opacity="0",2500);
+
+  if(isOn ===true){
+    toast.style.background="rgba(0,200,100,0.15)"
+    // toast.style.borderColor="rgba(0,200,100,0.3)"
+    toast.style.color="rgba(0,220,110,0.9)"
+  } else if(isOn === false){
+    toast.style.background = "rgba(220,60,60,0.15)";
+    // toast.style.borderColor = "rgba(220,60,60,0.3)";
+    toast.style.color = "rgba(220,80,80,0.9)";
+  } else {
+    toast.style.background = "rgba(255,255,255,0.08)"
+    // toast.style.borderColor="rgba(255,255,255,0.1)"
+    toast.style.color="#aaa"
+  }
+
+  toastTimeout=setTimeout(()=>{
+    toast.style.transform="opactity 0.8s ease"
+    toast.style.opacity="0"
+    toastTimeout=null
+  },2000)
 }
 
 
@@ -375,19 +414,17 @@ canvas.addEventListener("mousedown",(e)=>{
 
 })
 
-canvas.addEventListener("mousemove",(e)=>{
+canvas.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX
-  mouse.Y=e.clientY
+  mouse.y = e.clientY
 
-  if ( interactMode && grabbedParticle ){
-    grabbedParticle.vx=e.clientX-grabbedParticle.prevX
-    grabbedParticle.vy=e.clientY-grabbedParticle.prevY
+  if (interactMode && grabbedParticle) {
+    grabbedParticle.vx = e.clientX - grabbedParticle.prevX
+    grabbedParticle.vy = e.clientY - grabbedParticle.prevY
     grabbedParticle.prevX = e.clientX
     grabbedParticle.prevY = e.clientY
-
-    grabbedParticle.x=e.clientX
-    grabbedParticle.y=e.clientY
-
+    grabbedParticle.x = e.clientX
+    grabbedParticle.y = e.clientY
   }
 })
 
@@ -556,6 +593,7 @@ function drawBlackHole() {
 }
 
 function applyGravity(p) {
+  if(zeroGravity) return
   const dir = gravityFlip ? -1 : 1;
   p.vy += dir * parseFloat(pullSlider.value) * 0.3;
 }
@@ -666,7 +704,7 @@ function loop() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   resolveMergeOrCollide();
-  spawnTrail();
+  // spawnTrail();
   drawStory();
 
   particles.forEach((p) => {

@@ -104,15 +104,17 @@ kbd {
   bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.607);
-  color: #242424;
+  background: rgba(255,255,255,0.08);
+  /* border: 1px solid rgba(255,255,255,0.1); */
+  color: #aaa;
   font-family: 'Space Grotesk', monospace;
   font-size: 12px;
   padding: 6px 14px;
   border-radius: 20px;
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.8s ease, background 0.3s, color 0.3s;
   pointer-events: none;
+  white-space: nowrap;
 }
 
 .reset-btn {
