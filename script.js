@@ -18,6 +18,16 @@ const pcount = document.getElementById("pcount");
 
 pcount.textContent = particles.length;
 
+
+document.querySelectorAll(".reset-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const slider = document.getElementById(btn.dataset.id)
+    const display = document.getElementById(`${btn.dataset.id}-val`)
+    slider.value = btn.dataset.default
+    if (display) display.textContent = btn.dataset.default
+  })
+})
+
 const stories = [
   { text: "welcome to particle sandbox.", trigger: null },
   { text: "click anywhere to spawn particles.", trigger: "click" },
