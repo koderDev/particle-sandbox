@@ -38,7 +38,7 @@ document.querySelectorAll(".reset-btn").forEach(btn => {
 const stories = [
   { text: "welcome to particle sandbox.", trigger: null },
   { text: "click anywhere to spawn particles.", trigger: "click" },
-  { text: "nice! right click to create a shockwave.", trigger: "rightclick" },
+  { text: "nice! right click to create a shockwave.", trigger: null },
   { text: "press G to flip gravity.", trigger: "g" },
   { text: "watch them float... press G again to bring them back.", trigger: "g" },
   { text: "press B to open a black hole at your cursor.", trigger: "b" },
