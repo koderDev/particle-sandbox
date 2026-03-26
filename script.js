@@ -251,7 +251,9 @@ window.addEventListener("keydown", (e) => {
     blackHole = !blackHole;
     bhactive.textContent = blackHole ? "ON" : "off";
     bhactive.style.color = blackHole ? "#a0f" : "#555";
+    canvas.style.cursor=blackHole?"none":"default"
     showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
+    
     fireTrigger("b");
   }
 
@@ -530,13 +532,26 @@ function applyBlackHole() {
     const dx = mouse.x - p.x;
     const dy = mouse.y - p.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    if(dist>500) return
     const force = (2000 * bhAlpha) / (dist * dist);
-    p.vx += (dx / dist) * force;
-    p.vy += (dy / dist) * force;
-    if (dist < 10 && blackHole) {
+    const nx=dx/dist
+    const ny=dy/dist
+    const tx=-ny
+    const ty=nx
+
+    const swirlStrength = Math.min(6000/(dist*dist),2);
+
+    p.vx += (nx) * force+tx*swirlStrength;
+    p.vy += (ny) * force + ty*swirlStrength;
+
+    const speed = Math.sqrt(p.vx*p.vx+p.vy*p.vy)
+    if(speed > 30 ){
+      p.vx=(p.vx/speed)*30;
+      p.vy=(p.vy/speed)*30;
+    }
+    if (dist < 80 && blackHole) {
       particles.splice(particles.indexOf(p), 1);
     }
-    if(dist > 300) return
   });
 }
 
@@ -694,7 +709,7 @@ function drawConnections() {
           const alpha = (1 - dist / 100) * 0.5
           ctx.globalAlpha = alpha
           ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 90%)`
-          ctx.lineWidth = 1
+          ctx.lineWidth = 2
           ctx.beginPath()
           ctx.moveTo(a.x, a.y)
           ctx.lineTo(b.x, b.y)
