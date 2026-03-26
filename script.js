@@ -7,6 +7,8 @@ canvas.height = window.innerHeight;
 let particles = [];
 let mouse = { x: 0, y: 0 };
 
+const MAX_PARTICLES = 420;
+
 const pullSlider = document.getElementById("pull");
 const dampenSlider = document.getElementById("dampen");
 const sizeSlider = document.getElementById("size");
@@ -139,6 +141,11 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("click", (e) => {
   if(interactMode) return
+  if(particles.length >=MAX_PARTICLES)
+  {
+    showToast("particle limit reached!")
+    return
+  }
   const count = Math.floor(parseFloat(countSlider.value) / 10);
   for (let i = 0; i < count; i++) {
     particles.push(createParticle(e.clientX, e.clientY));
@@ -288,6 +295,7 @@ window.addEventListener("keydown", (e) => {
     if(!interactMode&&grabbedParticle) grabbedParticle=null;
     canvas.style.cursor = interactMode?"grab":"default";
     fireTrigger("i");
+
   }
 });
 
@@ -420,6 +428,7 @@ function applyBlackHole() {
     if (dist < 10 && blackHole) {
       particles.splice(particles.indexOf(p), 1);
     }
+    if(dist > 300) return
   });
 }
 
@@ -581,9 +590,9 @@ function loop() {
   particles.forEach((p) => {
     updateParticle(p);
     drawParticle(p);
-    if (lineMode) drawConnections();
   });
-
+  if (lineMode) drawConnections();
+  
   drawBlackHole();
   applyBlackHole();
 
