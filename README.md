@@ -31,16 +31,25 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 
 ## changelogs 🛠
 
+
 ### [1.0.2]
-#### new mode
+#### new modes
 - zero gravity mode (Z) — particles float freely in space
+- bubble mode (N) - particles transform into floating bubbles with a glassy shine effect. hovering over a bubble pops it and splits it into 2 smaller bubbles.
 
 #### UI
 - add toast notifications for all mode toggles
-- reset buttons added to gravity and friction sliders (as per the request of a voter)
+- reset buttons added to all 4 sliders (as per the request of a voter)
+- toast colors have been fixed -> fully visible against the colorful particles
 
-#### story mode REWORK
+#### story mode -> TUTORIAL MODE
 - story mode i.e. tutorial now walks you through this simulation interactively.
+- yesss, finally. story mode has been renamed into "tutorial mode". *(self-explanatory, ig)*
+
+#### improved black hole *(on the request of a voter)*
+- stronger pull force
+- particles now spiral inward with swirl physics *(was kinda tough to implement)*
+- cursor is hidden when black hole is active — only the black hole effect is visible
 
 #### performance improvements (most requested in previous ship)
 - replace the previous collision detection O(n^2) with a spatial grid system ( took a lot of time implementing this system)
