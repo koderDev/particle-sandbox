@@ -230,6 +230,10 @@ let bhAlpha = 0;
 
 window.addEventListener("keydown", (e) => {
   if (e.key === "b" || e.key === "B") {
+    if(interactMode){
+      showToast("exit interact mode first")
+      return
+    }
     blackHole = !blackHole;
     bhactive.textContent = blackHole ? "ON" : "off";
     bhactive.style.color = blackHole ? "#a0f" : "#555";
@@ -242,11 +246,13 @@ window.addEventListener("keydown", (e) => {
     trailstate.style.color = trailMode ? "#fa0" : "#555";
     fireTrigger("t");
 
-    if(trailMode&&lineMode){
-      lineMode=false
-      linestate.textContent="off"
-      linestate.style.color="#555"
-      showToast("line mode turned off to save performance")
+    if(trailMode){
+      if(lineMode){
+        lineMode=false
+        linestate.textContent="off"
+        linestate.style.color="#555"
+        showToast("line mode turned off to save performance")
+      }
     }
   }
 
@@ -281,6 +287,10 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "l" || e.key === "L") {
+    if(trailMode){
+      showToast("exit trail mode first")
+      return
+    }
     lineMode = !lineMode;
     linestate.textContent = lineMode ? "ON" : "off";
     linestate.style.color = lineMode ? "#fff" : "#555";
@@ -288,6 +298,10 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "i" || e.key === "I"){
+    if(blackHole){
+      showToast("turn off black hole first")
+      return
+    }
     interactMode=!interactMode
     interactstate.textContent=interactMode?"ON":"off";
     interactstate.style.color = interactMode ? "#4cf" : "#555";
@@ -309,31 +323,46 @@ function showToast(msg){
 }
 
 
-canvas.addEventListener("mousedown",(e)=>{
-  if (!interactMode) return
-  if(e.button!==0) return
-
-  let closest=null
-  let closestDist=30
-  particles.forEach(p=>{
-    const dx=p.x-e.clientX
-    const dy=p.y-e.clientY
-
-    const r=Math.sqrt(dx*dx+dy*dy)
-    if(r<closestDist){
-      closestDist=r
-      closest=p
-    }
-  })
-
-  if(closest){
-    grabbedParticle=closest
-    grabbedParticle.grabbed = true
-    grabbedParticle.prevX=e.clientX
-    grabbedParticle.prevY=e.clientY
-    canvas.style.cursor="grabbing"
-
+function spawnTrail(){
+  if (!trailMode) return
+  if (!isMouseDown) return
+  if (interactMode) return
+  if (particles.length >=MAX_PARTICLES) return
+  for(let i=0;i<3;i++)
+  {
+    particles.push(createParticle(mouse.x,mouse.y))
   }
+}
+
+let isMouseDown = false
+
+canvas.addEventListener("mousedown",(e)=>{
+  if(e.button!==0) return
+  isMouseDown=true
+  if (interactMode){
+    let closest=null
+    let closestDist=30
+    particles.forEach(p=>{
+      const dx=p.x-e.clientX
+      const dy=p.y-e.clientY
+  
+      const r=Math.sqrt(dx*dx+dy*dy)
+      if(r<closestDist){
+        closestDist=r
+        closest=p
+      }
+    })
+  
+    if(closest){
+      grabbedParticle=closest
+      grabbedParticle.grabbed = true
+      grabbedParticle.prevX=e.clientX
+      grabbedParticle.prevY=e.clientY
+      canvas.style.cursor="grabbing"
+  
+    }
+  }
+
 })
 
 canvas.addEventListener("mousemove",(e)=>{
@@ -350,15 +379,10 @@ canvas.addEventListener("mousemove",(e)=>{
     grabbedParticle.y=e.clientY
 
   }
-
-  if(trailMode && !interactMode && particles.length <500){
-    for(let i=0;i<3;i++){
-      particles.push(createParticle(e.clientX,e.clientY))
-    }
-  }
 })
 
 canvas.addEventListener("mouseup",(e)=>{
+  isMouseDown=false
   if (grabbedParticle) {
     grabbedParticle.grabbed = false
     grabbedParticle = null
@@ -631,8 +655,8 @@ function loop() {
   ctx.fillStyle = "#0a0a0a";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  //   resolveCollisions()
   resolveMergeOrCollide();
+  spawnTrail();
   drawStory();
 
   particles.forEach((p) => {
