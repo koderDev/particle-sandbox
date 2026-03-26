@@ -19,6 +19,13 @@ const pcount = document.getElementById("pcount");
 pcount.textContent = particles.length;
 
 
+// helper function — add this at top
+function setModeState(el, isOn) {
+  el.textContent = isOn ? "ON" : "off"
+  el.className = isOn ? "mode-on" : "mode-off"
+  if (!isOn) el.style.color = "#afafaf"
+}
+
 document.querySelectorAll(".reset-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const slider = document.getElementById(btn.dataset.id)
@@ -31,7 +38,7 @@ document.querySelectorAll(".reset-btn").forEach(btn => {
 const stories = [
   { text: "welcome to particle sandbox.", trigger: null },
   { text: "click anywhere to spawn particles.", trigger: "click" },
-  { text: "nice! now try right clicking to blast them.", trigger: "rightclick" },
+  { text: "nice! now try right clicking to create a shockwave.", trigger: "rightclick" },
   { text: "press G to flip gravity.", trigger: "g" },
   { text: "watch them float... press G again to bring them back.", trigger: "g" },
   { text: "press B to open a black hole at your cursor.", trigger: "b" },
@@ -153,9 +160,10 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("click", (e) => {
   if(interactMode) return
+  if (bubbleMode) return
   if(particles.length >=MAX_PARTICLES)
   {
-    showToast("particle limit reached!")
+    showToast("particle limit reached!",false)
     return
   }
   const count = Math.floor(parseFloat(countSlider.value) / 10);
@@ -224,7 +232,6 @@ let gravityFlip = false;
 let shockwaves = [];
 
 
-
 let lineMode = false; // on by default
 const linestate = document.getElementById("linestate");
 let toastTimeout=null
@@ -232,6 +239,10 @@ let interactMode = false;
 let grabbedParticle = null;
 const interactstate = document.getElementById("interactstate");
 const interactPopup = document.getElementById("interactPopup");
+const bubblePopup = document.getElementById("bubblePopup")
+
+let bubbleMode = false
+const bubblestate = document.getElementById("bubblestate");
 
 let zeroGravity=false
 const zerogravstate=document.getElementById("zerogravstate");
@@ -243,14 +254,19 @@ const flipstate = document.getElementById("flipstate");
 let bhAlpha = 0;
 
 window.addEventListener("keydown", (e) => {
+  if (bubbleMode && e.key !== "n" && e.key !== "N" && e.key !== "s" && e.key !== "S") {
+    showToast("exit bubble mode first")
+    return
+  }
+
   if (e.key === "b" || e.key === "B") {
     if(interactMode){
       showToast("exit interact mode first")
       return
     }
     blackHole = !blackHole;
-    bhactive.textContent = blackHole ? "ON" : "off";
-    bhactive.style.color = blackHole ? "#a0f" : "#555";
+    setModeState(bhactive, blackHole)
+    if (blackHole) bhactive.style.color = "#a0f"
     canvas.style.cursor=blackHole?"none":"default"
     showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
     
@@ -258,9 +274,9 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "t" || e.key === "T") {
-    trailMode = !trailMode;
-    trailstate.textContent = trailMode ? "ON" : "off";
-    trailstate.style.color = trailMode ? "#fa0" : "#555";
+    trailMode = !trailMode
+    setModeState(trailstate, trailMode)
+    if (trailMode) trailstate.style.color = "#fa0"
     showToast(trailMode ? "trail mode ON" : "trail mode OFF", trailMode)
     fireTrigger("t");
     
@@ -277,8 +293,8 @@ window.addEventListener("keydown", (e) => {
 
   if (e.key === "s" || e.key === "S") {
     storyMode = !storyMode;
-    storystate.textContent = storyMode ? "ON" : "off";
-    storystate.style.color = storyMode ? "#fff" : "#555";
+    setModeState(storystate, storyMode)
+    showToast(storyMode ? "tutorial ON" : "tutorial OFF", storyMode)
     fireTrigger("s");
 
     if(storyMode){
@@ -293,16 +309,16 @@ window.addEventListener("keydown", (e) => {
 
   if (e.key === "m" || e.key === "M") {
     mergeMode = !mergeMode;
-    mergestate.textContent = mergeMode ? "ON" : "off";
-    mergestate.style.color = mergeMode ? "#0f0" : "#555";
+    setModeState(mergestate, mergeMode)
+    if (mergeMode) mergestate.style.color = "#0f0"
     showToast(mergeMode ? "merge mode ON" : "merge mode OFF", mergeMode)
     fireTrigger("m");
   }
 
   if (e.key === "g" || e.key === "G") {
     gravityFlip = !gravityFlip;
-    flipstate.textContent = gravityFlip ? "ON" : "off";
-    flipstate.style.color = gravityFlip ? "#0ff" : "#555";
+    setModeState(flipstate, gravityFlip)
+    if (gravityFlip) flipstate.style.color = "#0ff"
     showToast(gravityFlip ? "gravity flip ON" : "gravity flip OFF", gravityFlip)
     fireTrigger("g");
   }
@@ -313,8 +329,7 @@ window.addEventListener("keydown", (e) => {
       return
     }
     lineMode = !lineMode;
-    linestate.textContent = lineMode ? "ON" : "off";
-    linestate.style.color = lineMode ? "#fff" : "#555";
+    setModeState(linestate, lineMode)
     showToast(lineMode ? "line mode ON" : "line mode OFF", lineMode)
     fireTrigger("l");
   }
@@ -322,8 +337,8 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "i" || e.key === "I") {
     if (blackHole) { showToast("turn off black hole first"); return }
     interactMode = !interactMode
-    interactstate.textContent = interactMode ? "ON" : "off"
-    interactstate.style.color = interactMode ? "#4cf" : "#555"
+    setModeState(interactstate, interactMode)
+    if (interactMode) interactstate.style.color = "#4cf"
     interactPopup.style.display = interactMode ? "flex" : "none"
     if (!interactMode && grabbedParticle) grabbedParticle = null
     canvas.style.cursor = interactMode ? "grab" : "default"
@@ -331,25 +346,94 @@ window.addEventListener("keydown", (e) => {
     fireTrigger("i")
   }
 
-if (e.key === "z" || e.key === "Z") {
-  zeroGravity = !zeroGravity
-  zerogravstate.textContent = zeroGravity ? "ON" : "off"
-  zerogravstate.style.color = zeroGravity ? "#ff0" : "#555"
+  if (e.key === "z" || e.key === "Z") {
+    zeroGravity = !zeroGravity
+    setModeState(zerogravstate, zeroGravity)
+    if (zeroGravity) zerogravstate.style.color = "#ff0"
 
-  if (zeroGravity) {
-    pullSlider.dataset.saved = pullSlider.value
-    pullSlider.value = 0
-  } else {
-    const saved = pullSlider.dataset.saved || 0.9
-    pullSlider.value = saved
+    if (zeroGravity) {
+      pullSlider.dataset.saved = pullSlider.value
+      pullSlider.value = 0
+    } else {
+      const saved = pullSlider.dataset.saved || 0.9
+      pullSlider.value = saved
+    }
+
+    showToast(zeroGravity ? "zero gravity ON" : "zero gravity OFF", zeroGravity)
+    fireTrigger("z")
   }
 
-  showToast(zeroGravity ? "zero gravity ON" : "zero gravity OFF", zeroGravity)
-  fireTrigger("z")
-}
+  if(e.key==="n"||e.key==="N"){
+    bubbleMode=!bubbleMode;
+    setModeState(bubblestate,bubbleMode)
+    if(bubbleMode){
+      bubblestate.style.color="#7df";
+      enableBubbleMode()
+    } else {
+      disableBubbleMode()
+    }
+    // showToast(bubbleMode?"bubble mode ON":"bubble mode OFF",bubbleMode)
+    fireTrigger("n")
+  }
+
 });
 
 
+function enableBubbleMode() {
+  // trim to 50
+  if (particles.length > 80) {
+    particles = particles.slice(particles.length - 80)
+  }
+
+  if(blackHole){
+    blackHole=false
+    setModeState(bhactive,false)
+    bhAlpha=0
+    canvas.style.cursor="default"
+  }
+  if(trailMode){
+    trailMode=false
+    setModeState(trailstate,false)
+  }
+  if(mergeMode){
+    mergeMode=false
+    setModeState(mergestate,false)
+  }
+  if(gravityFlip){
+    gravityFlip=false
+    setModeState(flipstate,false)
+  }
+  if(interactMode){
+    interactMode=false
+    setModeState(interactstate,false)
+    interactPopup.style.display="none"
+    canvas.style.cursor="default"
+  }
+  if(zeroGravity){
+    zeroGravity=false
+    setModeState(zerogravstate,false)
+    pullSlider.value=pullSlider.dataset.saved || 0.9
+    document.getElementById("pull-val").textContent=pullSlider.value
+  }
+  showToast("all modes turned off for bubble mode",null)
+  
+
+  particles.forEach(p => {
+    p.isBubble = true
+    p.vx = (Math.random() - 0.5) * 1.5
+    p.vy = (Math.random() - 0.5) * 1.5
+    p.size = Math.max(p.size, 20)  
+  })
+
+  canvas.style.cursor="ne-resize";
+}
+
+function disableBubbleMode() {
+  particles.forEach(p => {
+    p.isBubble = false
+  })
+  canvas.style.cursor="default"
+}
 
 function showToast(msg, isOn=null){
   const toast=document.getElementById("toast")
@@ -361,18 +445,15 @@ function showToast(msg, isOn=null){
   toast.textContent=msg
   toast.style.opacity="1"
 
-  if(isOn ===true){
-    toast.style.background="rgba(0,200,100,0.15)"
-    // toast.style.borderColor="rgba(0,200,100,0.3)"
-    toast.style.color="rgba(0,220,110,0.9)"
-  } else if(isOn === false){
-    toast.style.background = "rgba(220,60,60,0.15)";
-    // toast.style.borderColor = "rgba(220,60,60,0.3)";
-    toast.style.color = "rgba(220,80,80,0.9)";
+  if (isOn === true) {
+    toast.style.background = "#1a4d2e"
+    toast.style.color = "#4cff8f"
+  } else if (isOn === false) {
+    toast.style.background = "#4d1a1a"
+    toast.style.color = "#ff6b6b"
   } else {
-    toast.style.background = "rgba(255,255,255,0.08)"
-    // toast.style.borderColor="rgba(255,255,255,0.1)"
-    toast.style.color="#aaa"
+    toast.style.background = "#2a2a2a"
+    toast.style.color = "#afafaf"
   }
 
   toastTimeout=setTimeout(()=>{
@@ -381,7 +462,6 @@ function showToast(msg, isOn=null){
     toastTimeout=null
   },2000)
 }
-
 
 function spawnTrail(){
   if (!trailMode) return
@@ -560,7 +640,10 @@ function drawBlackHole() {
 
   // fade in/out
   if (blackHole && bhAlpha < 1) bhAlpha += 0.03;
-  if (!blackHole && bhAlpha > 0) bhAlpha -= 0.03;
+  if (!blackHole && bhAlpha > 0) {
+    bhAlpha -= 0.03;
+    if(bhAlpha<=0) canvas.style.cursor="default";
+  }
   bhAlpha = Math.max(0, Math.min(1, bhAlpha));
 
   const time = Date.now() * 0.002;
@@ -642,28 +725,80 @@ function wallBounce(p) {
 }
 
 function updateParticle(p) {
-  if(p.grabbed) return
-  applyGravity(p);
-  p.vx *= parseFloat(dampenSlider.value);
-  p.vy *= parseFloat(dampenSlider.value);
-  p.x += p.vx;
-  p.y += p.vy;
-  wallBounce(p);
+  if (p.grabbed) return
+
+  if (p.isBubble) {
+    p.vx += (Math.random() - 0.5) * 0.1  // gentle drift
+    p.vx *= 0.98
+    p.vy *= 0.98
+
+    p.x += p.vx
+    p.y += p.vy
+
+    // bounce off walls softly
+    if (p.x - p.size < 0) { p.x = p.size; p.vx *= -0.5 }
+    if (p.x + p.size > canvas.width) { p.x = canvas.width - p.size; p.vx *= -0.5 }
+    if (p.y - p.size < 0) { p.y = p.size; p.vy *= -0.5 }
+    if (p.y + p.size > canvas.height) { p.y = canvas.height - p.size; p.vy *= -0.3 }
+    return
+  }
+
+  applyGravity(p)
+  p.vx *= parseFloat(dampenSlider.value)
+  p.vy *= parseFloat(dampenSlider.value)
+  p.x += p.vx
+  p.y += p.vy
+  wallBounce(p)
 }
 
 function drawParticle(p) {
-  const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-  const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-  gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`);
-  gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`);
+  if (p.isBubble) {
+    const r = p.size
 
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-  ctx.fill();
+    // outer transparent bubble
+    ctx.globalAlpha = 0.08
+    ctx.fillStyle = `hsl(200, 80%, 90%)`
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
+    ctx.fill()
 
-    // ring around grabbed particle
+    // bubble outline
+    ctx.globalAlpha = 0.5
+    ctx.strokeStyle = `rgba(180, 220, 255, 0.8)`
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
+    ctx.stroke()
+
+    // inner highlight — top left shine
+    ctx.globalAlpha = 0.35
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)"
+    ctx.beginPath()
+    ctx.arc(p.x - r * 0.3, p.y - r * 0.3, r * 0.25, 0, Math.PI * 2)
+    ctx.fill()
+
+    // small secondary highlight
+    ctx.globalAlpha = 0.15
+    ctx.fillStyle = "rgba(255,255,255,0.6)"
+    ctx.beginPath()
+    ctx.arc(p.x + r * 0.25, p.y + r * 0.25, r * 0.1, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.globalAlpha = 1
+    return
+  }
+
+  // normal draw below...
+  const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
+  const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size)
+  gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`)
+  gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
+  ctx.globalAlpha = 1
+  ctx.fillStyle = gradient
+  ctx.beginPath()
+  ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+  ctx.fill()
+
   if (p.grabbed) {
     ctx.globalAlpha = 0.8
     ctx.strokeStyle = "#fff"
@@ -673,9 +808,53 @@ function drawParticle(p) {
     ctx.stroke()
     ctx.globalAlpha = 1
   }
+}
 
+function checkBubblePop()
+{
+  if(!bubbleMode) return
+  for(let i=particles.length -1;i>=0;i--){
+    const p = particles[i]
+    if(!p.isBubble) continue
+
+    const dx=mouse.x-p.x
+    const dy=mouse.y-p.y
+    const dist = Math.sqrt(dx*dx+dy*dy)
+
+    if(dist<p.size+8){
+
+      const px=p.x
+      const py=p.y
+      const psize=p.size
+
+      particles.splice(i,1)
+
+      if(p.size>12){
+        const splitAngle=Math.random()*Math.PI*2
+        for(let s=0;s<2;s++){
+          const angle = splitAngle+s*Math.PI+(Math.random() - 0.5)* 0.5
+          const speed = Math.random() * 1.5 + 0.5
+          particles.push({
+            x:px,
+            y: py,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 0.8,
+            size: p.size * 0.55,
+            mass: 1,
+            hue: p.hue,
+            isBubble: true
+          })
+        }
+      }
+
+            // pop shockwave
+      shockwaves.push({ x: px, y: py, radius: 0, alpha: 0.6 })
+
+    }
+  }
 
 }
+
 
 function drawConnections() {
   if (!lineMode) return
@@ -739,6 +918,7 @@ function loop() {
   
   drawBlackHole();
   applyBlackHole();
+  checkBubblePop()
 
   drawShockwaves();
   pcount.textContent = particles.length;
