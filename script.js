@@ -92,6 +92,8 @@ function drawStory() {
     }
   }
 
+  
+
   ctx.save()
   ctx.globalAlpha = storyAlpha * 0.85
   ctx.fillStyle = "#e1e1e1"
@@ -232,6 +234,13 @@ window.addEventListener("keydown", (e) => {
     trailstate.textContent = trailMode ? "ON" : "off";
     trailstate.style.color = trailMode ? "#fa0" : "#555";
     fireTrigger("t");
+
+    if(trailMode&&lineMode){
+      lineMode=false
+      linestate.textContent="off"
+      linestate.style.color="#555"
+      showToast("line mode turned off to save performance")
+    }
   }
 
   if (e.key === "s" || e.key === "S") {
@@ -282,6 +291,14 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+
+
+function showToast(msg){
+  const toast=document.getElementById("toast")
+  toast.textContent=msg
+  toast.style.opacity="1"
+  setTimeout(()=>toast.style.opacity="0",2500);
+}
 
 
 canvas.addEventListener("mousedown",(e)=>{
