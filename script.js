@@ -367,53 +367,81 @@ canvas.addEventListener("mouseup",(e)=>{
 })
 
 
+function getGridKey(x, y, cellSize) {
+  return `${Math.floor(x / cellSize)},${Math.floor(y / cellSize)}`
+}
+
+function buildGrid(cellSize) {
+  const grid = new Map()
+  particles.forEach(p => {
+    const key = getGridKey(p.x, p.y, cellSize)
+    if (!grid.has(key)) grid.set(key, [])
+    grid.get(key).push(p)
+  })
+  return grid
+}
+
 function resolveMergeOrCollide() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const a = particles[i];
-      const b = particles[j];
-      if (!a || !b) continue;
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const minDist = a.size + b.size;
+  const cellSize = 80
+  const grid = buildGrid(cellSize)
 
-      if (dist < minDist && dist > 0) {
-        if (
-          mergeMode &&
-          a.size + b.size <= 80 &&
-          Math.abs(a.hue - b.hue) < 30
-        ) {
-          const totalMass = a.size + b.size;
-          a.vx = (a.vx * a.size + b.vx * b.size) / totalMass;
-          a.vy = (a.vy * a.size + b.vy * b.size) / totalMass;
-          a.size = Math.min(totalMass * 0.6, 80);
-          a.hue = Math.random() * 360;
-          particles.splice(j, 1);
-          j--;
-        } else {
-          const angle = Math.atan2(dy, dx);
-          const overlap = minDist - dist;
-          a.x -= (Math.cos(angle) * overlap) / 2;
-          a.y -= (Math.sin(angle) * overlap) / 2;
-          b.x += (Math.cos(angle) * overlap) / 2;
-          b.y += (Math.sin(angle) * overlap) / 2;
+  grid.forEach((cell, key) => {
+    const [gx, gy] = key.split(",").map(Number)
 
-          const nx = dx / dist;
-          const ny = dy / dist;
-          const relVx = a.vx - b.vx;
-          const relVy = a.vy - b.vy;
-          const dot = relVx * nx + relVy * ny;
-          if (dot > 0) {
-            a.vx -= dot * nx;
-            a.vy -= dot * ny;
-            b.vx += dot * nx;
-            b.vy += dot * ny;
+    // only check neighboring cells
+    const neighbors = []
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const n = grid.get(`${gx + dx},${gy + dy}`)
+        if (n) neighbors.push(...n)
+      }
+    }
+
+    for (let i = 0; i < cell.length; i++) {
+      for (let j = 0; j < neighbors.length; j++) {
+        const a = cell[i]
+        const b = neighbors[j]
+        if (a === b) continue
+        if (!a || !b) continue
+
+        const dx = b.x - a.x
+        const dy = b.y - a.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        const minDist = a.size + b.size
+
+        if (dist < minDist && dist > 0) {
+          if (mergeMode && a.size + b.size <= 80 && Math.abs(a.hue - b.hue) < 30) {
+            const totalMass = a.size + b.size
+            a.vx = (a.vx * a.size + b.vx * b.size) / totalMass
+            a.vy = (a.vy * a.size + b.vy * b.size) / totalMass
+            a.size = Math.min(totalMass * 0.6, 80)
+            a.hue = Math.random() * 360
+            const bi = particles.indexOf(b)
+            if (bi > -1) particles.splice(bi, 1)
+          } else {
+            const angle = Math.atan2(dy, dx)
+            const overlap = minDist - dist
+            a.x -= Math.cos(angle) * overlap / 2
+            a.y -= Math.sin(angle) * overlap / 2
+            b.x += Math.cos(angle) * overlap / 2
+            b.y += Math.sin(angle) * overlap / 2
+
+            const nx = dx / dist
+            const ny = dy / dist
+            const relVx = a.vx - b.vx
+            const relVy = a.vy - b.vy
+            const dot = relVx * nx + relVy * ny
+            if (dot > 0) {
+              a.vx -= dot * nx
+              a.vy -= dot * ny
+              b.vx += dot * nx
+              b.vy += dot * ny
+            }
           }
         }
       }
     }
-  }
+  })
 }
 
 function applyBlackHole() {
@@ -554,27 +582,47 @@ function drawParticle(p) {
 }
 
 function drawConnections() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const a = particles[i];
-      const b = particles[j];
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+  if (!lineMode) return
+  const cellSize = 100
+  const grid = buildGrid(cellSize)
 
-      if (dist < 100) {
-        const alpha = (1 - dist / 100) * 0.5;
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 90%)`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+  const checked = new Set()
+
+  grid.forEach((cell, key) => {
+    const [gx, gy] = key.split(",").map(Number)
+    const neighbors = []
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const n = grid.get(`${gx + dx},${gy + dy}`)
+        if (n) neighbors.push(...n)
       }
     }
-  }
-  ctx.globalAlpha = 1;
+
+    cell.forEach(a => {
+      neighbors.forEach(b => {
+        if (a === b) return
+        const pairKey = a < b ? `${particles.indexOf(a)}-${particles.indexOf(b)}` : `${particles.indexOf(b)}-${particles.indexOf(a)}`
+        if (checked.has(pairKey)) return
+        checked.add(pairKey)
+
+        const dx = b.x - a.x
+        const dy = b.y - a.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist < 100) {
+          const alpha = (1 - dist / 100) * 0.5
+          ctx.globalAlpha = alpha
+          ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 90%)`
+          ctx.lineWidth = 1
+          ctx.beginPath()
+          ctx.moveTo(a.x, a.y)
+          ctx.lineTo(b.x, b.y)
+          ctx.stroke()
+        }
+      })
+    })
+  })
+  ctx.globalAlpha = 1
 }
 
 function loop() {
