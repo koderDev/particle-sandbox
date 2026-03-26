@@ -17,65 +17,108 @@ const pcount = document.getElementById("pcount");
 pcount.textContent = particles.length;
 
 const stories = [
-  "you are the god of this universe.",
-  "these particles obey your will.",
-  "click to breathe life into the void.",
-  "right click to unleash chaos.",
-  "press B to tear open a black hole.",
-  "they fear you.",
-  "they trust you.",
-  "want to flip gravity? press G",
-  "apples need not fall downwards ;)",
-  "press T for particle trails.",
-  "trails = more chaos.",
-  "and after all of this",
-  "press M to merge the particles",
-  "will they all merge to be ONE?",
-  "what will you do with this power?",
-  "the universe watches.",
-  "every particle has a purpose.",
-  "or maybe none of them do.",
-];
+  { text: "welcome to particle sandbox.", trigger: null },
+  { text: "click anywhere to spawn particles.", trigger: "click" },
+  { text: "nice! now try right clicking to blast them.", trigger: "rightclick" },
+  { text: "press G to flip gravity.", trigger: "g" },
+  { text: "watch them float... press G again to bring them back.", trigger: "g" },
+  { text: "press B to open a black hole at your cursor.", trigger: "b" },
+  { text: "move your cursor around. they follow you.", trigger: null },
+  { text: "press B again to close it.", trigger: "b" },
+  { text: "press M to turn on merge mode.", trigger: "m" },
+  { text: "now spawn more particles. same colors will merge.", trigger: "click" },
+  { text: "press L to connect nearby particles with lines.", trigger: "l" },
+  { text: "press I to enter interact mode.", trigger: "i" },
+  { text: "grab a particle and throw it around.", trigger: null },
+  { text: "press I again to go back to normal.", trigger: "i" },
+  { text: "press T for trail mode. move your mouse.", trigger: "t" },
+  { text: "you have learned everything.", trigger: null },
+  { text: "now build your own universe.", trigger: null },
+  { text: "we won't tell you what to do anymore.", trigger: null },
+  { text: "press S to dismiss this. see you on the other side.", trigger: "s" },
+]
 
-let currentStory = 0;
-let storyAlpha = 0;
-let storyState = "fadein"; 
-let storyTimer = 0;
-let storyMode = true;
-let shockwaves = [];
+let currentStory = 0
+let storyAlpha = 0
+let storyState = "fadein"
+let storyTimer = 0
+let storyMode = true
+let waitingForTrigger = false
+let storyTriggered = false
+
 
 function drawStory() {
-  if (!storyMode) return;
+  if (!storyMode) return
+  if (currentStory >= stories.length) return
+
+  const story = stories[currentStory]
+
+  if (story.trigger && !storyTriggered) {
+    waitingForTrigger = true
+    // just keep showing current text, pulse it slightly
+    storyAlpha = 0.5 + Math.sin(Date.now() * 0.003) * 0.2
+    ctx.save()
+    ctx.globalAlpha = storyAlpha
+    ctx.fillStyle = "#e1e1e1"
+    ctx.font = "28px Space Grotesk"
+    ctx.textAlign = "center"
+    ctx.fillText(story.text, canvas.width / 2, canvas.height / 2)
+
+    // hint arrow pulse
+    ctx.globalAlpha = storyAlpha * 0.5
+    ctx.fillStyle = "#aaa"
+    ctx.font = "14px Space Grotesk"
+    ctx.fillText("[ do it to continue ]", canvas.width / 2, canvas.height / 2 + 40)
+    ctx.restore()
+    return
+  }
+
+  // no trigger or trigger fired — normal fade in/hold/out
+  waitingForTrigger = false
+  storyTriggered = false
 
   if (storyState === "fadein") {
-    storyAlpha += 0.01;
-    if (storyAlpha >= 1) {
-      storyAlpha = 1;
-      storyState = "hold";
-    }
+    storyAlpha += 0.035
+    if (storyAlpha >= 1) { storyAlpha = 1; storyState = "hold" }
   } else if (storyState === "hold") {
-    storyTimer++;
-    if (storyTimer > 180) {
-      storyState = "fadeout";
-      storyTimer = 0;
-    }
+    storyTimer++
+    if (storyTimer > 100) { storyState = "fadeout"; storyTimer = 0 }
   } else if (storyState === "fadeout") {
-    storyAlpha -= 0.01;
+    storyAlpha -= 0.035
     if (storyAlpha <= 0) {
-      storyAlpha = 0;
-      storyState = "fadein";
-      currentStory = (currentStory + 1) % stories.length;
+      storyAlpha = 0
+      storyState = "fadein"
+      currentStory = (currentStory + 1) % stories.length
     }
   }
 
-  ctx.save();
-  ctx.globalAlpha = storyAlpha * 0.8;
-  ctx.fillStyle = "#e1e1e1";
-  ctx.font = "32px Space Grotesk";
-  ctx.textAlign = "center";
-  ctx.fillText(stories[currentStory], canvas.width / 2, canvas.height / 2);
-  ctx.restore();
+  ctx.save()
+  ctx.globalAlpha = storyAlpha * 0.85
+  ctx.fillStyle = "#e1e1e1"
+  ctx.font = "28px Space Grotesk"
+  ctx.textAlign = "center"
+  ctx.fillText(story.text, canvas.width / 2, canvas.height / 2)
+  ctx.restore()
 }
+
+
+function fireTrigger(key) {
+  if (!storyMode) return
+  if (currentStory >= stories.length) return
+  const story = stories[currentStory]
+  if (story.trigger === key && waitingForTrigger) {
+    storyTriggered = true
+    // advance after short delay
+    setTimeout(() => {
+      storyState = "fadein"
+      storyAlpha = 0
+      currentStory++
+      storyTriggered = false
+      waitingForTrigger = false
+    }, 600)
+  }
+}
+
 
 const sliders = [
   { slider: pullSlider, display: document.getElementById("pull-val") },
@@ -98,6 +141,8 @@ canvas.addEventListener("click", (e) => {
   for (let i = 0; i < count; i++) {
     particles.push(createParticle(e.clientX, e.clientY));
   }
+
+  fireTrigger("click") 
 });
 
 canvas.addEventListener("contextmenu", (e) => {
@@ -110,7 +155,7 @@ canvas.addEventListener("contextmenu", (e) => {
     p.vx += (dx / dist) * 10;
     p.vy += (dy / dist) * 10;
   });
-
+  fireTrigger("rightclick");
   shockwaves.push({ x: e.clientX, y: e.clientY, radius: 0, alpha: 1 });
 });
 
@@ -155,6 +200,9 @@ let blackHole = false;
 let trailMode = false;
 let mergeMode = false;
 let gravityFlip = false;
+let shockwaves = [];
+
+
 
 let lineMode = false; // on by default
 const linestate = document.getElementById("linestate");
@@ -176,36 +224,51 @@ window.addEventListener("keydown", (e) => {
     blackHole = !blackHole;
     bhactive.textContent = blackHole ? "ON" : "off";
     bhactive.style.color = blackHole ? "#a0f" : "#555";
+    fireTrigger("b");
   }
 
   if (e.key === "t" || e.key === "T") {
     trailMode = !trailMode;
     trailstate.textContent = trailMode ? "ON" : "off";
     trailstate.style.color = trailMode ? "#fa0" : "#555";
+    fireTrigger("t");
   }
 
   if (e.key === "s" || e.key === "S") {
     storyMode = !storyMode;
     storystate.textContent = storyMode ? "ON" : "off";
     storystate.style.color = storyMode ? "#fff" : "#555";
+    fireTrigger("s");
+
+    if(storyMode){
+      currentStory=0
+      storyAlpha=0
+      storyState="fadein"
+      storyTimer=0
+      waitingForTrigger=false
+      storyTriggered=false
+    }
   }
 
   if (e.key === "m" || e.key === "M") {
     mergeMode = !mergeMode;
     mergestate.textContent = mergeMode ? "ON" : "off";
     mergestate.style.color = mergeMode ? "#0f0" : "#555";
+    fireTrigger("m");
   }
 
   if (e.key === "g" || e.key === "G") {
     gravityFlip = !gravityFlip;
     flipstate.textContent = gravityFlip ? "ON" : "off";
     flipstate.style.color = gravityFlip ? "#0ff" : "#555";
+    fireTrigger("g");
   }
 
   if (e.key === "l" || e.key === "L") {
     lineMode = !lineMode;
     linestate.textContent = lineMode ? "ON" : "off";
     linestate.style.color = lineMode ? "#fff" : "#555";
+    fireTrigger("l");
   }
 
   if (e.key === "i" || e.key === "I"){
@@ -214,9 +277,11 @@ window.addEventListener("keydown", (e) => {
     interactstate.style.color = interactMode ? "#4cf" : "#555";
     interactPopup.style.display=interactMode?"flex":"none"
     if(!interactMode&&grabbedParticle) grabbedParticle=null;
-    canvas.style.cursor = interactMode?"grab":"default"
+    canvas.style.cursor = interactMode?"grab":"default";
+    fireTrigger("i");
   }
 });
+
 
 
 canvas.addEventListener("mousedown",(e)=>{
