@@ -5,7 +5,7 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top: 20px;
+  top: 60px;
   left: 20px;
   display: flex;
   flex-direction: column;
@@ -14,8 +14,8 @@ canvas { display: block; }
   font-size: 14px;
   color: rgb(255, 255, 255);
   background: #1e1e1ee6;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   padding: 14px;
   width: 260px;
   
@@ -87,38 +87,29 @@ label {
   border-top: 1px solid #2a2a2a;
 }
 
-
-#interactPopup {
+#popup {
   display: none;
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255,255,255,0.08);
+  /* border: 1px solid rgba(255,255,255,0.1); */
   color: #aaa;
+  text-align: center;
   font-family: 'Space Grotesk', monospace;
-  font-size: 12px;
-  padding: 6px 14px;
-  border-radius: 20px;
+  font-size: 14px;
+  padding: 6px 18px;
+  transition: opacity 0.8s ease, background 0.3s, color 0.3s;
   pointer-events: none;
+  white-space: nowrap;
+  border-radius: 30px;
+  corner-shape: squircle;
   z-index: 999;
 }
 
-#bubblePopup {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255,255,255,0.08);
-  color: #aaa;
-  font-family: 'Space Grotesk', monospace;
-  font-size: 12px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  pointer-events: none;
-  z-index: 999;
-}
+
+
 
 
 kbd {
@@ -140,14 +131,12 @@ kbd {
   font-family: 'Space Grotesk', monospace;
   font-size: 16px;
   padding: 6px 18px;
-  /* border-radius: 20px; */
   opacity: 0;
   transition: opacity 0.8s ease, background 0.3s, color 0.3s;
   pointer-events: none;
   white-space: nowrap;
-    border-radius: 30px; /* Defines the extent of the rounding */
-  corner-shape: squircle; /* Defines the specific superellipse geometry */
-
+  border-radius: 30px;
+  corner-shape: squircle;
 }
 
 .reset-btn {

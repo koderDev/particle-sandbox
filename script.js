@@ -38,23 +38,31 @@ document.querySelectorAll(".reset-btn").forEach(btn => {
 const stories = [
   { text: "welcome to particle sandbox.", trigger: null },
   { text: "click anywhere to spawn particles.", trigger: "click" },
-  { text: "nice! now try right clicking to create a shockwave.", trigger: "rightclick" },
+  { text: "nice! right click to create a shockwave.", trigger: "rightclick" },
   { text: "press G to flip gravity.", trigger: "g" },
   { text: "watch them float... press G again to bring them back.", trigger: "g" },
   { text: "press B to open a black hole at your cursor.", trigger: "b" },
-  { text: "move your cursor around. they follow you.", trigger: null },
+  { text: "move your cursor around. they follow you and feed on particles.", trigger: null },
   { text: "press B again to close it.", trigger: "b" },
   { text: "press M to turn on merge mode.", trigger: "m" },
-  { text: "now spawn more particles. same colors will merge.", trigger: "click" },
+  { text: "now spawn more particles. same colors will merge.", trigger: null },
+  { text: "done merging? press M to turn it off.", trigger: "m" },
   { text: "press L to connect nearby particles with lines.", trigger: "l" },
+  { text: "looks like a neural network right? press L to turn off.", trigger: "l" },
   { text: "press I to enter interact mode.", trigger: "i" },
-  { text: "grab a particle and throw it around.", trigger: null },
+  { text: "grab a particle (click and drag) and throw it around.", trigger: null },
   { text: "press I again to go back to normal.", trigger: "i" },
-  { text: "press T for trail mode. move your mouse.", trigger: "t" },
-  { text: "press Z for zero gravity mode.", trigger: "z" },
-  { text: "watch them float... press Z again to turn this off.", trigger: "z" },
+  { text: "press T for trail mode.", trigger: "t" },
+  { text: "click to spawn more particles and see their trails.", trigger: null },
+  { text: "press T again to turn it off.", trigger: "t" },
+  { text: "press Z for zero gravity.", trigger: "z" },
+  { text: "now right click to get them floating around in the void.", trigger: null },
+  { text: "press Z again to turn this off.", trigger: "z" },
+  { text: "press N for bubble mode.", trigger: "n" },
+  { text: "hover over bubbles to pop them.", trigger: null },
+  { text: "press N to exit bubble mode.", trigger: "n" },
   { text: "you have learned everything.", trigger: null },
-  { text: "now build your own universe.", trigger: null },
+  { text: "now you can build your own universe.", trigger: null },
   { text: "we won't tell you what to do anymore.", trigger: null },
   { text: "press S to dismiss this. see you on the other side.", trigger: "s" },
 ]
@@ -76,36 +84,36 @@ function drawStory() {
 
   if (story.trigger && !storyTriggered) {
     waitingForTrigger = true
-    // just keep showing current text, pulse it slightly
     storyAlpha = 0.5 + Math.sin(Date.now() * 0.003) * 0.2
     ctx.save()
     ctx.globalAlpha = storyAlpha
     ctx.fillStyle = "#e1e1e1"
-    ctx.font = "28px Space Grotesk"
+    ctx.font = "32px Space Grotesk"
     ctx.textAlign = "center"
-    ctx.fillText(story.text, canvas.width / 2, canvas.height / 2)
+    ctx.fillText(story.text, (canvas.width / 2)+120, canvas.height / 2)
 
     // hint arrow pulse
     ctx.globalAlpha = storyAlpha * 0.5
     ctx.fillStyle = "#aaa"
     ctx.font = "14px Space Grotesk"
-    ctx.fillText("[ do it to continue ]", canvas.width / 2, canvas.height / 2 + 40)
+    ctx.fillText("[ do it to continue ]", (canvas.width / 2)+120, canvas.height / 2 + 40)
     ctx.restore()
     return
   }
 
+  if(storyTriggered) return
   // no trigger or trigger fired — normal fade in/hold/out
   waitingForTrigger = false
   storyTriggered = false
 
   if (storyState === "fadein") {
-    storyAlpha += 0.035
+    storyAlpha += 0.025
     if (storyAlpha >= 1) { storyAlpha = 1; storyState = "hold" }
   } else if (storyState === "hold") {
     storyTimer++
     if (storyTimer > 100) { storyState = "fadeout"; storyTimer = 0 }
   } else if (storyState === "fadeout") {
-    storyAlpha -= 0.035
+    storyAlpha -= 0.025
     if (storyAlpha <= 0) {
       storyAlpha = 0
       storyState = "fadein"
@@ -118,9 +126,9 @@ function drawStory() {
   ctx.save()
   ctx.globalAlpha = storyAlpha * 0.85
   ctx.fillStyle = "#e1e1e1"
-  ctx.font = "28px Space Grotesk"
+  ctx.font = "32px Space Grotesk"
   ctx.textAlign = "center"
-  ctx.fillText(story.text, canvas.width / 2, canvas.height / 2)
+  ctx.fillText(story.text, (canvas.width / 2)+120, canvas.height / 2)
   ctx.restore()
 }
 
@@ -161,6 +169,7 @@ canvas.addEventListener("mousemove", (e) => {
 canvas.addEventListener("click", (e) => {
   if(interactMode) return
   if (bubbleMode) return
+  if (blackHole) return
   if(particles.length >=MAX_PARTICLES)
   {
     showToast("particle limit reached!",false)
@@ -238,9 +247,7 @@ let toastTimeout=null
 let interactMode = false;
 let grabbedParticle = null;
 const interactstate = document.getElementById("interactstate");
-const interactPopup = document.getElementById("interactPopup");
-const bubblePopup = document.getElementById("bubblePopup")
-
+const popup = document.getElementById("popup")
 let bubbleMode = false
 const bubblestate = document.getElementById("bubblestate");
 
@@ -339,9 +346,16 @@ window.addEventListener("keydown", (e) => {
     interactMode = !interactMode
     setModeState(interactstate, interactMode)
     if (interactMode) interactstate.style.color = "#4cf"
-    interactPopup.style.display = interactMode ? "flex" : "none"
-    if (!interactMode && grabbedParticle) grabbedParticle = null
-    canvas.style.cursor = interactMode ? "grab" : "default"
+
+    if (interactMode) {
+      showPopup(`grab & throw particles. you can't create new particles in interact mode. press 'I' to exit`)
+      canvas.style.cursor = "grab"
+    } else {
+      hidePopup()
+      if (grabbedParticle) grabbedParticle = null
+      canvas.style.cursor = "default"
+    }
+
     showToast(interactMode ? "interact mode ON" : "interact mode OFF", interactMode)
     fireTrigger("i")
   }
@@ -366,21 +380,39 @@ window.addEventListener("keydown", (e) => {
   if(e.key==="n"||e.key==="N"){
     bubbleMode=!bubbleMode;
     setModeState(bubblestate,bubbleMode)
-    if(bubbleMode){
-      bubblestate.style.color="#7df";
+    if (bubbleMode) {
+      bubblestate.style.color = "#7df"
       enableBubbleMode()
+      showPopup(`hover over the bubbles to pop them. you can't create new particles in bubble mode. press "N" to exit. pop all the bubbles IF U CAN ;)`)
     } else {
       disableBubbleMode()
+      hidePopup()
     }
+
     // showToast(bubbleMode?"bubble mode ON":"bubble mode OFF",bubbleMode)
     fireTrigger("n")
   }
 
 });
 
+function showPopup(msg) {
+  popup.innerHTML = msg
+  popup.style.display = "flex"
+}
+
+function hidePopup() {
+  popup.innerHTML = ""
+  popup.style.display = "none"
+}
 
 function enableBubbleMode() {
-  // trim to 50
+
+  if(particles.length ===0){
+    bubbleMode = false
+    setModeState(bubblestate,false)
+    showToast("add some particles first")
+    return
+  }
   if (particles.length > 80) {
     particles = particles.slice(particles.length - 80)
   }
@@ -406,7 +438,7 @@ function enableBubbleMode() {
   if(interactMode){
     interactMode=false
     setModeState(interactstate,false)
-    interactPopup.style.display="none"
+    hidePopup()
     canvas.style.cursor="default"
   }
   if(zeroGravity){
@@ -828,6 +860,15 @@ function checkBubblePop()
       const psize=p.size
 
       particles.splice(i,1)
+
+      if(bubbleMode && particles.filter(p=>p.isBubble).length===0){
+        bubbleMode = false
+        setModeState(bubblestate,false)
+        hidePopup()
+        particles.length=0;
+        canvas.style.cursor="default"
+        showToast("all bubbles popped!!🥳",true);
+      }
 
       if(p.size>12){
         const splitAngle=Math.random()*Math.PI*2
