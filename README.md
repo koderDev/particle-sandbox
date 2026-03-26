@@ -31,6 +31,23 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 
 ## changelogs 🛠
 
+### [1.0.2]
+#### new mode
+- zero gravity mode (Z) — particles float freely in space
+
+#### UI
+- add toast notifications for all mode toggles
+- reset buttons added to gravity and friction sliders (as per the request of a voter)
+
+#### story mode REWORK
+- story mode i.e. tutorial now walks you through this simulation interactively.
+
+#### performance improvements (most requested in previous ship)
+- replace the previous collision detection O(n^2) with a spatial grid system ( took a lot of time implementing this system)
+- line mode also uses spatial grid now
+- particle cap at 420 to prevent browser crashes ;)
+
+
 ### [1.0.1]
 
 - [x] Black hole mode i.e. mouse cursor -> black hole ;)

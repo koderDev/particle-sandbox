@@ -44,6 +44,8 @@ const stories = [
   { text: "grab a particle and throw it around.", trigger: null },
   { text: "press I again to go back to normal.", trigger: "i" },
   { text: "press T for trail mode. move your mouse.", trigger: "t" },
+  { text: "press Z for zero gravity mode.", trigger: "z" },
+  { text: "watch them float... press Z again to turn this off.", trigger: "z" },
   { text: "you have learned everything.", trigger: null },
   { text: "now build your own universe.", trigger: null },
   { text: "we won't tell you what to do anymore.", trigger: null },
@@ -327,15 +329,22 @@ window.addEventListener("keydown", (e) => {
     fireTrigger("i")
   }
 
-  if (e.key==="z"||e.key==="Z"){
-    zeroGravity=!zeroGravity
-    zerogravstate.textContent=zeroGravity?"ON":"off"
-    zerogravstate.style.color=zeroGravity?"#ff0":"#555"
-    pullSlider.value=zeroGravity?0:0.9
-    document.getElementById("pull-val").textContent=zeroGravity?0:0.9
-    showToast(zeroGravity?"zero gravity ON":"zero gravity OFF",zeroGravity)
-    fireTrigger("z")
+if (e.key === "z" || e.key === "Z") {
+  zeroGravity = !zeroGravity
+  zerogravstate.textContent = zeroGravity ? "ON" : "off"
+  zerogravstate.style.color = zeroGravity ? "#ff0" : "#555"
+
+  if (zeroGravity) {
+    pullSlider.dataset.saved = pullSlider.value
+    pullSlider.value = 0
+  } else {
+    const saved = pullSlider.dataset.saved || 0.9
+    pullSlider.value = saved
   }
+
+  showToast(zeroGravity ? "zero gravity ON" : "zero gravity OFF", zeroGravity)
+  fireTrigger("z")
+}
 });
 
 
