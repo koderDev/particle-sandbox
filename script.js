@@ -39,7 +39,7 @@ const stories = [
 
 let currentStory = 0;
 let storyAlpha = 0;
-let storyState = "fadein"; // fadein, hold, fadeout
+let storyState = "fadein"; 
 let storyTimer = 0;
 let storyMode = true;
 let shockwaves = [];
@@ -93,6 +93,7 @@ canvas.addEventListener("mousemove", (e) => {
 });
 
 canvas.addEventListener("click", (e) => {
+  if(interactMode) return
   const count = Math.floor(parseFloat(countSlider.value) / 10);
   for (let i = 0; i < count; i++) {
     particles.push(createParticle(e.clientX, e.clientY));
@@ -158,6 +159,12 @@ let gravityFlip = false;
 let lineMode = false; // on by default
 const linestate = document.getElementById("linestate");
 
+let interactMode = false;
+let grabbedParticle = null;
+const interactstate = document.getElementById("interactstate");
+const interactPopup = document.getElementById("interactPopup");
+
+
 const mergestate = document.getElementById("mergestate");
 const bhactive = document.getElementById("bhactive");
 const storystate = document.getElementById("storyActive");
@@ -195,13 +202,80 @@ window.addEventListener("keydown", (e) => {
     flipstate.style.color = gravityFlip ? "#0ff" : "#555";
   }
 
-  // in keydown:
   if (e.key === "l" || e.key === "L") {
     lineMode = !lineMode;
     linestate.textContent = lineMode ? "ON" : "off";
     linestate.style.color = lineMode ? "#fff" : "#555";
   }
+
+  if (e.key === "i" || e.key === "I"){
+    interactMode=!interactMode
+    interactstate.textContent=interactMode?"ON":"off";
+    interactstate.style.color = interactMode ? "#4cf" : "#555";
+    interactPopup.style.display=interactMode?"flex":"none"
+    if(!interactMode&&grabbedParticle) grabbedParticle=null;
+    canvas.style.cursor = interactMode?"grab":"default"
+  }
 });
+
+
+canvas.addEventListener("mousedown",(e)=>{
+  if (!interactMode) return
+  if(e.button!==0) return
+
+  let closest=null
+  let closestDist=30
+  particles.forEach(p=>{
+    const dx=p.x-e.clientX
+    const dy=p.y-e.clientY
+
+    const r=Math.sqrt(dx*dx+dy*dy)
+    if(r<closestDist){
+      closestDist=r
+      closest=p
+    }
+  })
+
+  if(closest){
+    grabbedParticle=closest
+    grabbedParticle.grabbed = true
+    grabbedParticle.prevX=e.clientX
+    grabbedParticle.prevY=e.clientY
+    canvas.style.cursor="grabbing"
+
+  }
+})
+
+canvas.addEventListener("mousemove",(e)=>{
+  mouse.x = e.clientX
+  mouse.Y=e.clientY
+
+  if ( interactMode && grabbedParticle ){
+    grabbedParticle.vx=e.clientX-grabbedParticle.prevX
+    grabbedParticle.vy=e.clientY-grabbedParticle.prevY
+    grabbedParticle.prevX = e.clientX
+    grabbedParticle.prevY = e.clientY
+
+    grabbedParticle.x=e.clientX
+    grabbedParticle.y=e.clientY
+
+  }
+
+  if(trailMode && !interactMode && particles.length <500){
+    for(let i=0;i<3;i++){
+      particles.push(createParticle(e.clientX,e.clientY))
+    }
+  }
+})
+
+canvas.addEventListener("mouseup",(e)=>{
+  if (grabbedParticle) {
+    grabbedParticle.grabbed = false
+    grabbedParticle = null
+    canvas.style.cursor = interactMode ? "grab" : "default"
+  }
+})
+
 
 function resolveMergeOrCollide() {
   for (let i = 0; i < particles.length; i++) {
@@ -353,6 +427,7 @@ function wallBounce(p) {
 }
 
 function updateParticle(p) {
+  if(p.grabbed) return
   applyGravity(p);
   p.vx *= parseFloat(dampenSlider.value);
   p.vy *= parseFloat(dampenSlider.value);
@@ -372,6 +447,19 @@ function drawParticle(p) {
   ctx.beginPath();
   ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
   ctx.fill();
+
+    // ring around grabbed particle
+  if (p.grabbed) {
+    ctx.globalAlpha = 0.8
+    ctx.strokeStyle = "#fff"
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, p.size + 4, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.globalAlpha = 1
+  }
+
+
 }
 
 function drawConnections() {
