@@ -31,6 +31,21 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 
 ## changelogs 🛠
 
+### [1.0.3]
+
+#### new modes
+- orbit mode (o) -> particles orbit around the cursor as if they were planets and the mouse cursor behaves like the sun 🌞. it was fun to build. making sure the particles are always revolving around the orbit required a bit of physickks formulas and concepts though.
+- cyclone mode (c) -> cyclones can be placed on screen (max 5) by right clicking, particles near the cyclone spin around it continuously. pressing DEL clears all the cyclones.
+- explosion mode (e) -> click for a while on the particles and release it to make them explode. the longer you wait before releasing, the bigger it blasts.
+
+#### ui rework
+- the normie mode indicators in the panel have been replaced by a grid of clickable boxes with big letters representing the key of the mode. looks impressiveee
+- added a dice button which turns of a few modes randomly forming new chaos combinations
+- added a spawn button which spawns particles when clicked -> it was required for modes like blackhole, interact, and more in which left click was occupied by the major feature of the mode so needed an alternative method to spawn particles.
+- added a newspaper-ad like badge in the top right which shows the latest updates.
+
+### 🐛🐛🐛
+and a lot of bug fixes 
 
 ### [1.0.2]
 #### new modes
