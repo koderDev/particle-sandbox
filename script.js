@@ -260,39 +260,9 @@ const storystate = document.getElementById("storyActive");
 const flipstate = document.getElementById("flipstate");
 let bhAlpha = 0;
 
-let fanMode = false
 let orbitMode = false
-let fanAngle=0
-let prevMouseX=0
-let prevMouseY=0
-
-const fanstate=document.getElementById("fanstate")
 const orbitstate=document.getElementById("orbitstate")
-const fanStrengthUI = document.getElementById("fanStrengthUI")
-const fanStrengthSlider = document.getElementById("fanStrength")
-const fanStrengthVal = document.getElementById("fanStrengthVal")
 
-function getFanStrength() {
-  return parseFloat(fanStrengthSlider.value)
-}
-
-fanStrengthUI.style.display = fanMode ? "flex" : "none"
-
-document.getElementById("fanPlus").addEventListener("click", () => {
-  const val = Math.min(20, parseFloat(fanStrengthSlider.value) + 1)
-  fanStrengthSlider.value = val
-  fanStrengthVal.textContent = val
-})
-
-document.getElementById("fanMinus").addEventListener("click", () => {
-  const val = Math.max(1, parseFloat(fanStrengthSlider.value) - 1)
-  fanStrengthSlider.value = val
-  fanStrengthVal.textContent = val
-})
-
-fanStrengthSlider.addEventListener("input", () => {
-  fanStrengthVal.textContent = fanStrengthSlider.value
-})
 
 window.addEventListener("keydown", (e) => {
   if (bubbleMode && e.key !== "n" && e.key !== "N" && e.key !== "s" && e.key !== "S") {
@@ -427,22 +397,10 @@ window.addEventListener("keydown", (e) => {
     fireTrigger("n")
   }
 
-  if(e.key==="f"||e.key==="F"){
-    if(bubbleMode){showToast("exit bubble mode first",null); return}
-    fanMode=!fanMode
-    setModeState(fanstate,fanMode)
-    if(fanMode) fanstate.style.color="#8df"
-    canvas.style.cursor=fanMode?"none":"default"
-    fanStrengthUI.style.display=fanMode?"flex":"none"
-    showToast(fanMode ? "fan mode ON" : "fan mode OFF", fanMode)
-    fireTrigger("f")
-  }
-
   if(e.key==="o"||e.key==="O"){
     if(bubbleMode){ showToast("exit bubble mode first"); return}
     if(blackHole){ showToast("exit black hole mode first"); return}
     if(interactMode){showToast("exit interact mode first"); return}
-    if(fanMode){showToast("exit fan mode first"); return}
     orbitMode=!orbitMode
     setModeState(orbitstate,orbitMode)
     if(orbitMode) orbitstate.style.color="#fd8"
@@ -596,16 +554,6 @@ canvas.addEventListener("mousedown",(e)=>{
 })
 
 canvas.addEventListener("mousemove", (e) => {
-
-  const dx = e.clientX - prevMouseX
-  const dy = e.clientY - prevMouseY
-  if(fanMode && (Math.abs(dx)>0.5||Math.abs(dy)>0.5)){
-    fanAngle=Math.atan2(-dy,-dx);
-  }
-
-  prevMosueX=e.clientX
-  prevMouseY=e.clientY
-
   mouse.x = e.clientX
   mouse.y = e.clientY
 
@@ -706,76 +654,6 @@ function resolveMergeOrCollide() {
   })
 }
 
-
-function applyFan(){
-  if(!fanMode) return
-  const fanRadius = 150
-  const fanStrength = getFanStrength()
-
-
-  particles.forEach(p=>{
-    const dx=p.x-mouse.x
-    const dy=p.y-mouse.y
-    const dist=Math.sqrt(dx*dx+dy*dy)||1
-
-    if(dist>fanRadius) return
-
-    const influence=(1-dist/fanRadius)
-    p.vx+=Math.cos(fanAngle)*fanStrength*influence
-    p.vy+=Math.sin(fanAngle)*fanStrength*influence
-  })
-}
-
-function drawFan(){
-  if(!fanMode) return
-
-  ctx.save()
-  ctx.translate(mouse.x,mouse.y)
-  ctx.rotate(fanAngle)
-
-  const spinSpeed=Date.now()*0.01*(getFanStrength()/8)
-  for(let i=0;i<4;i++){
-    const bladeAngle=(i/4)*Math.PI*2+spinSpeed
-    ctx.save()
-    ctx.rotate(bladeAngle)
-    ctx.globalAlpha=0.7
-    ctx.fillStyle="#8df"
-    ctx.beginPath()
-    ctx.ellipse(12,0,14,6,0,0,Math.PI*2)
-    ctx.fill()
-    ctx.restore()
-  }
-
-  ctx.globalAlpha=1
-  ctx.fillStyle="#fff"
-  ctx.beginPath()
-  ctx.arc(0,0,4,0,Math.PI*2)
-  ctx.fill()
-
-  for(let i=-1;i<=1;i++){
-    const offset=i*15
-    ctx.globalAlpha=0.3
-    ctx.strokeStyle="#8df"
-    ctx.lineWidth=1.5
-    ctx.setLineDash([4,4])
-    ctx.beginPath()
-    ctx.moveTo(20,offset)
-    ctx.lineTo(60,offset)
-    ctx.stroke()
-    ctx.setLineDash([])
-  }
-
-  ctx.globalAlpha=0.05
-  ctx.fillStyle="#8df"
-  ctx.beginPath()
-  ctx.moveTo(0,0)
-  ctx.arc(0,0,150,-Math.PI/4,Math.PI/4)
-  ctx.closePath()
-  ctx.fill()
-
-  ctx.restore()
-  ctx.globalAlpha=1
-}
 
 function applyOrbit(){
   if(!orbitMode) return
@@ -1158,7 +1036,6 @@ function loop() {
   resolveMergeOrCollide();
   // spawnTrail();
   drawStory();
-  applyFan();
   applyOrbit();
 
   particles.forEach((p) => {
@@ -1167,7 +1044,6 @@ function loop() {
   });
   if (lineMode) drawConnections();
   
-  drawFan()
   drawOrbit()
   drawBlackHole();
   applyBlackHole();

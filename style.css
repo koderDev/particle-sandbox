@@ -148,33 +148,3 @@ kbd {
   padding: 0 2px;
   line-height: 1;
 }
-
-
-#fanStrengthUI{
-  display: none;
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translate(-50%);
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  background-color: #1e1e1ee6;
-  border-radius: 16px;
-  padding: 12px 10px;
-  font-family: 'Space Grotesk',monospace;
-  color: #afafaf;
-  font-size: 13px;
-  z-index: 100;
-  user-select: none;
-}
-
-#fanStrengthUI button {
-  background: none;
-  border: 1px solid #333;
-  color: #8df;
-  font-size: 18px;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-}
