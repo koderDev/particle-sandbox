@@ -34,7 +34,7 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 
 ### [1.0.2]
 #### new modes
-- zero gravity mode (Z) — particles float freely in space
+- zero gravity mode (Z) - particles float freely in space
 - bubble mode (N) - particles transform into floating bubbles with a glassy shine effect. hovering over a bubble pops it and splits it into 2 smaller bubbles.
 
 #### UI

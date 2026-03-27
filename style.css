@@ -102,6 +102,46 @@ label {
 #btn-c.active .mode-key { color: rgb(255, 170, 248); }
 #btn-e.active .mode-key { color: #f84; }
 
+#dice-btn {
+  position: fixed;
+  bottom: 82px;
+  right: 24px;
+  background-color: #1e1e1ee6;
+  color: #fff;
+  font-family: 'Space Grotesk',monospace;
+  font-size: 24px;
+  padding: 10px ;
+  border-radius: 8px;
+  corner-shape: squircle;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, color 1s, transform 0.1s;
+  z-index: 999;
+}
+
+#dice-btn:hover {
+  background-color: #2a2a2ae6;
+}
+
+#dice-btn:active {
+  transform: scale(0.9);
+}
+
+@keyframes diceRoll {
+  0%   { transform: rotate(0deg)   scale(1); }
+  20%  { transform: rotate(72deg)  scale(1.2); }
+  40%  { transform: rotate(144deg) scale(0.9); }
+  60%  { transform: rotate(216deg) scale(1.15); }
+  80%  { transform: rotate(288deg) scale(0.95); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+#dice-btn.rolling {
+  animation: diceRoll 0.5s ease-out forwards;
+  background: #2a1f00e6;
+}
+
 #spawn-btn {
   position: fixed;
   bottom: 24px;
@@ -109,8 +149,8 @@ label {
   background-color: #1e1e1ee6;
   color: #fff;
   font-family: 'Space Grotesk',monospace;
-  font-size: 14px;
-  padding: 8px 18px;
+  font-size: 18px;
+  padding: 10px 18px;
   border-radius: 8px;
   corner-shape: squircle;
   border: none;

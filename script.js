@@ -18,8 +18,213 @@ const pcount = document.getElementById("pcount");
 
 pcount.textContent = particles.length;
 
+const DICE_PRESETS = [
+  { modes: ["z", "l"],        label: "void network" },
+  { modes: ["z", "l", "t"],   label: "neon web" },
+  { modes: ["t", "b"],        label: "black hole spiral" },
+  { modes: ["o", "t"],        label: "solar trails" },
+  { modes: ["z", "t"],        label: "ghost drift" },
+  { modes: ["l", "m"],        label: "merge cluster" },
+  { modes: ["c", "z"],        label: "cyclone void" },
+  { modes: ["c", "l"],        label: "vortex web" },
+  { modes: ["w", "t"],        label: "wave trails" },
+  { modes: ["w", "l"],        label: "wave network" },
+  { modes: ["g", "t"],        label: "upside down trails" },
+  { modes: ["g", "l", "z"],   label: "floating web" },
+  { modes: ["z", "l", "m"],   label: "merge void" },
+  { modes: ["o", "l"],        label: "orbital network" },
+]
 
-// helper function — add this at top
+function rollDice(){
+
+  if(storyMode){
+    storyMode=false
+    setModeBtn("s",false);
+  }
+
+  if(blackHole) {
+    blackHole=false;
+    setModeBtn("b",false);
+    bhAlpha=0;
+    canvas.style.cursor="default"
+  }
+
+  if(trailMode){
+    trailMode=false;
+    setModeBtn("t",false);
+  }
+
+  
+  if(mergeMode){
+    mergeMode=false;
+    setModeBtn("m",false);
+  }
+
+  
+  if(gravityFlip){
+    gravityFlip=false;
+    setModeBtn("g",false);
+  }
+
+  
+  if(lineMode){
+    lineMode=false;
+    setModeBtn("l",false);
+  }
+
+  
+  if(interactMode){
+    interactMode=false;
+    setModeBtn("i",false);
+    canvas.style.cursor="default";
+  }
+
+  
+  if(zeroGravity){
+    zeroGravity=false;
+    setModeBtn("z",false);
+    pullSlider.value = pullSlider.dataset.saved || 0.9;
+  }
+
+  
+  if(orbitMode){
+    orbitMode=false;
+    setModeBtn("o",false);
+    orbitAlpha=0;
+  }
+
+  
+  if(cycloneMode){
+    cycloneMode=false;
+    setModeBtn("c",false);
+    cyclones=[];
+    canvas.style.cursor="default";
+  }
+
+  
+  if(explosionMode){
+    explosionMode=false;
+    setModeBtn("e",false);
+    canvas.style.cursor="default";
+  }
+  hidePopup();
+  particles=[]
+
+  const preset=DICE_PRESETS[Math.floor(Math.random()*DICE_PRESETS.length)]
+
+  preset.modes.forEach(key=>{
+    if(key==="z"){
+      zeroGravity=true;
+      setModeBtn("z",true);
+      pullSlider.dataset.saved = pullSlider.value
+      pullSlider.value = 0
+    }
+    if(key==="l"){
+      lineMode=true
+      setModeBtn("l",true)
+    }
+
+    if(key === "b") {
+      blackHole=true;
+      setModeBtn("b",true);
+      canvas.style.cursor="none"
+    }
+
+    if(key==="t"){
+      trailMode=true;
+      setModeBtn("t",true);
+    }
+
+    
+    if(key==="m"){
+      mergeMode=true;
+      setModeBtn("m",true);
+    }
+
+    
+    if(key==="g"){
+      gravityFlip=true;
+      setModeBtn("g",true);
+    }
+    
+    if(key==="i"){
+      interactMode=true;
+      setModeBtn("i",true);
+      canvas.style.cursor="default";
+    }
+
+    if(key==="o"){
+      orbitMode=true;
+      setModeBtn("o",true);
+      canvas.style.cursor = "none"
+
+      particles.forEach(p => {
+        const dx = p.x - mouse.x
+        const dy = p.y - mouse.y
+        const dist = Math.sqrt(dx*dx + dy*dy) || 1
+        const tx = dy/dist, ty = -dx/dist
+        const kick = Math.sqrt(800 / Math.max(dist, 80))
+        p.vx = tx * kick; p.vy = ty * kick
+      })
+    }
+
+    
+    if(key==="c"){
+      cycloneMode=true;
+      setModeBtn("c",true);
+      canvas.style.cursor="crosshair";
+      cyclones=[
+        { x: canvas.width * 0.3, y: canvas.height * 0.4, id: Date.now() },
+        { x: canvas.width * 0.7, y: canvas.height * 0.6, id: Date.now()+1 },
+      ];
+    }
+
+    
+    if(key==="e"){
+      explosionMode=true;
+      setModeBtn("e",true);
+      canvas.style.cursor="crosshair";
+    }
+
+    const count = Math.min(Math.floor(parseFloat(countSlider.value) / 10) * 3, MAX_PARTICLES)
+    for (let i = 0; i < count; i++) {
+      particles.push(createParticle(
+        Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+        Math.random() * canvas.height * 0.8 + canvas.height * 0.1
+      ))
+    }
+
+    if(preset.modes.includes("o")) {
+      particles.forEach(p=>{
+        const dx=p.x-mouse.x
+        const dy=p.y-mouse.y
+        const dist=Math.sqrt(dx*dx+dy*dy)||1
+        const tx=dy/dist,ty=-dx/dist
+        const kick=Math.sqrt(800/Math.max(dist,80))
+        p.vx=tx*kick*(Math.random()*0.4+0.8)
+        p.vy=ty*kick*(Math.random()*0.4+0.8)
+      })
+    }
+
+    showToast(` ${preset.label} 🎲`, true);
+  })
+}
+
+
+document.getElementById("dice-btn").addEventListener("click",()=>{
+  const btn=document.getElementById("dice-btn")
+
+  btn.classList.remove("rolling")
+  void btn.offsetWidth
+  btn.classList.add("rolling")
+  btn.addEventListener("animationend",()=>btn.classList.remove("rolling"), {once:true})
+
+  setTimeout(()=>{
+    rollDice()
+  }, 150)
+
+})
+
 function setModeState(el, isOn) {
   if(!el) return
   el.textContent = isOn ? "ON" : "off"
