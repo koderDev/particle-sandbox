@@ -5,7 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
-let mouse = { x: 0, y: 0 };
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 
 const MAX_PARTICLES = 420;
 
