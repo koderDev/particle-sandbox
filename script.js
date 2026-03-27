@@ -263,7 +263,7 @@ const bhactive = document.getElementById("bhactive");
 const storystate = document.getElementById("storyActive");
 const flipstate = document.getElementById("flipstate");
 let bhAlpha = 0;
-
+let orbitAlpha=0;
 let orbitMode = false
 const orbitstate=document.getElementById("orbitstate")
 
@@ -668,6 +668,7 @@ function resolveMergeOrCollide() {
 
 function applyOrbit(){
   if(!orbitMode) return
+  if(orbitAlpha<=0) return
   const orbitRadius=250
   const orbitStrength = 3
   const inwardStrength = 1.5
@@ -698,14 +699,24 @@ function applyOrbit(){
 
 
 function drawOrbit(){
-  if(!orbitMode) return
+  // if(!orbitMode) return
+    if (!orbitMode && orbitAlpha <= 0) return;
+
+    if (orbitMode && orbitAlpha < 1) orbitAlpha += 0.03;
+    if (!orbitMode && orbitAlpha > 0) {
+      orbitAlpha -= 0.03;
+      if(orbitAlpha<=0) canvas.style.cursor="default";
+    }
+    orbitAlpha = Math.max(0, Math.min(1, orbitAlpha));
+
+
   const time=Date.now()*0.01
 
     // rotating dashed ring
   ctx.save()
   ctx.translate(mouse.x, mouse.y)
   ctx.rotate(time * 0.5)
-  ctx.globalAlpha = 0.2
+  ctx.globalAlpha = 0.2 * orbitAlpha
   ctx.strokeStyle = "#fd8"
   ctx.lineWidth = 1
   ctx.setLineDash([8, 8])
@@ -717,20 +728,22 @@ function drawOrbit(){
 
   // sun corona — outer glow layers
   const coronaLayers = [
-    { r: 160, alpha: 0.09 },
-    { r: 100, alpha: 0.08 },
-    { r: 80, alpha: 0.15 },
+    { r: 160, alpha: 0.09*orbitAlpha },
+    { r: 100, alpha: 0.08*orbitAlpha },
+    { r: 80, alpha: 0.15*orbitAlpha },
   ]
   coronaLayers.forEach(({ r, alpha }) => {
     const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, r)
-    grad.addColorStop(0, `rgba(255, 200, 50, ${alpha})`)
+    grad.addColorStop(0, `rgba(255, 200, 50, ${orbitAlpha})`)
     grad.addColorStop(1, "rgba(0,0,0,0)")
-    ctx.globalAlpha = 1
+    ctx.globalAlpha = orbitAlpha
     ctx.fillStyle = grad
     ctx.beginPath()
     ctx.arc(mouse.x, mouse.y, r, 0, Math.PI * 2)
     ctx.fill()
   })
+
+  // ctx.restore();
 
   const sunGrad = ctx.createRadialGradient(
     mouse.x - 5, mouse.y - 5, 2,
@@ -741,7 +754,7 @@ function drawOrbit(){
   sunGrad.addColorStop(0.8, "#ff9a00") // orange
   sunGrad.addColorStop(1, "#ff5500")   // red edge
 
-  ctx.globalAlpha = 1
+  ctx.globalAlpha = orbitAlpha
   ctx.fillStyle = sunGrad
   ctx.beginPath()
   ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2)
@@ -753,7 +766,7 @@ function drawOrbit(){
   for (let i = 0; i < 5; i++) {
     const a = (i / 5) * Math.PI * 2 + time
     const r = 30 + Math.sin(time * 3 + i) * 3
-    ctx.globalAlpha = 0.15
+    ctx.globalAlpha = 0.15 * orbitAlpha
     ctx.fillStyle = "#fff"
     ctx.beginPath()
     ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 10, 0, Math.PI * 2)
@@ -764,7 +777,6 @@ function drawOrbit(){
   ctx.globalAlpha = 1
 
 }
-
 
 
 function applyBlackHole() {
