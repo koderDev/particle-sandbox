@@ -61,6 +61,9 @@ const stories = [
   { text: "press N for bubble mode.", trigger: "n" },
   { text: "hover over bubbles to pop them.", trigger: null },
   { text: "press N to exit bubble mode.", trigger: "n" },
+  { text: "press O for orbit mode.", trigger: "o" },
+  { text: "mouse=sun & particles=orbit around the sun.", trigger: null },
+  { text: "press O to exit orbit mode.", trigger: "o" },
   { text: "you have learned everything.", trigger: null },
   { text: "now you can build your own universe.", trigger: null },
   { text: "we won't tell you what to do anymore.", trigger: null },
@@ -421,6 +424,7 @@ window.addEventListener("keydown", (e) => {
   }
 
 });
+
 
 function showPopup(msg) {
   popup.innerHTML = msg
