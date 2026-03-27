@@ -177,6 +177,8 @@ canvas.addEventListener("click", (e) => {
     return
   }
   if (blackHole) return
+
+  
   if(particles.length >=MAX_PARTICLES)
   {
     showToast("particle limit reached!",false)
@@ -192,6 +194,17 @@ canvas.addEventListener("click", (e) => {
 
 canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
+
+
+  if(cycloneMode){
+    if(cyclones.length>=MAX_CYCLONES){
+      showToast(`max ${MAX_CYCLONES} cyclones! press DEL to reset`,false)
+      return
+    }
+    cyclones.push({x:e.clientX,y:e.clientY,id:Date.now()})
+    showToast(`cyclone placed (${cyclones.length}/${MAX_CYCLONES}).`, true)
+    return
+  }
 
   particles.forEach((p) => {
     const dx = p.x - e.clientX;
@@ -247,6 +260,12 @@ let mergeMode = false;
 let gravityFlip = false;
 let shockwaves = [];
 
+
+let cycloneMode = false
+let cyclones = []
+const cyclonestate=document.getElementById("cyclonestate")
+const MAX_CYCLONES=5
+const CYCLONE_RADIUS=150
 
 let lineMode = false; // on by default
 const linestate = document.getElementById("linestate");
@@ -431,7 +450,7 @@ window.addEventListener("keydown", (e) => {
         p.vy=ty*kickSpeed*(Math.random()*0.4+0.8)
       })
 
-      showPopup(`orbit mode — particles orbit the sun(mouse)· press 'o' to exit`)
+      showPopup(`orbit mode: particles orbit the sun(mouse)· press 'o' to exit`)
       canvas.style.cursor = orbitMode?"none":"default"
   
     } else {
@@ -440,6 +459,39 @@ window.addEventListener("keydown", (e) => {
 
     fireTrigger("o")
   }
+
+
+  if(e.key==="c"||e.key==="C"){
+    if(bubbleMode){ showToast("exit bubble mode first"); return}
+    if(blackHole){ showToast("exit black hole mode first"); return}
+
+    cycloneMode=!cycloneMode
+    setModeState(cyclonestate,cycloneMode)
+    if(cycloneMode) 
+    {    
+      cyclonestate.style.color="#a8f"
+      cyclones=[]
+      canvas.style.cursor="crosshair"
+      showPopup(`cyclone mode: right click anywhere to place a cyclone ( max: ${MAX_CYCLONES}). click anywhere on screen to spawn particles. press DEL to remove all cyclones. press 'C' to exit.`)
+      showToast("cyclone mode ON", true)
+    } else {
+      cyclones=[]
+      canvas.style.cursor="default"
+      hidePopup();
+      showToast("cyclone mode OFF", false)
+    }
+    fireTrigger("c")
+  }
+
+  if(e.key==="Delete"||e.key==="Backspace"){
+    if(cycloneMode && cyclones.length>0){
+      cyclones=[]
+      showToast("all cyclones cleared",null)
+    }
+  }
+
+
+
 });
 
 
@@ -687,6 +739,40 @@ function resolveMergeOrCollide() {
   })
 }
 
+function applyCyclones(){
+  if(!cycloneMode||cyclones.length===0) return
+
+  particles.forEach(p=>{
+    cyclones.forEach(c=>{
+      const dx=p.x-c.x
+      const dy=p.y-c.y
+      const dist = Math.sqrt(dx*dx+dy*dy)||1
+      if(dist >CYCLONE_RADIUS) return
+
+      const nx = dx / dist
+      const ny = dy / dist
+      const tx = -ny  
+      const ty = nx
+
+      const influence = 1 - dist / CYCLONE_RADIUS  // stronger at center
+      const spinStrength = 3.5
+
+      p.vx += tx * spinStrength * influence
+      p.vy += ty * spinStrength * influence
+
+      p.vx -= nx * 0.8 * influence
+      p.vy -= ny * 0.8 * influence
+
+      const speed = Math.sqrt(p.vx*p.vx + p.vy*p.vy)
+      if (speed > 10) {
+        p.vx = (p.vx / speed) * 10
+        p.vy = (p.vy / speed) * 10
+      }
+
+    })
+  })
+}
+
 
 function applyOrbit(){
   if(!orbitMode) return
@@ -745,6 +831,49 @@ function applyOrbit(){
 
   })
 }
+
+
+function drawCyclones()
+{
+  if(!cycloneMode && cyclones.length===0) return
+  const time=Date.now()*0.001
+  cyclones.forEach((c,ci)=>{
+    [1,0.6,0.35].forEach((radiusFrac,i)=>{
+      const r = CYCLONE_RADIUS * radiusFrac
+      const speed = (i + 1) * 0.4
+      ctx.save()
+      ctx.translate(c.x, c.y)
+      ctx.rotate(time * speed + ci)
+      ctx.globalAlpha = 0.12 + i * 0.06
+      ctx.strokeStyle = "#a8f"
+      ctx.lineWidth = 1.5
+      ctx.setLineDash([6, 10])
+      ctx.beginPath()
+      ctx.arc(0, 0, r, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.setLineDash([])
+      ctx.restore()
+    })
+
+    const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, 40)
+    grad.addColorStop(0, "rgba(180, 100, 255, 0.35)")
+    grad.addColorStop(1, "rgba(0,0,0,0)")
+    ctx.globalAlpha = 1
+    ctx.fillStyle = grad
+    ctx.beginPath()
+    ctx.arc(c.x, c.y, 40, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.globalAlpha=0.7
+    ctx.fillStyle="#c8a0ff"
+    ctx.beginPath()
+    ctx.arc(c.x,c.y,5,0,Math.PI*2)
+    ctx.fill()
+    ctx.globalAlpha=1
+
+  })
+}
+
 
 function drawOrbit(){
   // if(!orbitMode) return
@@ -1152,9 +1281,11 @@ function loop() {
   });
   if (lineMode) drawConnections();
   
+  applyBlackHole();
+  applyCyclones();
   drawOrbit()
   drawBlackHole();
-  applyBlackHole();
+  drawCyclones();
   checkBubblePop()
 
   drawShockwaves();
