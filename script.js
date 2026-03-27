@@ -410,20 +410,38 @@ window.addEventListener("keydown", (e) => {
     if(interactMode){showToast("exit interact mode first"); return}
     orbitMode=!orbitMode
     setModeState(orbitstate,orbitMode)
-    if(orbitMode) orbitstate.style.color="#fd8"
-    canvas.style.cursor = orbitMode?"none":"default"
+    if(orbitMode) 
+    {    
+      orbitstate.style.color="#fd8"
 
-    if (orbitMode) {
+      const cap=80
+      if(particles.length>cap){
+        particles=particles.slice(particles.length-cap)
+        showToast(`reduced to ${cap} particles for orbit mode`,null);
+      }
+
+      particles.forEach(p=>{
+        const dx=p.x-mouse.x
+        const dy=p.y-mouse.y
+        const dist=Math.sqrt(dx*dx+dy*dy)||1
+        const tx=dy/dist
+        const ty=-dx/dist
+        const kickSpeed=Math.sqrt(800/Math.max(dist,80)) 
+        p.vx=tx*kickSpeed*(Math.random()*0.4+0.8)
+        p.vy=ty*kickSpeed*(Math.random()*0.4+0.8)
+      })
+
       showPopup(`orbit mode — particles orbit the sun(mouse)· press 'o' to exit`)
+      canvas.style.cursor = orbitMode?"none":"default"
+  
     } else {
-      hidePopup()
-    } 
+      hidePopup();
+    }
 
-    showToast(orbitMode?"orbit mode on":"orbit mode OFF", orbitMode)
     fireTrigger("o")
   }
-
 });
+
 
 
 function showPopup(msg) {
@@ -674,33 +692,59 @@ function applyOrbit(){
   if(!orbitMode) return
   if(orbitAlpha<=0) return
   const orbitRadius=250
-  const orbitStrength = 3
-  const inwardStrength = 1.5
+
+  const sun_rad = 50
+  const exclusion_zone=sun_rad+20
+  const GM=800
+  const max_speed=12
 
   particles.forEach(p=>{
     const dx=p.x-mouse.x
     const dy=p.y-mouse.y
     const dist=Math.sqrt(dx*dx+dy*dy)||1
-    if(dist>orbitRadius) return
-
+    
     const nx=dx/dist
     const ny=dy/dist
+
+    if(dist<exclusion_zone)
+    {
+      p.x=mouse.x+nx*exclusion_zone
+      p.y=mouse.y+ny*exclusion_zone
+      const radialVel=p.vx*nx+p.vy*ny
+      if(radialVel<0){
+        p.vx-=radialVel*nx*1.5
+        p.vy-=radialVel*ny*1.5
+      }
+      return
+    }
+
     const tx=-ny
     const ty=nx
+    
+    if(dist>orbitRadius) {
+        p.vx+=-nx*1.5*orbitAlpha
+        p.vy+=-ny*1.5*orbitAlpha
+        return
+    }
 
-    const influence=(1-dist/orbitRadius)
-    p.vx += tx * orbitStrength * influence - nx * inwardStrength * influence
-    p.vy += ty * orbitStrength * influence - ny * inwardStrength * influence
+    const tangentialSpeed = p.vx * tx + p.vy * ty
+    const idealSpeed = Math.sqrt(GM / dist)
+    const diff = idealSpeed - tangentialSpeed
+    p.vx += tx * diff * 0.05 * orbitAlpha
+    p.vy += ty * diff * 0.05 * orbitAlpha
+
+    const centripetalForce = (tangentialSpeed * tangentialSpeed) / dist
+    p.vx -= nx * centripetalForce * 0.05 * orbitAlpha
+    p.vy -= ny * centripetalForce * 0.05 * orbitAlpha
     
     const speed=Math.sqrt(p.vx*p.vx+p.vy*p.vy)
-    if(speed>12){
-      p.vx=(p.vx/speed)*12
-      p.vy=(p.vy/speed)*12
+    if(speed>max_speed){
+      p.vx=(p.vx/speed)*max_speed
+      p.vy=(p.vy/speed)*max_speed
     }
 
   })
 }
-
 
 function drawOrbit(){
   // if(!orbitMode) return
@@ -879,8 +923,6 @@ function drawBlackHole() {
 function applyGravity(p) {
   if(zeroGravity) return
   if(orbitMode){
-    //
-    p.vy+=0.02
     return
   }
   const dir = gravityFlip ? -1 : 1;
@@ -930,7 +972,9 @@ function updateParticle(p) {
   p.vy *= parseFloat(dampenSlider.value)
   p.x += p.vx
   p.y += p.vy
-  wallBounce(p)
+  // wallBounce(p)
+
+  if(!orbitMode) wallBounce(p)
 }
 
 function drawParticle(p) {
@@ -1078,8 +1122,8 @@ function drawConnections() {
         if (dist < 100) {
           const alpha = (1 - dist / 100) * 0.5
           ctx.globalAlpha = alpha
-          ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 90%)`
-          ctx.lineWidth = 2
+          ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 70%)`
+          ctx.lineWidth = 3
           ctx.beginPath()
           ctx.moveTo(a.x, a.y)
           ctx.lineTo(b.x, b.y)
