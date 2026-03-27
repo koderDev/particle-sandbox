@@ -355,7 +355,6 @@ function drawStory() {
 
 
   if(storyTriggered) return
-  // no trigger or trigger fired — normal fade in/hold/out
   waitingForTrigger = false
   storyTriggered = false
 
@@ -1298,7 +1297,6 @@ function drawOrbit(){
   ctx.setLineDash([])
   ctx.restore()
 
-  // sun corona — outer glow layers
   const coronaLayers = [
     { r: 160, alpha: 0.09*orbitAlpha },
     { r: 100, alpha: 0.08*orbitAlpha },
@@ -1383,7 +1381,6 @@ function applyBlackHole() {
 function drawBlackHole() {
   if (!blackHole && bhAlpha <= 0) return;
 
-  // fade in/out
   if (blackHole && bhAlpha < 1) bhAlpha += 0.03;
   if (!blackHole && bhAlpha > 0) {
     bhAlpha -= 0.03;
@@ -1393,7 +1390,6 @@ function drawBlackHole() {
 
   const time = Date.now() * 0.002;
 
-  // orbiting particles
   for (let i = 0; i < 8; i++) {
     const angle = (i / 8) * Math.PI * 2 + time;
     const radius = 70 + Math.sin(time * 2 + i) * 8;
