@@ -753,7 +753,7 @@ window.addEventListener("keydown", (e) => {
     {    
       cyclones=[]
       canvas.style.cursor="crosshair"
-      showPopup(`cyclone mode: right click anywhere to place a cyclone ( max: ${MAX_CYCLONES}). click anywhere on screen to spawn particles. press DEL to remove all cyclones. press 'C' to exit.`)
+      showPopup(`right click -> place a cyclone (max=${MAX_CYCLONES}). left click -> spawn particles. DEL -> remove all cyclones. press 'C' to exit.`)
       showToast("cyclone mode ON", true)
     } else {
       cyclones=[]
@@ -779,7 +779,7 @@ window.addEventListener("keydown", (e) => {
       if(particles.length===0){
         showToast("add some particles first!",false)
       }
-      showPopup(`explosion mode: hold left click to charge, release to BOOOOOM. hold >10s = fizzle. press 'E' to exit.`);
+      showPopup(`explosion mode: hole left click on a particle=charge, release to BOOOOOM. press 'E' to exit.`);
       canvas.style.cursor="crosshair"
     } else {
       chargeStart=null
@@ -787,7 +787,7 @@ window.addEventListener("keydown", (e) => {
       canvas.style.cursor="default"
       hidePopup()
     }
-    showToast(explosionMode?"explosion mode ON":"explosion mode OFF",explosionMode)
+    // showToast(explosionMode?"explosion mode ON":"explosion mode OFF",explosionMode)
     fireTrigger("e");
   }
 
