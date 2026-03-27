@@ -11,14 +11,15 @@
 <body>
     <canvas id="canvas"></canvas>
 
-    <div class="new-badge">new -> ORBIT MODE (o)</div>
+    <div class="new-badge">new -> orbit(o), cyclone(c) </div>
 
     <div id="toast"></div>
+    <button id="spawn-btn" title="spawn particles">+ spawn</button>
     <div id="popup"></div>
 
     <div id="panel">
         <div id="title">particle sandbox</div>
-        <div id="hints">left click — spawn <br> right click — repulse</div>
+        <div id="hints">left click: spawn | right click: repulse</div>
         
         <label>gravity
             <div class="row">
@@ -45,19 +46,61 @@
             </div>
         </label>
 
-        <p id="modes">MODES:</p>
+        <p id="modes">MODES [ press the key ] </p>
+    
+        <div id="modeGrid">
+            <div class="mode-btn" id="btn-s" onclick="toggleMode('s')">
+                <span class="mode-key">S</span>
+                <span class="mode-label">tutorial</span>
+            </div>
+            <div class="mode-btn" id="btn-t" onclick="toggleMode('t')">
+                <span class="mode-key">T</span>
+                <span class="mode-label">trail</span>
+            </div>
+            <div class="mode-btn" id="btn-b" onclick="toggleMode('b')">
+                <span class="mode-key">B</span>
+                <span class="mode-label">black hole</span>
+            </div>
+            <div class="mode-btn" id="btn-m" onclick="toggleMode('m')">
+                <span class="mode-key">M</span>
+                <span class="mode-label">merge</span>
+            </div>
+            <div class="mode-btn" id="btn-i" onclick="toggleMode('i')">
+                <span class="mode-key">I</span>
+                <span class="mode-label">interact</span>
+            </div>
+            <div class="mode-btn" id="btn-z" onclick="toggleMode('z')">
+                <span class="mode-key">Z</span>
+                <span class="mode-label">zero grav</span>
+            </div>
+            <div class="mode-btn" id="btn-n" onclick="toggleMode('n')">
+                <span class="mode-key">N</span>
+                <span class="mode-label">bubbles</span>
+            </div>
+            <div class="mode-btn" id="btn-o" onclick="toggleMode('o')">
+                <span class="mode-key">O</span>
+                <span class="mode-label">orbit</span>
+            </div>
+            <div class="mode-btn" id="btn-g" onclick="toggleMode('g')">
+                <span class="mode-key">G</span>
+                <span class="mode-label">grav flip</span>
+            </div>
+            <div class="mode-btn" id="btn-l" onclick="toggleMode('l')">
+                <span class="mode-key">L</span>
+                <span class="mode-label">line</span>
+            </div>
+            <div class="mode-btn" id="btn-c" onclick="toggleMode('c')">
+                <span class="mode-key">C</span>
+                <span class="mode-label">cyclone</span>
+            </div>
+            <div class="mode-btn" id="btn-e" onclick="toggleMode('e')">
+                <span class="mode-key">E</span>
+                <span class="mode-label">explosion</span>
+            </div>
 
-        <div class="mode-item">Tutorial (s): <span id="storyActive" class="mode-on">ON</span></div>
-        <div class="mode-item">Black hole (b): <span id="bhactive" class="mode-off">off</span></div>
-        <div class="mode-item">Trail (t): <span id="trailstate" class="mode-off">off</span></div>
-        <div class="mode-item">Merge (m): <span id="mergestate" class="mode-off">off</span></div>
-        <div class="mode-item">Gravity flip (g): <span id="flipstate" class="mode-off">off</span></div>
-        <div class="mode-item">Lines (l): <span id="linestate" class="mode-off">off</span></div>
-        <div class="mode-item">Interact (i): <span id="interactstate" class="mode-off">off</span></div>
-        <div class="mode-item">Zero gravity (z): <span id="zerogravstate" class="mode-off">off</span></div>
-        <div class="mode-item">Bubbles (n): <span id="bubblestate" class="mode-off">off</span></div>
-        <div class="mode-item">Orbit (o): <span id="orbitstate" class="mode-off">off</span></div>
-        <div class="mode-item">Cyclone (c): <span id="cyclonestate" class="mode-off">off</span></div>
+        </div>
+        
+
         <div id="counter">particles: <span id="pcount">0</span></div>
 
     </div>

@@ -5,13 +5,15 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top: 50px;
-  left: 30px;
+  top: 40px;
+  left: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   font-family: 'Space Grotesk', monospace;
   font-size: 14px;
+  border-radius: 8px;
+  corner-shape: squircle;
   color: rgb(255, 255, 255);
   background: #1e1e1ee6;
   backdrop-filter: blur(5px);
@@ -29,18 +31,102 @@ label {
   color: #afafaf;
 }
 
-.mode-item {
-  color: #afafaf;
+
+#modeGrid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 6px;
 }
 
-.mode-on {
+.mode-btn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  border-radius: 8px;
+  corner-shape: squircle;
+  background-color: #141414;
+  cursor: pointer;
+  gap: 3px;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+}
+
+.mode-btn:hover {
+  border-color: #444;
+  background: #1e1e1e;
+}
+
+.mode-btn.active{
+  border-color: #555;
+  background-color: #2a2a2a;
+}
+
+.mode-key {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  font-family: 'Space Grotesk', monospace;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.mode-btn.active .mode-key {
   color: #fff;
 }
 
-.mode-off {
-  color: #afafaf;
+.mode-label {
+  font-size: 14px;
+  color: #444;
+  font-family: 'Space Grotesk', monospace;
+  text-align: center;
+  transition: color 0.2s;
+  line-height: 1;
 }
 
+.mode-btn.active .mode-label {
+  color: #888;
+}
+
+#btn-t.active .mode-key { color: #fa0; }
+#btn-b.active .mode-key { color: #a0f; }
+#btn-m.active .mode-key { color: #0f0; }
+#btn-i.active .mode-key { color: #4cf; }
+#btn-z.active .mode-key { color: #ff0; }
+#btn-n.active .mode-key { color: #7df; }
+#btn-o.active .mode-key { color: #fd8; }
+#btn-g.active .mode-key { color: #0ff; }
+#btn-s.active .mode-key { color: #fff; }
+#btn-l.active .mode-key { color: #fff; }
+#btn-c.active .mode-key { color: rgb(255, 170, 248); }
+#btn-e.active .mode-key { color: #f84; }
+
+#spawn-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #1e1e1ee6;
+  color: #fff;
+  font-family: 'Space Grotesk',monospace;
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  corner-shape: squircle;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, color 1s;
+  z-index: 999;
+}
+
+#spawn-btn:hover {
+  background: #2a2a2ae6;
+}
+
+#spawn-btn:active {
+  transform: scale(0.96);
+}
 
 #title {
   font-size: 20px;
@@ -153,7 +239,7 @@ kbd {
 .new-badge {
   position: fixed;
   top: 60px;
-  right: -140px;
+  right: -105px;
   background: #ffde59;
   color: #000;
   padding: 8px 45px;

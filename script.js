@@ -21,6 +21,7 @@ pcount.textContent = particles.length;
 
 // helper function — add this at top
 function setModeState(el, isOn) {
+  if(!el) return
   el.textContent = isOn ? "ON" : "off"
   el.className = isOn ? "mode-on" : "mode-off"
   if (!isOn) el.style.color = "#afafaf"
@@ -35,9 +36,44 @@ document.querySelectorAll(".reset-btn").forEach(btn => {
   })
 })
 
+document.getElementById("spawn-btn").addEventListener("click",()=>{
+
+  if(bubbleMode){
+    showToast("can't spawn in bubble mode!",false)
+    return
+  }
+
+  if(orbitMode){
+    showToast("can't spawn in orbit mode!",false)
+    return
+  }
+
+  if(particles.length>=MAX_PARTICLES){
+    showToast("particle limit reached!", false)
+    return
+  }
+  const count = Math.floor(parseFloat(countSlider.value)/10)
+  const cx=canvas.width/2
+  const cy=canvas.height/2
+  const spread=120
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2
+    const r=Math.random()*spread
+    const p=createParticle(
+      cx+Math.cos(angle)*r,
+      cy+Math.sin(angle)*r
+    )
+    particles.push(p)
+  }
+
+  showToast(`spawned ${count} particles`,true)
+  fireTrigger("click")
+})
+
 const stories = [
   { text: "welcome to particle sandbox.", trigger: null },
-  { text: "click anywhere to spawn particles.", trigger: "click" },
+  { text: "left click anywhere to spawn particles.", trigger: "click" },
+  { text: "OR click on the spawn button to spawn them.", trigger: "click" },
   { text: "nice! right click to create a shockwave.", trigger: null },
   { text: "press G to flip gravity.", trigger: "g" },
   { text: "watch them float... press G again to bring them back.", trigger: "g" },
@@ -64,6 +100,14 @@ const stories = [
   { text: "press O for orbit mode.", trigger: "o" },
   { text: "mouse=sun & particles=orbit around the sun.", trigger: null },
   { text: "press O to exit orbit mode.", trigger: "o" },
+  { text: "press C for cyclone mode.", trigger: "c" },
+  { text: "right click anywhere to place cyclones.", trigger: null },
+  { text: "spawn particles near cyclone and see them revolve.", trigger: null },
+  { text: "press C to exit cyclone mode.", trigger: "c" },
+  { text: "press E for explosion mode.", trigger:"e"},
+  { text: "click on a particle for a while, and release it.", trigger:null},
+  { text: "longer you press, biggger the explosion ", trigger: null},
+  { text: "press E to exit explosion mode.", trigger: "e"},
   { text: "you have learned everything.", trigger: null },
   { text: "now you can build your own universe.", trigger: null },
   { text: "we won't tell you what to do anymore.", trigger: null },
@@ -99,10 +143,11 @@ function drawStory() {
     ctx.globalAlpha = storyAlpha * 0.5
     ctx.fillStyle = "#aaa"
     ctx.font = "14px Space Grotesk"
-    ctx.fillText("[ do it to continue ]", (canvas.width / 2)+120, canvas.height / 2 + 40)
+    ctx.fillText("[ do it to continue ]", (canvas.width / 2)+110, canvas.height / 2 + 40)
     ctx.restore()
     return
   }
+
 
   if(storyTriggered) return
   // no trigger or trigger fired — normal fade in/hold/out
@@ -169,9 +214,21 @@ canvas.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY;
 });
 
+function setModeBtn(key,isOn){
+  const btn=document.getElementById(`btn-${key}`)
+  if(!btn) return
+  if(isOn) btn.classList.add("active")
+  else btn.classList.remove("active")
+}
+
+function toggleMode(key){
+  window.dispatchEvent(new KeyboardEvent("keydown",{key:key.toUpperCase()}))
+}
+
 canvas.addEventListener("click", (e) => {
   if(interactMode) return
   if (bubbleMode) return
+  if(explosionMode) return
   if(orbitMode) {
     showToast("can't spawn in orbit mode!",false);
     return
@@ -267,6 +324,15 @@ const cyclonestate=document.getElementById("cyclonestate")
 const MAX_CYCLONES=5
 const CYCLONE_RADIUS=150
 
+let explosionMode=false
+let chargedParticle=null
+let chargeStart=null
+let chargeX=0
+let chargeY=0
+const MAX_CHARGE_MS=10000 //10seconds max
+
+
+
 let lineMode = false; // on by default
 const linestate = document.getElementById("linestate");
 let toastTimeout=null
@@ -302,18 +368,23 @@ window.addEventListener("keydown", (e) => {
       return
     }
     blackHole = !blackHole;
+    setModeBtn("b",blackHole)
+
+    if (blackHole && particles.length === 0) {
+      showToast("add some particles first!", false)
+    }
+
     setModeState(bhactive, blackHole)
-    if (blackHole) bhactive.style.color = "#a0f"
     canvas.style.cursor=blackHole?"none":"default"
-    showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
+    // showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
     
     fireTrigger("b");
   }
 
   if (e.key === "t" || e.key === "T") {
     trailMode = !trailMode
+    setModeBtn("t", trailMode)
     setModeState(trailstate, trailMode)
-    if (trailMode) trailstate.style.color = "#fa0"
     showToast(trailMode ? "trail mode ON" : "trail mode OFF", trailMode)
     fireTrigger("t");
     
@@ -321,8 +392,7 @@ window.addEventListener("keydown", (e) => {
     if(trailMode){
       if(lineMode){
         lineMode=false
-        linestate.textContent="off"
-        linestate.style.color="#555"
+        setModeBtn("l",false);
         showToast("line mode turned off to save performance")
       }
     }
@@ -330,6 +400,7 @@ window.addEventListener("keydown", (e) => {
 
   if (e.key === "s" || e.key === "S") {
     storyMode = !storyMode;
+    setModeBtn("s", storyMode)
     setModeState(storystate, storyMode)
     showToast(storyMode ? "tutorial ON" : "tutorial OFF", storyMode)
     fireTrigger("s");
@@ -347,15 +418,15 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "m" || e.key === "M") {
     mergeMode = !mergeMode;
     setModeState(mergestate, mergeMode)
-    if (mergeMode) mergestate.style.color = "#0f0"
+    setModeBtn("m", mergeMode)
     showToast(mergeMode ? "merge mode ON" : "merge mode OFF", mergeMode)
     fireTrigger("m");
   }
 
   if (e.key === "g" || e.key === "G") {
     gravityFlip = !gravityFlip;
+    setModeBtn("g", gravityFlip)
     setModeState(flipstate, gravityFlip)
-    if (gravityFlip) flipstate.style.color = "#0ff"
     showToast(gravityFlip ? "gravity flip ON" : "gravity flip OFF", gravityFlip)
     fireTrigger("g");
   }
@@ -366,6 +437,7 @@ window.addEventListener("keydown", (e) => {
       return
     }
     lineMode = !lineMode;
+    setModeBtn("l", lineMode)
     setModeState(linestate, lineMode)
     showToast(lineMode ? "line mode ON" : "line mode OFF", lineMode)
     fireTrigger("l");
@@ -374,11 +446,16 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "i" || e.key === "I") {
     if (blackHole) { showToast("turn off black hole first"); return }
     interactMode = !interactMode
+    setModeBtn("i", interactMode)
     setModeState(interactstate, interactMode)
-    if (interactMode) interactstate.style.color = "#4cf"
 
     if (interactMode) {
       showPopup(`grab & throw particles. you can't create new particles in interact mode. press 'I' to exit`)
+
+      if (particles.length === 0) {
+        showToast("add some particles first!", false)
+      }
+
       canvas.style.cursor = "grab"
     } else {
       hidePopup()
@@ -386,14 +463,14 @@ window.addEventListener("keydown", (e) => {
       canvas.style.cursor = "default"
     }
 
-    showToast(interactMode ? "interact mode ON" : "interact mode OFF", interactMode)
+    // showToast(interactMode ? "interact mode ON" : "interact mode OFF", interactMode)
     fireTrigger("i")
   }
 
   if (e.key === "z" || e.key === "Z") {
     zeroGravity = !zeroGravity
+    setModeBtn("z", zeroGravity)
     setModeState(zerogravstate, zeroGravity)
-    if (zeroGravity) zerogravstate.style.color = "#ff0"
 
     if (zeroGravity) {
       pullSlider.dataset.saved = pullSlider.value
@@ -409,9 +486,9 @@ window.addEventListener("keydown", (e) => {
 
   if(e.key==="n"||e.key==="N"){
     bubbleMode=!bubbleMode;
+    setModeBtn("n", bubbleMode)
     setModeState(bubblestate,bubbleMode)
     if (bubbleMode) {
-      bubblestate.style.color = "#7df"
       enableBubbleMode()
       showPopup(`hover over the bubbles to pop them. you can't create new particles in bubble mode. press "N" to exit. pop all the bubbles IF U CAN ;)`)
     } else {
@@ -428,11 +505,10 @@ window.addEventListener("keydown", (e) => {
     if(blackHole){ showToast("exit black hole mode first"); return}
     if(interactMode){showToast("exit interact mode first"); return}
     orbitMode=!orbitMode
+    setModeBtn("o", orbitMode)
     setModeState(orbitstate,orbitMode)
     if(orbitMode) 
     {    
-      orbitstate.style.color="#fd8"
-
       const cap=80
       if(particles.length>cap){
         particles=particles.slice(particles.length-cap)
@@ -466,10 +542,10 @@ window.addEventListener("keydown", (e) => {
     if(blackHole){ showToast("exit black hole mode first"); return}
 
     cycloneMode=!cycloneMode
+    setModeBtn("c",cycloneMode)
     setModeState(cyclonestate,cycloneMode)
     if(cycloneMode) 
     {    
-      cyclonestate.style.color="#a8f"
       cyclones=[]
       canvas.style.cursor="crosshair"
       showPopup(`cyclone mode: right click anywhere to place a cyclone ( max: ${MAX_CYCLONES}). click anywhere on screen to spawn particles. press DEL to remove all cyclones. press 'C' to exit.`)
@@ -488,6 +564,26 @@ window.addEventListener("keydown", (e) => {
       cyclones=[]
       showToast("all cyclones cleared",null)
     }
+  }
+
+  if(e.key==="e"||e.key==="E"){
+    if(bubbleMode) {showToast("exit bubble mode first");return}
+    explosionMode=!explosionMode
+    setModeBtn("e",explosionMode)
+    if(explosionMode){
+      if(particles.length===0){
+        showToast("add some particles first!",false)
+      }
+      showPopup(`explosion mode: hold left click to charge, release to BOOOOOM. hold >10s = fizzle. press 'E' to exit.`);
+      canvas.style.cursor="crosshair"
+    } else {
+      chargeStart=null
+      chargedParticle=null
+      canvas.style.cursor="default"
+      hidePopup()
+    }
+    showToast(explosionMode?"explosion mode ON":"explosion mode OFF",explosionMode)
+    fireTrigger("e");
   }
 
 
@@ -612,6 +708,25 @@ let isMouseDown = false
 canvas.addEventListener("mousedown",(e)=>{
   if(e.button!==0) return
   isMouseDown=true
+
+  if (explosionMode && e.button === 0) {
+    let closest = null
+    let closestDist = 60 
+    particles.forEach(p => {
+      const dx = p.x - e.clientX
+      const dy = p.y - e.clientY
+      const dist = Math.sqrt(dx*dx + dy*dy)
+      if (dist < closestDist) { closestDist = dist; closest = p }
+    })
+    if (closest) {
+      chargedParticle = closest
+      chargedParticle._origSize = closest.size  
+      chargeStart = Date.now()
+    }
+    return
+  }
+  
+
   if (interactMode){
     let closest=null
     let closestDist=30
@@ -654,6 +769,50 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("mouseup",(e)=>{
   isMouseDown=false
+  
+  if (explosionMode && e.button === 0 && chargedParticle && chargeStart) {
+    const held = Date.now() - chargeStart
+    const p = chargedParticle
+    chargedParticle = null
+    chargeStart = null
+
+    if (held > MAX_CHARGE_MS) {
+      p.size = p._origSize 
+      showToast("held too long... fizzled 💨", null)
+      shockwaves.push({ x: p.x, y: p.y, radius: 0, alpha: 0.3 })
+      return
+    }
+
+    const t = held / MAX_CHARGE_MS
+    const blastRadius = 80 + t * 350
+    const blastForce = 10 + t * 35
+    const px = p.x, py = p.y
+
+    particles.splice(particles.indexOf(p), 1)
+
+    particles.forEach(other => {
+      const dx = other.x - px
+      const dy = other.y - py
+      const dist = Math.sqrt(dx*dx + dy*dy) || 1
+      if (dist > blastRadius) return
+      const falloff = 1 - dist / blastRadius
+      const nx = dx / dist, ny = dy / dist
+      other.vx += nx * blastForce * falloff
+      other.vy += ny * blastForce * falloff
+      other.hue = Math.random() * 60  
+    })
+
+    const rings = Math.floor(1 + t * 4)
+    for (let i = 0; i < rings; i++) {
+      setTimeout(() => {
+        shockwaves.push({ x: px, y: py, radius: i * 20, alpha: 0.9 - i * 0.15 })
+      }, i * 50)
+    }
+
+    showToast(held < 1000 ? "pop 💥" : held < 5000 ? "BOOM 💥" : "MEGABLAST 💥💥", true)
+    return
+  }
+
   if (grabbedParticle) {
     grabbedParticle.grabbed = false
     grabbedParticle = null
@@ -661,6 +820,37 @@ canvas.addEventListener("mouseup",(e)=>{
   }
 })
 
+
+function drawCharge() {
+  if (!explosionMode || !chargedParticle || !chargeStart) return
+  const t = Math.min((Date.now() - chargeStart) / MAX_CHARGE_MS, 1)
+  const p = chargedParticle
+
+  p.size = p._origSize + p._origSize * t * 3
+
+  const pulse = Math.sin(Date.now() * 0.015) * 0.2
+  const glowRadius = p.size + 20 + t * 40
+
+  const grad = ctx.createRadialGradient(p.x, p.y, p.size * 0.5, p.x, p.y, glowRadius)
+  grad.addColorStop(0, `rgba(255, ${Math.floor(200 - t*180)}, 0, ${0.6 + pulse})`)
+  grad.addColorStop(0.5, `rgba(255, 80, 0, ${0.3 + t*0.2})`)
+  grad.addColorStop(1, "rgba(0,0,0,0)")
+  ctx.globalAlpha = 1
+  ctx.fillStyle = grad
+  ctx.beginPath()
+  ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2)
+  ctx.fill()
+
+  if (t > 0.8) {
+    ctx.globalAlpha = (Math.sin(Date.now() * 0.025) + 1) * 0.5
+    ctx.strokeStyle = "#f00"
+    ctx.lineWidth = 3
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, p.size + 8, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.globalAlpha = 1
+  }
+}
 
 function getGridKey(x, y, cellSize) {
   return `${Math.floor(x / cellSize)},${Math.floor(y / cellSize)}`
@@ -1287,10 +1477,13 @@ function loop() {
   drawBlackHole();
   drawCyclones();
   checkBubblePop()
-
+  
   drawShockwaves();
+  drawCharge();
   pcount.textContent = particles.length;
 
   requestAnimationFrame(loop);
 }
+
+setModeBtn("s", true)
 loop();
