@@ -5,8 +5,8 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top: 60px;
-  left: 20px;
+  top: 50px;
+  left: 30px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -147,4 +147,27 @@ kbd {
   font-size: 13px;
   padding: 0 2px;
   line-height: 1;
+}
+
+
+.new-badge {
+  position: fixed;
+  top: 60px;
+  right: -140px;
+  background: #ffde59;
+  color: #000;
+  padding: 8px 45px;
+  padding-left: 70px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 400px;
+  transform: rotate(30deg); 
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+  border: 2px dashed #000;
+  z-index: 1000;
+  pointer-events: none;
+  user-select: none;
 }
