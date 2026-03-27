@@ -169,6 +169,10 @@ canvas.addEventListener("mousemove", (e) => {
 canvas.addEventListener("click", (e) => {
   if(interactMode) return
   if (bubbleMode) return
+  if(orbitMode) {
+    showToast("can't spawn in orbit mode!",false);
+    return
+  }
   if (blackHole) return
   if(particles.length >=MAX_PARTICLES)
   {
@@ -405,6 +409,13 @@ window.addEventListener("keydown", (e) => {
     setModeState(orbitstate,orbitMode)
     if(orbitMode) orbitstate.style.color="#fd8"
     canvas.style.cursor = orbitMode?"none":"default"
+
+    if (orbitMode) {
+      showPopup(`orbit mode — particles orbit the sun(mouse)· press 'o' to exit`)
+    } else {
+      hidePopup()
+    } 
+
     showToast(orbitMode?"orbit mode on":"orbit mode OFF", orbitMode)
     fireTrigger("o")
   }
@@ -657,9 +668,9 @@ function resolveMergeOrCollide() {
 
 function applyOrbit(){
   if(!orbitMode) return
-  const orbitRadius=200
+  const orbitRadius=250
   const orbitStrength = 3
-  const inwardStrength = 0.5
+  const inwardStrength = 1.5
 
   particles.forEach(p=>{
     const dx=p.x-mouse.x
@@ -690,36 +701,68 @@ function drawOrbit(){
   if(!orbitMode) return
   const time=Date.now()*0.01
 
+    // rotating dashed ring
   ctx.save()
-  ctx.translate(mouse.x,mouse.y)
-  ctx.rotate(time)
-
-  ctx.globalAlpha=0.15
-  ctx.strokeStyle="#fd8"
-  ctx.lineWidth=1
-  ctx.setLineDash([8,8])
+  ctx.translate(mouse.x, mouse.y)
+  ctx.rotate(time * 0.5)
+  ctx.globalAlpha = 0.2
+  ctx.strokeStyle = "#fd8"
+  ctx.lineWidth = 1
+  ctx.setLineDash([8, 8])
   ctx.beginPath()
-  ctx.arc(0,0,200,0,Math.PI*2)
+  ctx.arc(0, 0, 200, 0, Math.PI * 2)
   ctx.stroke()
   ctx.setLineDash([])
-
-  const grad=ctx.createRadialGradient(0,0,0,0,0,200)
-  grad.addColorStop(0,"rgba(255,220,100,0.05)")
-  grad.addColorStop(1,"rgba(0,0,0,0)")
-  ctx.globalAlpha=1
-  ctx.fillStyle=grad
-  ctx.beginPath()
-  ctx.arc(0,0,200,0,Math.PI*2)
-  ctx.fill()
-
-  ctx.globalAlpha=0.5
-  ctx.fillStyle="#fd8"
-  ctx.beginPath()
-  ctx.arc(0,0,3,0,Math.PI*2)
-  ctx.fill()
-
   ctx.restore()
-  ctx.globalAlpha=1
+
+  // sun corona — outer glow layers
+  const coronaLayers = [
+    { r: 160, alpha: 0.09 },
+    { r: 100, alpha: 0.08 },
+    { r: 80, alpha: 0.15 },
+  ]
+  coronaLayers.forEach(({ r, alpha }) => {
+    const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, r)
+    grad.addColorStop(0, `rgba(255, 200, 50, ${alpha})`)
+    grad.addColorStop(1, "rgba(0,0,0,0)")
+    ctx.globalAlpha = 1
+    ctx.fillStyle = grad
+    ctx.beginPath()
+    ctx.arc(mouse.x, mouse.y, r, 0, Math.PI * 2)
+    ctx.fill()
+  })
+
+  const sunGrad = ctx.createRadialGradient(
+    mouse.x - 5, mouse.y - 5, 2,
+    mouse.x, mouse.y, 50
+  )
+  sunGrad.addColorStop(0, "#fff5c0")   // bright white center
+  sunGrad.addColorStop(0.5, "#ffd84d") // yellow
+  sunGrad.addColorStop(0.8, "#ff9a00") // orange
+  sunGrad.addColorStop(1, "#ff5500")   // red edge
+
+  ctx.globalAlpha = 1
+  ctx.fillStyle = sunGrad
+  ctx.beginPath()
+  ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2)
+  ctx.fill()
+
+  ctx.save()
+  ctx.translate(mouse.x, mouse.y)
+  ctx.rotate(time * 0.8)
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2 + time
+    const r = 30 + Math.sin(time * 3 + i) * 3
+    ctx.globalAlpha = 0.15
+    ctx.fillStyle = "#fff"
+    ctx.beginPath()
+    ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 10, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  ctx.restore()
+
+  ctx.globalAlpha = 1
+
 }
 
 
@@ -807,7 +850,7 @@ function drawBlackHole() {
     100,
   ); // bigger spread
   glow.addColorStop(0, `rgba(0, 0, 0, ${bhAlpha})`); // black center
-  glow.addColorStop(0.3, `rgba(90, 1, 178, ${0.62 * bhAlpha})`); // purple mid
+  glow.addColorStop(0.3, `rgba(90, 1, 178, ${0.62 * bhAlpha})`); // purple middd
   glow.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.beginPath();
   ctx.arc(mouse.x, mouse.y, 100, 0, Math.PI * 2); // 60 -> 100
@@ -819,6 +862,11 @@ function drawBlackHole() {
 
 function applyGravity(p) {
   if(zeroGravity) return
+  if(orbitMode){
+    //
+    p.vy+=0.02
+    return
+  }
   const dir = gravityFlip ? -1 : 1;
   p.vy += dir * parseFloat(pullSlider.value) * 0.3;
 }
@@ -1035,8 +1083,8 @@ function loop() {
 
   resolveMergeOrCollide();
   // spawnTrail();
-  drawStory();
   applyOrbit();
+  drawStory();
 
   particles.forEach((p) => {
     updateParticle(p);
