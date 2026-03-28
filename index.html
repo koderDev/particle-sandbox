@@ -11,7 +11,7 @@
 <body>
     <canvas id="canvas"></canvas>
 
-    <div class="new-badge">new: color palette system </div>
+    <div class="new-badge">new: color palette, repel(x), restart(r) </div>
 
     <div id="toast"></div>
     <button id="dice-btn" title="random modes generator">🎲</button>
@@ -98,7 +98,18 @@
                 <span class="mode-key">E</span>
                 <span class="mode-label">explosion</span>
             </div>
-
+            <div class="mode-btn" id="btn-x" onclick="toggleMode('x')">
+                <span class="mode-key">X</span>
+                <span class="mode-label">repel</span>
+            </div>
+            <div class="mode-btn" >
+                <span class="mode-key">?</span>
+                <span class="mode-label"></span>
+            </div>
+            <div class="mode-btn" >
+                <span class="mode-key">?</span>
+                <span class="mode-label"></span>
+            </div>
         </div>
 
         <div id="scheme-row">

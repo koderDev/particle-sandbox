@@ -35,6 +35,8 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - `Explosion (e)`: press and hold on particles to get them exploding!!! BOOOM!
 
+- `Repel (x)`: particles are repelled by the mouse pointer. they try to run away as much as they can...
+
 #### sliders
 
 |slider name|function|
@@ -56,6 +58,9 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 ### [1.0.4]
 
+#### new mode
+- repel (x): the mouse pointer changes to a no entry sign like symbol and all the particles are repelled by the mouse pointer. they try to escape and run away from the mouse pointer as much as they can.
+
 #### code
 - i have finally refactored the code. took a while to do this cause everything was jumbled in the same file. finally, the project files are getting a good structure. i have made a new `js` folder which comprises all the js code in it. the `script.js` has been broken down into 6 js files. 
 
@@ -72,12 +77,16 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - add new keybinding. `R` -> it restarts the simulation. if you are bored with your current simulation or you messed up something, you can press `R` and a new blank canvas will appear for you to get your creative juices flowing again.
 
+
 #### ui
 
 - add new color palette system. i have introduced 5 color palettes (default/rainbow, ice, fire, neon and mono). there is a section in the UI panel for color palettes. color of all the particles will change to the selected palette on selecting it.
+- the game now shows achievement toasts when particle count has reached to certain levels, e.g. when the user make 50, 100, etc. number of particles.
+-improve the panel UI and add new space for 2 more modes.
 
 #### bug 🐛 fixes
 - cyclone mode has been fixed. in the previous version, the particles that get into the cyclone mode were being kicked out as soon as they enter the cyclone. they were thrown out tangentially from the cyclone. a voter pointed this out in the feedbacks so I have fixed it in this update. now, the particles that get into the cyclone revolve around it continuously.
+- explosion mode was causing particles to have organish color and it took a while fixing it. now, the neighboring particles change their color based on the current palette.
 
 
 ### [1.0.3]

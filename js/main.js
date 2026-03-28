@@ -21,6 +21,8 @@ function loop() {
   drawCyclones();
   checkBubblePop()
   
+  drawRepel();
+  applyRepel();
   drawShockwaves();
   drawCharge();
   pcount.textContent = particles.length;
@@ -38,10 +40,13 @@ function loop() {
       }
       showToast(msgs[m],true)
     }
-  }
+  } 
+  
   if(count<50) lastMilestone=0
 
   requestAnimationFrame(loop);
+
+
 }
 
 setModeBtn("s", true)

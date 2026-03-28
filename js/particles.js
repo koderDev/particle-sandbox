@@ -15,7 +15,7 @@ function updateParticle(p) {
   if (p.grabbed) return
 
   if (p.isBubble) {
-    p.vx += (Math.random() - 0.5) * 0.1  // gentle drift
+    p.vx += (Math.random() - 0.5) * 0.1  
     p.vx *= 0.98
     p.vy *= 0.98
 
@@ -31,8 +31,6 @@ function updateParticle(p) {
   }
 
   applyGravity(p)
-  // p.vx *= parseFloat(dampenSlider.value)
-  // p.vy *= parseFloat(dampenSlider.value)
 
   const friction=1-parseFloat(dampenSlider.value)
   p.vx*=friction
@@ -40,7 +38,6 @@ function updateParticle(p) {
 
   p.x += p.vx
   p.y += p.vy
-  // wallBounce(p)
 
   if(!orbitMode) wallBounce(p)
 }
@@ -50,14 +47,12 @@ function drawParticle(p) {
   if (p.isBubble) {
     const r = p.size
 
-    // outer transparent bubble
     ctx.globalAlpha = 0.08
     ctx.fillStyle = `hsl(200, 80%, 90%)`
     ctx.beginPath()
     ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
     ctx.fill()
 
-    // bubble outline
     ctx.globalAlpha = 0.5
     ctx.strokeStyle = `rgba(180, 220, 255, 0.8)`
     ctx.lineWidth = 1.5
@@ -65,14 +60,12 @@ function drawParticle(p) {
     ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
     ctx.stroke()
 
-    // inner highlight — top left shine
     ctx.globalAlpha = 0.35
     ctx.fillStyle = "rgba(255, 255, 255, 0.9)"
     ctx.beginPath()
     ctx.arc(p.x - r * 0.3, p.y - r * 0.3, r * 0.25, 0, Math.PI * 2)
     ctx.fill()
 
-    // small secondary highlight
     ctx.globalAlpha = 0.15
     ctx.fillStyle = "rgba(255,255,255,0.6)"
     ctx.beginPath()
@@ -94,8 +87,6 @@ function drawParticle(p) {
     gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`)
     gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
   }
-  // gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`)
-  // gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
   
   ctx.globalAlpha = 1
   ctx.fillStyle = gradient

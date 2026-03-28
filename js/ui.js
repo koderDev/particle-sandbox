@@ -676,6 +676,17 @@ window.addEventListener("keydown", (e) => {
     fireTrigger("e");
   }
 
+  if(e.key==="x"||e.key==="X"){
+    if(bubbleMode) {
+      showToast("exit bubble mode first");
+      return
+    }
+    repelMode = !repelMode
+    setModeBtn("x",repelMode)
+    canvas.style.cursor=repelMode?"none":"default"
+    showToast(repelMode ? "repel mode ON": "repel mode OFF",repelMode)
+    fireTrigger("x")
+  }
 
 
 });
@@ -777,7 +788,7 @@ canvas.addEventListener("mouseup",(e)=>{
       // other.hue = Math.random() * 60  
       other.hue = COLOR_SCHEMES[currentScheme]();
     })
-    
+
     const rings = Math.floor(1 + t * 4)
     for (let i = 0; i < rings; i++) {
       setTimeout(() => {

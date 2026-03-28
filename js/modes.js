@@ -62,14 +62,12 @@ function drawBlackHole() {
     ctx.stroke();
   }
 
-  // dark circle - bigger and pure black
   ctx.globalAlpha = bhAlpha;
   ctx.beginPath();
   ctx.arc(mouse.x, mouse.y, 35, 0, Math.PI * 2);
   ctx.fillStyle = "#000";
   ctx.fill();
 
-  // glow ring - bigger too
   const glow = ctx.createRadialGradient(
     mouse.x,
     mouse.y,
@@ -77,7 +75,7 @@ function drawBlackHole() {
     mouse.x,
     mouse.y,
     100,
-  ); // bigger spread
+  );
   glow.addColorStop(0, `rgba(0, 0, 0, ${bhAlpha})`); // black center
   glow.addColorStop(0.3, `rgba(90, 1, 178, ${0.62 * bhAlpha})`); // purple middd
   glow.addColorStop(1, "rgba(0, 0, 0, 0)");
@@ -161,7 +159,6 @@ function drawOrbit(){
 
   const time=Date.now()*0.01
 
-    // rotating dashed ring
   ctx.save()
   ctx.translate(mouse.x, mouse.y)
   ctx.rotate(time * 0.5)
@@ -191,7 +188,6 @@ function drawOrbit(){
     ctx.fill()
   })
 
-  // ctx.restore();
 
   const sunGrad = ctx.createRadialGradient(
     mouse.x - 5, mouse.y - 5, 2,
@@ -265,7 +261,6 @@ function applyCyclones() {
 
       const radialVel = p.vx * nx + p.vy * ny
 
-      // inward pull — stronger when moving outward
       const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
       const centripetalNeeded = (speed * speed) / Math.max(dist, 10)
       const inwardForce = centripetalNeeded * 0.4 + 1.5 * influence
@@ -383,4 +378,79 @@ function drawShockwaves() {
 
   ctx.globalAlpha = 1;
   shockwaves = shockwaves.filter((s) => s.alpha > 0);
+}
+
+function applyRepel() {
+  if (repelAlpha <= 0) return
+  const repelRadius = 180
+  const repelStrength = 6
+
+  particles.forEach(p => {
+    const dx = p.x - mouse.x
+    const dy = p.y - mouse.y
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1
+    if (dist > repelRadius) return
+    const influence = (1 - dist / repelRadius)
+    p.vx += (dx / dist) * repelStrength * influence * repelAlpha
+    p.vy += (dy / dist) * repelStrength * influence * repelAlpha
+  })
+}
+
+function drawRepel() {
+  if (!repelMode && repelAlpha <= 0) return
+  if (repelMode && repelAlpha < 1) repelAlpha += 0.05
+  if (!repelMode && repelAlpha > 0) repelAlpha -= 0.05
+  repelAlpha = Math.max(0, Math.min(1, repelAlpha))
+  if (repelAlpha <= 0) return
+
+  const time = Date.now() * 0.002
+  const pulse = Math.sin(time * 3) * 10
+
+  ctx.save()
+  ctx.translate(mouse.x, mouse.y)
+
+  for (let i = 0; i < 3; i++) {
+    const r = 60 + i * 40 + pulse
+    ctx.globalAlpha = repelAlpha * (0.15 - i * 0.04)
+    ctx.strokeStyle = "#f84"
+    ctx.lineWidth = 1.5
+    ctx.setLineDash([5, 5])
+    ctx.beginPath()
+    ctx.arc(0, 0, r, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.setLineDash([])
+  }
+
+  const r=14
+  ctx.globalAlpha=repelAlpha*0.9
+  ctx.strokeStyle="#f84"
+  ctx.lineWidth=2.5
+
+  ctx.beginPath()
+  ctx.arc(0,0,r,0,Math.PI*2)
+  ctx.stroke()
+
+  ctx.beginPath()
+  ctx.moveTo(-r*Math.cos(Math.PI/4), -r*Math.sin(Math.PI/4))
+  ctx.lineTo(r*Math.cos(Math.PI/4),r*Math.sin(Math.PI/4))
+  ctx.stroke()
+
+
+  const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, 50)
+  grad.addColorStop(0, `rgba(255, 130, 60, ${0.2 * repelAlpha})`)
+  grad.addColorStop(1, "rgba(0,0,0,0)")
+  ctx.globalAlpha = 1
+  ctx.fillStyle = grad
+  ctx.beginPath()
+  ctx.arc(0, 0, 50, 0, Math.PI * 2)
+  ctx.fill()
+
+  ctx.globalAlpha = repelAlpha * 0.8
+  ctx.fillStyle = "#f84"
+  ctx.beginPath()
+  ctx.arc(0, 0, 4, 0, Math.PI * 2)
+  ctx.fill()
+
+  ctx.restore()
+  ctx.globalAlpha = 1
 }
