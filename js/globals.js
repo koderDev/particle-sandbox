@@ -58,3 +58,6 @@ const COLOR_SCHEMES = {
 }
 
 let currentScheme = "default"
+
+const MILESTONES=new Set([50,100,200,300,400])
+let lastMilestone = 0
