@@ -15,19 +15,6 @@ const DICE_PRESETS = [
   { modes: ["o", "l"],        label: "orbital network" },
 ]
 
-const linestate = document.getElementById("linestate");
-const interactstate = document.getElementById("interactstate");
-const bubblestate = document.getElementById("bubblestate");
-const zerogravstate=document.getElementById("zerogravstate");
-const trailstate=document.getElementById("trailstate");
-const storystate = document.getElementById("storyActive");
-const bhactive = document.getElementById("bhactive");
-const mergestate = document.getElementById("mergestate");
-const flipstate = document.getElementById("flipstate");
-const orbitstate=document.getElementById("orbitstate")
-const cyclonestate=document.getElementById("cyclonestate")
-
-
 function setModeBtn(key,isOn){
   const btn=document.getElementById(`btn-${key}`)
   if(!btn) return
@@ -35,12 +22,6 @@ function setModeBtn(key,isOn){
   else btn.classList.remove("active")
 }
 
-function setModeState(el, isOn) {
-  if(!el) return
-  el.textContent = isOn ? "ON" : "off"
-  el.className = isOn ? "mode-on" : "mode-off"
-  if (!isOn) el.style.color = "#afafaf"
-}
 
 function toggleMode(key){
   window.dispatchEvent(new KeyboardEvent("keydown",{key:key.toUpperCase()}))
@@ -410,7 +391,6 @@ window.addEventListener("keydown", (e) => {
       showToast("add some particles first!", false)
     }
 
-    setModeState(bhactive, blackHole)
     canvas.style.cursor=blackHole?"none":"default"
     // showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
     
@@ -420,7 +400,6 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "t" || e.key === "T") {
     trailMode = !trailMode
     setModeBtn("t", trailMode)
-    setModeState(trailstate, trailMode)
     showToast(trailMode ? "trail mode ON" : "trail mode OFF", trailMode)
     fireTrigger("t");
     
@@ -437,7 +416,6 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "s" || e.key === "S") {
     storyMode = !storyMode;
     setModeBtn("s", storyMode)
-    setModeState(storystate, storyMode)
     showToast(storyMode ? "tutorial ON" : "tutorial OFF", storyMode)
     fireTrigger("s");
 
@@ -453,7 +431,6 @@ window.addEventListener("keydown", (e) => {
 
   if (e.key === "m" || e.key === "M") {
     mergeMode = !mergeMode;
-    setModeState(mergestate, mergeMode)
     setModeBtn("m", mergeMode)
     showToast(mergeMode ? "merge mode ON" : "merge mode OFF", mergeMode)
     fireTrigger("m");
@@ -462,7 +439,6 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "g" || e.key === "G") {
     gravityFlip = !gravityFlip;
     setModeBtn("g", gravityFlip)
-    setModeState(flipstate, gravityFlip)
     showToast(gravityFlip ? "gravity flip ON" : "gravity flip OFF", gravityFlip)
     fireTrigger("g");
   }
@@ -474,7 +450,6 @@ window.addEventListener("keydown", (e) => {
     }
     lineMode = !lineMode;
     setModeBtn("l", lineMode)
-    setModeState(linestate, lineMode)
     showToast(lineMode ? "line mode ON" : "line mode OFF", lineMode)
     fireTrigger("l");
   }
@@ -483,7 +458,6 @@ window.addEventListener("keydown", (e) => {
     if (blackHole) { showToast("turn off black hole first"); return }
     interactMode = !interactMode
     setModeBtn("i", interactMode)
-    setModeState(interactstate, interactMode)
 
     if (interactMode) {
       showPopup(`grab & throw particles. you can't create new particles in interact mode. press 'I' to exit`)
@@ -506,7 +480,6 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "z" || e.key === "Z") {
     zeroGravity = !zeroGravity
     setModeBtn("z", zeroGravity)
-    setModeState(zerogravstate, zeroGravity)
 
     if (zeroGravity) {
       pullSlider.dataset.saved = pullSlider.value
@@ -523,7 +496,6 @@ window.addEventListener("keydown", (e) => {
   if(e.key==="n"||e.key==="N"){
     bubbleMode=!bubbleMode;
     setModeBtn("n", bubbleMode)
-    setModeState(bubblestate,bubbleMode)
     if (bubbleMode) {
       enableBubbleMode()
       showPopup(`hover over the bubbles to pop them. you can't create new particles in bubble mode. press "N" to exit. pop all the bubbles IF U CAN ;)`)
@@ -542,7 +514,6 @@ window.addEventListener("keydown", (e) => {
     if(interactMode){showToast("exit interact mode first"); return}
     orbitMode=!orbitMode
     setModeBtn("o", orbitMode)
-    setModeState(orbitstate,orbitMode)
     if(orbitMode) 
     {    
       const cap=80
@@ -579,7 +550,6 @@ window.addEventListener("keydown", (e) => {
 
     cycloneMode=!cycloneMode
     setModeBtn("c",cycloneMode)
-    setModeState(cyclonestate,cycloneMode)
     if(cycloneMode) 
     {    
       cyclones=[]
