@@ -74,7 +74,7 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 #### ui
 
-- add new color palette system. i have introduced 5 color palettes (default/rainbow, ice, fire, neon and mono). there is a section in the UI panel for color palettes. when select a palette, the particles spawned after selecting the palette will use the new color palette. i hope they will add more fun to the gameplay.
+- add new color palette system. i have introduced 5 color palettes (default/rainbow, ice, fire, neon and mono). there is a section in the UI panel for color palettes. color of all the particles will change to the selected palette on selecting it.
 
 #### bug 🐛 fixes
 - cyclone mode has been fixed. in the previous version, the particles that get into the cyclone mode were being kicked out as soon as they enter the cyclone. they were thrown out tangentially from the cyclone. a voter pointed this out in the feedbacks so I have fixed it in this update. now, the particles that get into the cyclone revolve around it continuously.
