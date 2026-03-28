@@ -80,10 +80,22 @@ function toggleMode(key){
 
 document.querySelectorAll(".scheme-dot").forEach(dot => {
   dot.addEventListener("click", () => {
-    currentScheme = dot.dataset.scheme
+
+    const nextScheme=dot.dataset.scheme
+    // currentScheme = dot.dataset.scheme
+    if(currentScheme==="mono"&&nextScheme!=="mono"){
+      currentScheme="default"
+      particles.forEach(p=>{
+        p.hue=COLOR_SCHEMES.default()
+      })
+    }
+    currentScheme=nextScheme
+    particles.forEach(p=>{
+      p.hue=COLOR_SCHEMES[currentScheme]()
+    })
     document.querySelectorAll(".scheme-dot").forEach(d => d.classList.remove("active"))
     dot.classList.add("active")
-    showToast(`particles will use ${currentScheme} palette from now`, true)
+    showToast(`particles will use the ${currentScheme} palette from now`, true)
   })
 })
 
