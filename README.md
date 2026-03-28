@@ -1,10 +1,8 @@
 ## particle sandbox 🌌
 a simple particle sandbox made using javascript.
 
-
-
 ## why and how? 🤔
-This is a physics particle simulator that I am building, using Javascript!! I learned how to work with 2d canvas in Js while building this project. Adding collisions was quite hard but did it with the help of the resources in the internet and claude. Very happy to see how it turned out! My goal is to make it sth like mrdoob’s simulators which I used to be fascinated playing, a few years before.
+this is a physics particle simulator that I am building, using Javascript!! I learned how to work with 2d canvas in Js while building this project. Adding collisions was quite hard but did it with the help of the resources in the internet and claude. Very happy to see how it turned out! My goal is to make it sth like mrdoob’s simulators which I used to be fascinated playing, a few years before.
 
 ## controls
 
@@ -12,17 +10,41 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 
 - Right click: create shockwave that repels particles
 
-- Story mode (s): shows the storyline of this simulator in the center of the screen
+#### modes
+- `Tutorial mode (s)`: shows an interactive tutorial of this simulator in the center of the screen.
 
-- Black hole (b): pulls all the particles into the mouse pointer (black hole)
+- `Black hole (b)`: pulls all the particles into the mouse pointer (black hole)
 
-- Trail (t): shows trails of each and every particle, more trails = more chaos
+- `Trail (t)`: shows trails of each and every particle, more trails = more chaos
 
-- Merge (m): merges particles which have similar color into a larger particle with a different color
+- `Merge (m)`: merges particles which have similar color into a larger particle with a different color
 
-- Gravity flip (g): flips the gravity of the game, apples need not fall downwards ;)
+- `Gravity flip (g)`: flips the gravity of the game, apples need not fall downwards ;)
 
-- Lines (l): shows lines connecting neighbouring particles
+- `Zero Gravity (z)`: set the gravity of the game to zero. 
+
+- `Lines (l)`: shows lines connecting neighbouring particles
+
+- `Bubbles (n)`: particles become bubbles and you get to pop them
+
+- `Orbit (o)`: mouse pointer is the sun and everything revolves around it.
+
+- `Cyclone (c)`: create cyclones on the screen, particles revolve around it.
+
+- `Explosion (e)`: press and hold on particles to get them exploding!!! BOOOM!
+
+#### sliders
+
+|slider name|function|
+|-----------|--------|
+|gravity|change the gravity of the game|
+|friction|tweak the friction between particles|
+|spawn|sets the number of particles to spawn|
+|size|sets the upper limit for size of particles to spawn|
+
+#### others
+- `spawn`: this button in the bottom-right corner of the screen lets you spawn particles when clicked
+- `dice/🎲`: this button sitting just above the `spawn` button, when clicked turns on a few modes randomly and lets you experience chaos in god mode. 
 
 
 ## img preview
@@ -30,6 +52,21 @@ This is a physics particle simulator that I am building, using Javascript!! I le
 <img width="1366" height="655" alt="image" src="https://github.com/user-attachments/assets/318c7c1e-c228-412d-bde0-e16014e52713" />
 
 ## changelogs 🛠
+
+### [1.0.4]
+
+#### code
+- i have finally refactored the code. took a while to do this cause everything was jumbled in the same file. finally, the project files are getting a good structure. i have made a new `js` folder which comprises all the js code in it. the `script.js` has been broken down into 6 js files. 
+
+| file      | what does it store?   |
+|-----------|-----------------------|
+| globals.js     | all the state variables, constants and the main canvas setup |
+| particles.js       | functions related to create,update,draw and collide particles |
+| modes.js   | handels all the modes and their functions |
+| ui.js   | UI handler -> panel,toast,popup,mouse/keyboard events and dice handler.|
+| stories   | stories array and its functions|
+| main.js   | main loop() call |
+
 
 ### [1.0.3]
 
