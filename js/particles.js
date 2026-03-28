@@ -30,8 +30,13 @@ function updateParticle(p) {
   }
 
   applyGravity(p)
-  p.vx *= parseFloat(dampenSlider.value)
-  p.vy *= parseFloat(dampenSlider.value)
+  // p.vx *= parseFloat(dampenSlider.value)
+  // p.vy *= parseFloat(dampenSlider.value)
+
+  const friction=1-parseFloat(dampenSlider.value)
+  p.vx*=friction
+  p.vy*=friction
+
   p.x += p.vx
   p.y += p.vy
   // wallBounce(p)

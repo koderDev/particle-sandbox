@@ -68,6 +68,8 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 | stories   | stories array and its functions|
 | main.js   | main loop() call |
 
+- the friction slider was wrong all this time. there was a simple logical error in the code. fixed it.
+
 - add new keybinding. `R` -> it restarts the simulation. if you are bored with your current simulation or you messed up something, you can press `R` and a new blank canvas will appear for you to get your creative juices flowing again.
 
 #### bug 🐛 fixes
@@ -130,3 +132,4 @@ and a lot of bug fixes
 - [x] Particles spawn, repulse and collide
 - [x] Toggle particle properties using sliders
 - [x] Implemented core features
+

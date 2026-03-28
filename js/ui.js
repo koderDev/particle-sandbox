@@ -55,7 +55,7 @@ function restartSimulation(){
   chargeStart=null
 
   pullSlider.value=0.9
-  dampenSlider.value=0.99
+  dampenSlider.value=0.01
   sizeSlider.value=30
   countSlider.value=100
 
