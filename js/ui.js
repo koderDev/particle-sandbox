@@ -258,7 +258,18 @@ function rollDice(){
   hidePopup();
   particles=[]
 
-  const preset=DICE_PRESETS[Math.floor(Math.random()*DICE_PRESETS.length)]
+  const schemes=Object.keys(COLOR_SCHEMES);
+  const randomScheme = schemes[Math.floor(Math.random()*schemes.length)]
+  currentScheme = randomScheme;
+
+  document.querySelectorAll(".scheme-dot").forEach(dot=>{
+    dot.classList.remove("active");
+    if(dot.dataset.scheme===randomScheme){
+      dot.classList.add("active");
+    }
+  })
+
+  const preset = DICE_PRESETS[Math.floor(Math.random()*DICE_PRESETS.length)];
 
   preset.modes.forEach(key=>{
     if(key==="z"){
@@ -354,7 +365,7 @@ function rollDice(){
       })
     }
 
-    showToast(` ${preset.label} 🎲`, true);
+    showToast(` ${preset.label} (${currentScheme} palette) 🎲`, true);
   })
 }
 
@@ -763,9 +774,10 @@ canvas.addEventListener("mouseup",(e)=>{
       const nx = dx / dist, ny = dy / dist
       other.vx += nx * blastForce * falloff
       other.vy += ny * blastForce * falloff
-      other.hue = Math.random() * 60  
+      // other.hue = Math.random() * 60  
+      other.hue = COLOR_SCHEMES[currentScheme]();
     })
-
+    
     const rings = Math.floor(1 + t * 4)
     for (let i = 0; i < rings; i++) {
       setTimeout(() => {
