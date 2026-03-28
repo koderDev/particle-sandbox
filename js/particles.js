@@ -6,7 +6,8 @@ function createParticle(x, y) {
     vy: (Math.random() - 0.5) * 6,
     size: Math.random() * parseFloat(sizeSlider.value) + 6,
     mass: 1,
-    hue: Math.random() * 360,
+    // hue: Math.random() * 360,
+    hue: COLOR_SCHEMES[currentScheme]()
   };
 }
 
@@ -45,6 +46,7 @@ function updateParticle(p) {
 }
 
 function drawParticle(p) {
+
   if (p.isBubble) {
     const r = p.size
 
@@ -84,8 +86,17 @@ function drawParticle(p) {
   // normal draw below...
   const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
   const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size)
-  gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`)
-  gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
+  
+  if(currentScheme === "mono") {
+    gradient.addColorStop(0,`hsl(0,0%,${70+speed*3}%)`)
+    gradient.addColorStop(1, `hsl(0,0%,25%)`)
+  } else {
+    gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`)
+    gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
+  }
+  // gradient.addColorStop(0, `hsl(${p.hue + speed * 5}, 100%, 70%)`)
+  // gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
+  
   ctx.globalAlpha = 1
   ctx.fillStyle = gradient
   ctx.beginPath()

@@ -49,5 +49,12 @@ let bhAlpha = 0;
 
 let isMouseDown = false
 
+const COLOR_SCHEMES = {
+    default:    () => Math.random() * 360,
+    fire:       () => Math.random() * 60,
+    ice:        () => 180 + Math.random() * 60,
+    neon:       () => [300, 120, 200, 60][Math.floor(Math.random()*4)]+Math.random()*30,
+    mono:       () => 0,
+}
 
-
+let currentScheme = "default"

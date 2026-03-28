@@ -5,8 +5,8 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top: 40px;
-  left: 20px;
+  top: 10px;
+  left: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -83,6 +83,14 @@ label {
   text-align: center;
   transition: color 0.2s;
   line-height: 1;
+}
+
+#scheme-label {
+  font-size: 14px;
+  color: #fff;
+  font-family: 'Space Grotesk', monospace;
+  display: flex;
+  flex-direction: column;
 }
 
 .mode-btn.active .mode-label {
@@ -211,6 +219,61 @@ label {
   color: #f1f1f1;
   padding-top: 8px;
   border-top: 1px solid #2a2a2a;
+}
+
+
+#scheme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #afafaf;
+  font-size: 13px;
+}
+
+#schemePicker {
+  display:flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.scheme-dot {
+  width:18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid rgb(127, 127, 127);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.scheme-dot:hover {
+  transform: scale(1.2)
+}
+
+.scheme-dot.active {
+  border-color:#fff;
+  transform: scale(1.15);
+  border-width: 2px;
+  
+}
+
+.scheme-dot[data-scheme="default"]{
+  background:conic-gradient(red,yellow,green,cyan,blue,magenta,red);
+}
+
+.scheme-dot[data-scheme="fire"]{
+  background: linear-gradient(#f00,#fa0);
+}
+
+.scheme-dot[data-scheme="ice"]{
+  background: linear-gradient(#0cf,#06f);
+}
+
+.scheme-dot[data-scheme="neon"]{
+  background: linear-gradient(#f0f,#0ff);
+}
+
+.scheme-dot[data-scheme="mono"]{
+  background: linear-gradient(#fff,#444);
 }
 
 #popup {

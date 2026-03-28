@@ -78,6 +78,16 @@ function toggleMode(key){
   window.dispatchEvent(new KeyboardEvent("keydown",{key:key.toUpperCase()}))
 }
 
+document.querySelectorAll(".scheme-dot").forEach(dot => {
+  dot.addEventListener("click", () => {
+    currentScheme = dot.dataset.scheme
+    document.querySelectorAll(".scheme-dot").forEach(d => d.classList.remove("active"))
+    dot.classList.add("active")
+    showToast(`particles will use ${currentScheme} palette from now`, true)
+  })
+})
+
+
 document.querySelectorAll(".reset-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const slider = document.getElementById(btn.dataset.id)
@@ -551,7 +561,7 @@ window.addEventListener("keydown", (e) => {
     setModeBtn("n", bubbleMode)
     if (bubbleMode) {
       enableBubbleMode()
-      showPopup(`hover over the bubbles to pop them. you can't create new particles in bubble mode. press "N" to exit. pop all the bubbles IF U CAN ;)`)
+      showPopup(`hover over the bubbles to pop them. you can't create new particles in bubble mode. press "N" to exit.`)
     } else {
       disableBubbleMode()
       hidePopup()

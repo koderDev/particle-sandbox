@@ -72,6 +72,10 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - add new keybinding. `R` -> it restarts the simulation. if you are bored with your current simulation or you messed up something, you can press `R` and a new blank canvas will appear for you to get your creative juices flowing again.
 
+#### ui
+
+- add new color palette system. i have introduced 5 color palettes (default/rainbow, ice, fire, neon and mono). there is a section in the UI panel for color palettes. when select a palette, the particles spawned after selecting the palette will use the new color palette. i hope they will add more fun to the gameplay.
+
 #### bug 🐛 fixes
 - cyclone mode has been fixed. in the previous version, the particles that get into the cyclone mode were being kicked out as soon as they enter the cyclone. they were thrown out tangentially from the cyclone. a voter pointed this out in the feedbacks so I have fixed it in this update. now, the particles that get into the cyclone revolve around it continuously.
 
@@ -88,6 +92,7 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - added a dice button which turns of a few modes randomly forming new chaos combinations
 - added a spawn button which spawns particles when clicked -> it was required for modes like blackhole, interact, and more in which left click was occupied by the major feature of the mode so needed an alternative method to spawn particles.
 - added a newspaper-ad like badge in the top right which shows the latest updates.
+
 
 ### 🐛🐛🐛
 and a lot of bug fixes 
