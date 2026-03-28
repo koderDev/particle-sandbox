@@ -8,8 +8,6 @@ let particles = [];
 const MAX_PARTICLES = 420;
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 
-
-//sliderss
 const pullSlider = document.getElementById("pull");
 const dampenSlider = document.getElementById("dampen");
 const sizeSlider = document.getElementById("size");
@@ -24,7 +22,7 @@ let trailMode = false;
 let mergeMode = false;
 let gravityFlip = false;
 let cycloneMode = false
-let lineMode = false; // on by default
+let lineMode = false;
 let interactMode = false;
 let bubbleMode = false
 let orbitMode = false
@@ -40,7 +38,7 @@ let chargedParticle=null
 let chargeStart=null
 let chargeX=0
 let chargeY=0
-const MAX_CHARGE_MS=10000 //10seconds max
+const MAX_CHARGE_MS=10000
 
 const popup = document.getElementById("popup")
 

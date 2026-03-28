@@ -11,7 +11,7 @@
 <body>
     <canvas id="canvas"></canvas>
 
-    <div class="new-badge">new: orbit(o), cyclone(c), explosion(e) </div>
+    <!-- <div class="new-badge">new: restart(r) | code refactored </div> -->
 
     <div id="toast"></div>
     <button id="dice-btn" title="random modes generator">🎲</button>
@@ -20,7 +20,7 @@
 
     <div id="panel">
         <div id="title">particle sandbox</div>
-        <div id="hints">left click: spawn | right click: repulse</div>
+        <div id="hints">LMB: spawn | RMB: repulse | R: restart</div>
         
         <label>gravity
             <div class="row">
@@ -100,10 +100,7 @@
             </div>
 
         </div>
-        
-
         <div id="counter">particles: <span id="pcount">0</span></div>
-
     </div>
 
     <script src="js/globals.js"></script>
@@ -112,5 +109,7 @@
     <script src="js/ui.js"></script>
     <script src="js/stories.js"></script>
     <script src="js/main.js"></script>
+
 </body>
 </html>
+

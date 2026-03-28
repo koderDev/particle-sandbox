@@ -1,11 +1,9 @@
 function loop() {
-  //   ctx.globalAlpha = 1
   ctx.globalAlpha = trailMode ? 0.15 : 1;
   ctx.fillStyle = "#0a0a0a";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   resolveMergeOrCollide();
-  // spawnTrail();
   applyOrbit();
   drawStory();
 

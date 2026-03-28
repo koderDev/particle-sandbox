@@ -226,36 +226,64 @@ function drawOrbit(){
 
 }
 
-function applyCyclones(){
-  if(!cycloneMode||cyclones.length===0) return
+function applyCyclones() {
+  if (!cycloneMode || cyclones.length === 0) return
 
-  particles.forEach(p=>{
-    cyclones.forEach(c=>{
-      const dx=p.x-c.x
-      const dy=p.y-c.y
-      const dist = Math.sqrt(dx*dx+dy*dy)||1
-      if(dist >CYCLONE_RADIUS) return
+  const EXCLUSION_ZONE = 60 //cant enter this zone
+
+  particles.forEach(p => {
+    cyclones.forEach(c => {
+      const dx = p.x - c.x
+      const dy = p.y - c.y
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1
+      if(dist<EXCLUSION_ZONE){
+        const nx=dx/dist
+        const ny=dy/dist
+        p.x=c.x+nx*EXCLUSION_ZONE
+        p.y=c.y+ny*EXCLUSION_ZONE
+
+        const radialVel=p.vx*nx+p.vy*ny
+        if(radialVel<0){
+          p.vx-=radialVel*nx;
+          p.vy-=radialVel*ny
+        }
+        return
+      }
+
+      if (dist > CYCLONE_RADIUS) return
 
       const nx = dx / dist
       const ny = dy / dist
-      const tx = -ny  
+      const tx = -ny
       const ty = nx
 
-      const influence = 1 - dist / CYCLONE_RADIUS  // stronger at center
-      const spinStrength = 3.5
+      const influence = 1 - dist / CYCLONE_RADIUS
 
+      const spinStrength = 4
       p.vx += tx * spinStrength * influence
       p.vy += ty * spinStrength * influence
 
-      p.vx -= nx * 0.8 * influence
-      p.vy -= ny * 0.8 * influence
+      const radialVel = p.vx * nx + p.vy * ny
 
-      const speed = Math.sqrt(p.vx*p.vx + p.vy*p.vy)
-      if (speed > 10) {
-        p.vx = (p.vx / speed) * 10
-        p.vy = (p.vy / speed) * 10
+      // inward pull — stronger when moving outward
+      const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
+      const centripetalNeeded = (speed * speed) / Math.max(dist, 10)
+      const inwardForce = centripetalNeeded * 0.4 + 1.5 * influence
+
+      p.vx -= nx * inwardForce
+      p.vy -= ny * inwardForce
+
+      if (radialVel > 0) {
+        p.vx -= nx * radialVel * 0.6
+        p.vy -= ny * radialVel * 0.6
       }
 
+      const finalSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
+      const maxSpeed = 8 + influence * 4
+      if (finalSpeed > maxSpeed) {
+        p.vx = (p.vx / finalSpeed) * maxSpeed
+        p.vy = (p.vy / finalSpeed) * maxSpeed
+      }
     })
   })
 }

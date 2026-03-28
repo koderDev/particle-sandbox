@@ -22,6 +22,57 @@ function setModeBtn(key,isOn){
   else btn.classList.remove("active")
 }
 
+function restartSimulation(){
+  particles=[]
+  blackHole=false;
+  setModeBtn("b",false);
+  bhAlpha=0
+  trailMode=false;
+  setModeBtn("t",false)
+  mergeMode=false;
+  setModeBtn("m",false)
+  gravityFlip=false;
+  setModeBtn("g",false)
+  lineMode=false;
+  setModeBtn("l",false)
+  interactMode=false;
+  setModeBtn("i",false)
+  zeroGravity=false;
+  setModeBtn("z",false)
+  bubbleMode=false;
+  setModeBtn("n",false)
+  orbitMode=false;
+  setModeBtn("o",false);
+  orbitAlpha=0;
+  cycloneMode=false;
+  setModeBtn("c",false);
+  cyclones=[]
+  explosionMode=false;
+  setModeBtn("e",false)
+
+  grabbedParticle=null
+  chargedParticle=null
+  chargeStart=null
+
+  pullSlider.value=0.9
+  dampenSlider.value=0.99
+  sizeSlider.value=30
+  countSlider.value=100
+
+  canvas.style.cursor="default"
+  hidePopup()
+
+  storyMode=true;
+  setModeBtn("s",true)
+  currentStory=0
+  storyAlpha=0
+  storyState="fadein"
+  storyTimer=0
+  waitingForTrigger=false
+  storyTriggered=false
+
+  showToast("simulation restarted",null);
+}
 
 function toggleMode(key){
   window.dispatchEvent(new KeyboardEvent("keydown",{key:key.toUpperCase()}))
@@ -374,6 +425,11 @@ canvas.addEventListener("contextmenu", (e) => {
 
 
 window.addEventListener("keydown", (e) => {
+
+  if(e.key==="r"||e.key==="R"){
+    restartSimulation();
+  }
+
   if (bubbleMode && e.key !== "n" && e.key !== "N" && e.key !== "s" && e.key !== "S") {
     showToast("exit bubble mode first")
     return
@@ -392,8 +448,6 @@ window.addEventListener("keydown", (e) => {
     }
 
     canvas.style.cursor=blackHole?"none":"default"
-    // showToast(blackHole ? "black hole ON" : "black hole OFF", blackHole)
-    
     fireTrigger("b");
   }
 
@@ -473,7 +527,6 @@ window.addEventListener("keydown", (e) => {
       canvas.style.cursor = "default"
     }
 
-    // showToast(interactMode ? "interact mode ON" : "interact mode OFF", interactMode)
     fireTrigger("i")
   }
 
@@ -504,7 +557,6 @@ window.addEventListener("keydown", (e) => {
       hidePopup()
     }
 
-    // showToast(bubbleMode?"bubble mode ON":"bubble mode OFF",bubbleMode)
     fireTrigger("n")
   }
 
@@ -588,7 +640,6 @@ window.addEventListener("keydown", (e) => {
       canvas.style.cursor="default"
       hidePopup()
     }
-    // showToast(explosionMode?"explosion mode ON":"explosion mode OFF",explosionMode)
     fireTrigger("e");
   }
 

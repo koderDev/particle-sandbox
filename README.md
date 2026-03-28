@@ -6,12 +6,14 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 ## controls
 
-- Left click: spawn particles
+- `LMB`: spawn particles
 
-- Right click: create shockwave that repels particles
+- `RMB`: create shockwave that repels particles
+
+- `R`: restart simulation. start again with a blank canvas to get your creative juices flowing again ;)
 
 #### modes
-- `Tutorial mode (s)`: shows an interactive tutorial of this simulator in the center of the screen.
+- `Tutorial (s)`: shows an interactive tutorial of this simulator in the center of the screen.
 
 - `Black hole (b)`: pulls all the particles into the mouse pointer (black hole)
 
@@ -38,14 +40,13 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 |slider name|function|
 |-----------|--------|
 |gravity|change the gravity of the game|
-|friction|tweak the friction between particles|
+|friction|change the friction between particles|
 |spawn|sets the number of particles to spawn|
 |size|sets the upper limit for size of particles to spawn|
 
-#### others
+#### others [ UI buttons]
 - `spawn`: this button in the bottom-right corner of the screen lets you spawn particles when clicked
-- `dice/🎲`: this button sitting just above the `spawn` button, when clicked turns on a few modes randomly and lets you experience chaos in god mode. 
-
+- `🎲` (dice button): this button sitting just above the `spawn` button, when clicked, turns on a few modes randomly and lets you experience chaos in god mode. 
 
 ## img preview
 <img width="1366" height="660" alt="image" src="https://github.com/user-attachments/assets/62e07fee-f9c5-4241-8e27-4df1a96ef2b0" />
@@ -66,6 +67,11 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 | ui.js   | UI handler -> panel,toast,popup,mouse/keyboard events and dice handler.|
 | stories   | stories array and its functions|
 | main.js   | main loop() call |
+
+- add new keybinding. `R` -> it restarts the simulation. if you are bored with your current simulation or you messed up something, you can press `R` and a new blank canvas will appear for you to get your creative juices flowing again.
+
+#### bug 🐛 fixes
+- cyclone mode has been fixed. in the previous version, the particles that get into the cyclone mode were being kicked out as soon as they enter the cyclone. they were thrown out tangentially from the cyclone. a voter pointed this out in the feedbacks so I have fixed it in this update. now, the particles that get into the cyclone revolve around it continuously.
 
 
 ### [1.0.3]
