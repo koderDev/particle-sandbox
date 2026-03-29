@@ -481,6 +481,32 @@ function rollDice(){
   },100)
 }
 
+function showTutorialSkipPrompt() {
+  const prompt = document.createElement("div")
+  prompt.id="tutorial-skip"
+  prompt.innerHTML=`
+    <div id="skip-content">
+      <span id="skip-text">if you want to explore on your own, press 'S' to skip the tutorial.</span>
+    </div>
+  `
+  document.body.appendChild(prompt)
+
+  requestAnimationFrame(()=>prompt.classList.add("visible"))
+
+  const timeout = setTimeout(()=>dismissSkipPrompt(prompt),10000)
+  prompt.dataset.timeout=timeout
+
+  prompt._dismiss = () => dismissSkipPrompt(prompt,timeout)
+  window._skipPromptDismiss=prompt._dismiss
+}
+
+function dismissSkipPrompt(prompt){
+  if(!prompt||!prompt.parentNode) return
+  prompt.classList.remove("visible")
+  setTimeout(()=>prompt.remove(),400)
+  window._skipPromptDismiss=null
+}
+
 document.getElementById("ss-btn").addEventListener("click",()=>{
   const btn = document.getElementById("ss-btn")
 
@@ -649,6 +675,7 @@ window.addEventListener("keydown", (e) => {
   }
 
   if (e.key === "s" || e.key === "S") {
+    if(window._skipPromptDismiss) window._skipPromptDismiss()
     storyMode = !storyMode;
     setModeBtn("s", storyMode)
     showToast(storyMode ? "tutorial ON" : "tutorial OFF", storyMode)
@@ -955,4 +982,4 @@ canvas.addEventListener("mouseup",(e)=>{
   }
 })
 
-
+setTimeout(showTutorialSkipPrompt,10000)

@@ -550,3 +550,29 @@ label {
   text-decoration-thickness: 2px;
   text-decoration-style: dotted;
 }
+
+#tutorial-skip {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1e1e1ee6;
+  color: #bebebe;
+  border-radius: 12px;
+  padding: 12px 20px 0px 20px;
+  font-family: 'Space Grotesk', monospace;
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  min-width: 280px;
+  overflow: hidden;
+}
+
+#tutorial-skip.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#skip-content {
+  padding-bottom: 10px;
+}
