@@ -521,8 +521,8 @@ label {
 
 .new-badge {
   position: fixed;
-  top: 70px;
-  right: -80px;
+  top: 15px;
+  right: -160px;
   background: #ffde59;
   color: #000;
   padding: 8px 45px;
@@ -532,12 +532,18 @@ label {
   font-weight: 800;
   font-size: 14px;
   text-transform: uppercase;
+  text-decoration: none;
   letter-spacing: 1px;
   width: 480px;
   transform: rotate(30deg); 
   box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
   border: 2px dashed #000;
   z-index: 1000;
-  pointer-events: none;
-  user-select: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.3s;
+} 
+
+.new-badge:hover {
+  background: #ffd500;
+  transform: rotate(30deg) scale(1.08);
 }
