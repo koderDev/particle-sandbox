@@ -50,6 +50,38 @@ function takeSS(){
       img.src=dataUrl
       overlay.appendChild(img)
 
+      const actions = document.createElement("div")
+      actions.id = "ss-actions"
+      actions.innerHTML = `
+      <span id="ss-label">screenshot captured!!</span>
+      <button id="ss-download">download</button>
+      <button id="ss-close">resume</button>
+      `
+      overlay.appendChild(actions)
+
+      requestAnimationFrame(()=>{
+        overlay.classList.add("visible")
+        img.classList.add("visible")
+        actions.classList.add("visible")
+      })
+
+      document.getElementById("ss-download").addEventListener("click",()=>{
+        const a = document.createElement("a")
+        a.href=dataUrl
+        a.download = `particle-sandbox-${Date.now()}.png`
+        a.click()
+        showToast("screenshot saved!", true)
+      })
+
+      document.getElementById("ss-close").addEventListener("click",()=>{
+        overlay.classList.remove("visible")
+        img.classList.remove("visible")
+        actions.classList.remove("visible")
+        setTimeout(()=>{
+          overlay.remove()
+          screenshotPaused=false
+        }, 400)
+      })
     })
   })
   
