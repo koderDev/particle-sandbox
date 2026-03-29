@@ -15,6 +15,13 @@ const DICE_PRESETS = [
   { modes: ["o", "l"],        label: "orbital web" },
 ]
 
+const shutterSound = new Audio("assets/sound/shutter.mp3");
+
+function playShutter() {
+  shutterSound.currentTime=0
+  shutterSound.play()
+}
+
 function togglePanel() {
   panelVisible=!panelVisible
   const panel=document.getElementById("panel")
@@ -27,13 +34,14 @@ function togglePanel() {
   } else {
     panel.style.display = "none"
     indicator.textContent="PANEL(h): OFF"
-    indicator.style.color="#bf7979b9"
+    indicator.style.color="#979797"
   }
 }
 
 function takeSS(){
   if(screenshotPaused) return
 
+  playShutter()
   takingScreenshot=true
 
   requestAnimationFrame(()=>{
