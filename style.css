@@ -113,8 +113,9 @@ label {
 
 #panel-indicator {
   position: fixed;
-  bottom: 24px;
-  right: 150px;
+  display: none;
+  top: 10px;
+  left: 10px;
   font-family: 'Space Grotesk', monospace;
   font-size: 11px;
   color: #555;
@@ -193,7 +194,6 @@ label {
 #spawn-btn:active {
   transform: scale(0.96);
 }
-
 
 
 #ss-overlay {
@@ -309,11 +309,35 @@ label {
   color: #fff;
 }
 
-#hints {
+/* #hints {
   color: #afafaf;
   font-size: 12px;
   align-self: left;
   line-height: 1.6;
+} */
+
+#hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.hint-chip {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #555;
+  border-radius: 6px;
+  corner-shape: squircle;
+  padding: 2px 7px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  color: #fff;
+}
+
+.hint-chip span {
+  font-weight: lighter;
+  color: #dedede;
 }
 
 .row {

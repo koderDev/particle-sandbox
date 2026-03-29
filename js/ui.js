@@ -29,11 +29,11 @@ function togglePanel() {
 
   if(panelVisible) {
     panel.style.display="flex"
-    indicator.textContent="PANEL(h): ON"
-    indicator.style.color="#555"
+    indicator.style.display="none"
   } else {
     panel.style.display = "none"
-    indicator.textContent="PANEL(h): OFF"
+    indicator.style.display="flex"
+    indicator.textContent="PANEL(h): OFF | RESTART (R) | SCREENSHOT (Q) | LMB (SPAWN) | RMB (SHOCKWAVE)"
     indicator.style.color="#979797"
   }
 }
