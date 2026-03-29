@@ -54,8 +54,10 @@ function takeSS(){
       actions.id = "ss-actions"
       actions.innerHTML = `
       <span id="ss-label">screenshot captured!!</span>
+      <div id="ss-actions-buttons">
       <button id="ss-download">download</button>
       <button id="ss-close">resume</button>
+      </div>
       `
       overlay.appendChild(actions)
 
@@ -531,6 +533,21 @@ canvas.addEventListener("contextmenu", (e) => {
 
 
 window.addEventListener("keydown", (e) => {
+
+  if(e.key==="Escape"){
+    const overlay = document.getElementById("ss-overlay")
+    if(overlay){
+      overlay.classList.remove("visible")
+      const img = overlay.querySelector("#ss-preview")
+      const actions = overlay.querySelector("#ss-actions")
+      if(img) img.classList.remove("visible")
+      if(actions) actions.classList.remove("#visible")
+      setTimeout(()=>{
+        overlay.remove()
+        screenshotPaused=false
+    },50)
+    }
+  }
 
   if(e.key==="q"||e.key==="Q"){
     takeSS();
