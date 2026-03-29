@@ -32,26 +32,27 @@ function togglePanel() {
 }
 
 function takeSS(){
-  screenshotPaused=true
+  if(screenshotPaused) return
 
-  const flash=document.createElement("div")
-  flash.id = "ss-flash"
-  document.body.appendChild(flash)
-  setTimeout(()=>flash.remove(),300)
+  takingScreenshot=true
 
-  const dataUrl=canvas.toDataURL("image/png")
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      const dataUrl=canvas.toDataURL("image/png")
+      takingScreenshot=false
+      screenshotPaused=true
+      const overlay=document.createElement("div")
+      overlay.id = "ss-overlay"
+      document.body.appendChild(overlay)
 
-  const overlay=document.createElement("div")
+      const img = document.createElement("img")
+      img.id="ss-preview"
+      img.src=dataUrl
+      overlay.appendChild(img)
 
-  overlay.id="ss-overlay"
-  overlay.innerHTML=`
-    <img id="ss-preview" src="${dataUrl}">
-    <div id="ss-actions">
-      <span id="ss-label"> screenshot captured </span>
-    </div>
-    `
-    document.body.appendChild(overlay)
-
+    })
+  })
+  
 }
 
 

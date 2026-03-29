@@ -68,3 +68,4 @@ let repelAlpha = 0
 
 let panelVisible = true
 let screenshotPaused= false
+let takingScreenshot=false
