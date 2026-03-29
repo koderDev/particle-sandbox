@@ -65,3 +65,6 @@ let lastMilestone = 0
 
 let repelMode=false
 let repelAlpha = 0
+
+let panelVisible = true
+let screenshotPaused= false

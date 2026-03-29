@@ -1,19 +1,35 @@
 const DICE_PRESETS = [
-  { modes: ["z", "l"],        label: "void network" },
-  { modes: ["z", "l", "t"],   label: "neon web" },
-  { modes: ["t", "b"],        label: "black hole spiral" },
+  { modes: ["z", "l"],        label: "space web" },
+  { modes: ["z", "l", "t"],   label: "web trails" },
+  { modes: ["t", "b"],        label: "black hole trails" },
   { modes: ["o", "t"],        label: "solar trails" },
   { modes: ["z", "t"],        label: "ghost drift" },
-  { modes: ["l", "m"],        label: "merge cluster" },
-  { modes: ["c", "z"],        label: "cyclone void" },
-  { modes: ["c", "l"],        label: "vortex web" },
+  { modes: ["l", "m"],        label: "merge web" },
+  { modes: ["c", "z"],        label: "space cyclone" },
+  { modes: ["c", "l"],        label: "cyclone web" },
   { modes: ["w", "t"],        label: "wave trails" },
   { modes: ["w", "l"],        label: "wave network" },
-  { modes: ["g", "t"],        label: "upside down trails" },
+  { modes: ["g", "t"],        label: "flip trails" },
   { modes: ["g", "l", "z"],   label: "floating web" },
-  { modes: ["z", "l", "m"],   label: "merge void" },
-  { modes: ["o", "l"],        label: "orbital network" },
+  { modes: ["z", "l", "m"],   label: "space network" },
+  { modes: ["o", "l"],        label: "orbital web" },
 ]
+
+function togglePanel() {
+  panelVisible=!panelVisible
+  const panel=document.getElementById("panel")
+  const indicator=document.getElementById("panel-indicator")
+
+  if(panelVisible) {
+    panel.style.display="flex"
+    indicator.textContent="PANEL(h): ON"
+    indicator.style.color="#555"
+  } else {
+    panel.style.display = "none"
+    indicator.textContent="PANEL(h): OFF"
+    indicator.style.color="#bf7979b9"
+  }
+}
 
 function setModeBtn(key,isOn){
   const btn=document.getElementById(`btn-${key}`)
@@ -458,6 +474,10 @@ canvas.addEventListener("contextmenu", (e) => {
 
 
 window.addEventListener("keydown", (e) => {
+
+  if(e.key==="h"||e.key==="H"){
+    togglePanel();
+  }
 
   if(e.key==="r"||e.key==="R"){
     restartSimulation();

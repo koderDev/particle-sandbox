@@ -15,6 +15,7 @@
 
     <div id="toast"></div>
     <button id="dice-btn" title="random modes generator">🎲</button>
+    <div id="panel-indicator">PANEL(h): ON</div>
     <button id="spawn-btn" title="spawn particles">+ spawn</button>
     <div id="popup"></div>
 
@@ -50,6 +51,10 @@
         <p id="modes">MODES [ press the key ] </p>
     
         <div id="modeGrid">
+            <div class="mode-btn" id="btn-b" onclick="toggleMode('b')">
+                <span class="mode-key">B</span>
+                <span class="mode-label">black hole</span>
+            </div>
             <div class="mode-btn" id="btn-s" onclick="toggleMode('s')">
                 <span class="mode-key">S</span>
                 <span class="mode-label">tutorial</span>
@@ -58,17 +63,13 @@
                 <span class="mode-key">T</span>
                 <span class="mode-label">trail</span>
             </div>
-            <div class="mode-btn" id="btn-b" onclick="toggleMode('b')">
-                <span class="mode-key">B</span>
-                <span class="mode-label">black hole</span>
+            <div class="mode-btn" id="btn-i" onclick="toggleMode('i')">
+                <span class="mode-key">I</span>
+                <span class="mode-label">interact</span>
             </div>
             <div class="mode-btn" id="btn-m" onclick="toggleMode('m')">
                 <span class="mode-key">M</span>
                 <span class="mode-label">merge</span>
-            </div>
-            <div class="mode-btn" id="btn-i" onclick="toggleMode('i')">
-                <span class="mode-key">I</span>
-                <span class="mode-label">interact</span>
             </div>
             <div class="mode-btn" id="btn-z" onclick="toggleMode('z')">
                 <span class="mode-key">Z</span>
@@ -78,14 +79,6 @@
                 <span class="mode-key">N</span>
                 <span class="mode-label">bubbles</span>
             </div>
-            <div class="mode-btn" id="btn-o" onclick="toggleMode('o')">
-                <span class="mode-key">O</span>
-                <span class="mode-label">orbit</span>
-            </div>
-            <div class="mode-btn" id="btn-g" onclick="toggleMode('g')">
-                <span class="mode-key">G</span>
-                <span class="mode-label">grav flip</span>
-            </div>
             <div class="mode-btn" id="btn-l" onclick="toggleMode('l')">
                 <span class="mode-key">L</span>
                 <span class="mode-label">line</span>
@@ -94,6 +87,10 @@
                 <span class="mode-key">C</span>
                 <span class="mode-label">cyclone</span>
             </div>
+            <div class="mode-btn" id="btn-g" onclick="toggleMode('g')">
+                <span class="mode-key">G</span>
+                <span class="mode-label">grav flip</span>
+            </div>
             <div class="mode-btn" id="btn-e" onclick="toggleMode('e')">
                 <span class="mode-key">E</span>
                 <span class="mode-label">explosion</span>
@@ -101,6 +98,10 @@
             <div class="mode-btn" id="btn-x" onclick="toggleMode('x')">
                 <span class="mode-key">X</span>
                 <span class="mode-label">repel</span>
+            </div>
+            <div class="mode-btn" id="btn-o" onclick="toggleMode('o')">
+                <span class="mode-key">O</span>
+                <span class="mode-label">orbit</span>
             </div>
             <div class="mode-btn" >
                 <span class="mode-key">?</span>
