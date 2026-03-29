@@ -292,7 +292,8 @@ function hidePopup() {
 }
 
 function rollDice(){
-
+  
+  canvas.style.cursor = "default"
   playDiceSound();
   setTimeout(()=>{
 
@@ -352,6 +353,10 @@ function rollDice(){
       orbitAlpha=0;
     }
   
+    if(repelMode){
+      repelMode=false
+      setModeBtn("x",false);
+    }
     
     if(cycloneMode){
       cycloneMode=false;
@@ -477,6 +482,10 @@ function rollDice(){
       }
   
       showToast(` ${preset.label} (${currentScheme} palette) 🎲`, true);
+
+      if(!blackHole && !orbitMode && !cycloneMode && !explosionMode && !repelMode){
+        canvas.style.cursor = "default"
+      }
     })
   },100)
 }
