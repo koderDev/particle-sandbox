@@ -31,6 +31,30 @@ function togglePanel() {
   }
 }
 
+function takeSS(){
+  screenshotPaused=true
+
+  const flash=document.createElement("div")
+  flash.id = "ss-flash"
+  document.body.appendChild(flash)
+  setTimeout(()=>flash.remove(),300)
+
+  const dataUrl=canvas.toDataURL("image/png")
+
+  const overlay=document.createElement("div")
+
+  overlay.id="ss-overlay"
+  overlay.innerHTML=`
+    <img id="ss-preview" src="${dataUrl}">
+    <div id="ss-actions">
+      <span id="ss-label"> screenshot captured </span>
+    </div>
+    `
+    document.body.appendChild(overlay)
+
+}
+
+
 function setModeBtn(key,isOn){
   const btn=document.getElementById(`btn-${key}`)
   if(!btn) return
@@ -475,6 +499,9 @@ canvas.addEventListener("contextmenu", (e) => {
 
 window.addEventListener("keydown", (e) => {
 
+  if(e.key==="q"||e.key==="Q"){
+    takeSS();
+  }
   if(e.key==="h"||e.key==="H"){
     togglePanel();
   }

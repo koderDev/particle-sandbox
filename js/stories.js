@@ -52,6 +52,7 @@ let storyTriggered = false
 
 function drawStory() {
   if (!storyMode) return
+  if(screenshotPaused) return
   if (currentStory >= stories.length) return
 
   const story = stories[currentStory]
