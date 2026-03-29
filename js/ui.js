@@ -16,8 +16,15 @@ const DICE_PRESETS = [
 ]
 
 const shutterSound = new Audio("assets/sound/shutter.mp3");
+shutterSound.load()
+
+let shutterReady = false
+shutterSound.addEventListener("canplaythrough",()=>{
+  shutterReady=true
+})
 
 function playShutter() {
+  if(!shutterReady) return
   shutterSound.currentTime=0
   shutterSound.play()
 }
@@ -34,7 +41,7 @@ function togglePanel() {
     panel.style.display = "none"
     indicator.style.display="flex"
     indicator.textContent="PANEL(h): OFF | RESTART (R) | SCREENSHOT (Q) | LMB (SPAWN) | RMB (SHOCKWAVE)"
-    indicator.style.color="#979797"
+    indicator.style.color="#828282"
   }
 }
 
@@ -42,58 +49,61 @@ function takeSS(){
   if(screenshotPaused) return
 
   playShutter()
-  takingScreenshot=true
+  setTimeout(()=>{
 
-  requestAnimationFrame(()=>{
+    takingScreenshot=true
+  
     requestAnimationFrame(()=>{
-      const dataUrl=canvas.toDataURL("image/png")
-      takingScreenshot=false
-      screenshotPaused=true
-      const overlay=document.createElement("div")
-      overlay.id = "ss-overlay"
-      document.body.appendChild(overlay)
-
-      const img = document.createElement("img")
-      img.id="ss-preview"
-      img.src=dataUrl
-      overlay.appendChild(img)
-
-      const actions = document.createElement("div")
-      actions.id = "ss-actions"
-      actions.innerHTML = `
-      <span id="ss-label">screenshot captured!!</span>
-      <div id="ss-actions-buttons">
-      <button id="ss-download">download</button>
-      <button id="ss-close">resume</button>
-      </div>
-      `
-      overlay.appendChild(actions)
-
       requestAnimationFrame(()=>{
-        overlay.classList.add("visible")
-        img.classList.add("visible")
-        actions.classList.add("visible")
-      })
-
-      document.getElementById("ss-download").addEventListener("click",()=>{
-        const a = document.createElement("a")
-        a.href=dataUrl
-        a.download = `particle-sandbox-${Date.now()}.png`
-        a.click()
-        showToast("screenshot saved!", true)
-      })
-
-      document.getElementById("ss-close").addEventListener("click",()=>{
-        overlay.classList.remove("visible")
-        img.classList.remove("visible")
-        actions.classList.remove("visible")
-        setTimeout(()=>{
-          overlay.remove()
-          screenshotPaused=false
-        }, 400)
+        const dataUrl=canvas.toDataURL("image/png")
+        takingScreenshot=false
+        screenshotPaused=true
+        const overlay=document.createElement("div")
+        overlay.id = "ss-overlay"
+        document.body.appendChild(overlay)
+  
+        const img = document.createElement("img")
+        img.id="ss-preview"
+        img.src=dataUrl
+        overlay.appendChild(img)
+  
+        const actions = document.createElement("div")
+        actions.id = "ss-actions"
+        actions.innerHTML = `
+        <span id="ss-label">screenshot captured!!</span>
+        <div id="ss-actions-buttons">
+        <button id="ss-download">download</button>
+        <button id="ss-close">resume</button>
+        </div>
+        `
+        overlay.appendChild(actions)
+  
+        requestAnimationFrame(()=>{
+          overlay.classList.add("visible")
+          img.classList.add("visible")
+          actions.classList.add("visible")
+        })
+  
+        document.getElementById("ss-download").addEventListener("click",()=>{
+          const a = document.createElement("a")
+          a.href=dataUrl
+          a.download = `particle-sandbox-${Date.now()}.png`
+          a.click()
+          showToast("screenshot saved!", true)
+        })
+  
+        document.getElementById("ss-close").addEventListener("click",()=>{
+          overlay.classList.remove("visible")
+          img.classList.remove("visible")
+          actions.classList.remove("visible")
+          setTimeout(()=>{
+            overlay.remove()
+            screenshotPaused=false
+          }, 50)
+        })
       })
     })
-  })
+  },100)
   
 }
 
