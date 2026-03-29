@@ -6,7 +6,7 @@ canvas { display: block; }
 #panel {
   position: fixed;
   top: 30px;
-  left: 30px;
+  left: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -546,4 +546,7 @@ label {
 .new-badge:hover {
   background: #ffd500;
   transform: rotate(30deg) scale(1.08);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-style: dotted;
 }
