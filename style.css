@@ -166,7 +166,7 @@ label {
 
 #dice-btn.rolling {
   animation: diceRoll 0.5s ease-out forwards;
-  background: #2a1f00e6;
+  background: #ff2828e6;
 }
 
 
@@ -196,6 +196,21 @@ label {
   transform: scale(0.9);
 }
 
+
+@keyframes ssBtnAnim {
+  0%   { transform: scale(1); }
+  12%  { transform: scale(0.95); }
+  25%  { transform: scale(0.8); }
+  50%  { transform: scale(0.5); }
+  80%  { transform: scale(0.85); }
+  100% { transform: scale(1); }
+}
+
+#ss-btn.clickin {
+  animation: ssBtnAnim 0.2s ease-in forwards;
+  background: #ffbb00;
+  box-shadow: inset 2px 1px 50px 50px rgba(239, 200, 43, 0.689);
+}
 
 #spawn-btn {
   position: fixed;

@@ -462,6 +462,20 @@ function rollDice(){
   })
 }
 
+document.getElementById("ss-btn").addEventListener("click",()=>{
+  const btn = document.getElementById("ss-btn")
+
+  btn.classList.remove("clickin")
+  btn.classList.add("clickin")
+  btn.addEventListener("animationend",()=>btn.classList.remove("clickin"),{once:true})
+
+  setTimeout(()=>{
+    takeSS();
+  },100)
+
+
+})
+
 document.getElementById("dice-btn").addEventListener("click",()=>{
   const btn=document.getElementById("dice-btn")
 
