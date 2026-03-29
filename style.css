@@ -169,6 +169,34 @@ label {
   background: #2a1f00e6;
 }
 
+
+#ss-btn {
+  position: fixed;
+  bottom: 82px;
+  right: 86px;
+  background-color: #1e1e1ee6;
+  color: #fff;
+  font-family: 'Space Grotesk',monospace;
+  font-size: 24px;
+  padding: 10px ;
+  border-radius: 8px;
+  corner-shape: squircle;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, color 1s, transform 0.1s;
+  z-index: 999;
+}
+
+#ss-btn:hover {
+  background-color: #2a2a2ae6;
+}
+
+#ss-btn:active {
+  transform: scale(0.9);
+}
+
+
 #spawn-btn {
   position: fixed;
   bottom: 24px;
@@ -177,7 +205,7 @@ label {
   color: #fff;
   font-family: 'Space Grotesk',monospace;
   font-size: 18px;
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 8px;
   corner-shape: squircle;
   border: none;
