@@ -75,7 +75,14 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - the friction slider was wrong all this time. there was a simple logical error in the code. fixed it.
 
-- add new keybinding. `R` -> it restarts the simulation. if you are bored with your current simulation or you messed up something, you can press `R` and a new blank canvas will appear for you to get your creative juices flowing again.
+#### new keybinding. 
+
+- `R` -> it restarts the simulation. if you are bored with your current simulation or you messed up something, you can press `R` and a new blank canvas will appear for you to get your creative juices flowing again.
+
+- `H` -> it hides the panel. allows more space to have fun with. when the panel is hidden, it shows a small text in the top left corner of the screen which gives info about the major shortcuts like toggle panel(h), restart(r), screenshot(q), etc
+
+- `Q` -> screenshot. it snaps a pic of the current simulation you are doing. it ignores all the UI elements and shows your particles and their fun behaviors only. it took a bit too long to add this but finally it has been added. yay!
+
 
 
 #### ui
@@ -83,10 +90,14 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - add new color palette system. i have introduced 5 color palettes (default/rainbow, ice, fire, neon and mono). there is a section in the UI panel for color palettes. color of all the particles will change to the selected palette on selecting it.
 - the game now shows achievement toasts when particle count has reached to certain levels, e.g. when the user make 50, 100, etc. number of particles.
 -improve the panel UI and add new space for 2 more modes.
+- add simple, but fun, animations on the dice and camera button in the screen. (dice is for random mode generator and camera is for snapping a quick screenshot.) used css keyframes animation for this.
+- change the new update badge to CHANGELOGS button which redirects to github repo readme link.
+
 
 #### bug 🐛 fixes
 - cyclone mode has been fixed. in the previous version, the particles that get into the cyclone mode were being kicked out as soon as they enter the cyclone. they were thrown out tangentially from the cyclone. a voter pointed this out in the feedbacks so I have fixed it in this update. now, the particles that get into the cyclone revolve around it continuously.
 - explosion mode was causing particles to have organish color and it took a while fixing it. now, the neighboring particles change their color based on the current palette.
+- cursor was being hidden in the dice mode, this issue has been fixed simply by doing `cursor: default` inside the rollDice() function.
 
 
 ### [1.0.3]
@@ -101,6 +112,7 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - added a dice button which turns of a few modes randomly forming new chaos combinations
 - added a spawn button which spawns particles when clicked -> it was required for modes like blackhole, interact, and more in which left click was occupied by the major feature of the mode so needed an alternative method to spawn particles.
 - added a newspaper-ad like badge in the top right which shows the latest updates.
+- change the new update badge to CHANGELOGS button which redirects to github repo readme link.
 
 
 ### 🐛🐛🐛
