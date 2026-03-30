@@ -456,41 +456,66 @@ function drawRepel() {
 }
 
 function enableDiscoMode() {
-  const warning=document.createElement("div")
-  warning.id="disco-warning"
-  warning.innerHTML=`
+  if (discoWarningOpen) return
+  discoWarningOpen = true
+
+  const warning = document.createElement("div")
+  warning.id = "disco-warning"
+  warning.innerHTML = `
     <div id="disco-warning-content">
       <span id="disco-warning-title">epilepsy warning</span>
-      <span id="disco-warning-text">disco mode causes rapidly flashing colors. donot proceed if you are sensitive to flashing lights..</span>
+      <span id="disco-warning-text">disco mode causes rapidly flashing colors. do not proceed if you are sensitive to flashing lights.</span>
       <div id="disco-warning-buttons">
-        <button id="disco-confirm">i understand, let's discooo</button>
-        <button id="disco-cancel">cancel</button>
+        <button id="disco-confirm">i understand, <br>let's discooo (Y)</button>
+        <button id="disco-cancel">cancel (N)</button>
       </div>
     </div>
-      `
+  `
+  document.body.appendChild(warning)
+  requestAnimationFrame(() => warning.classList.add("visible"))
 
-    document.body.appendChild(warning)
-    requestAnimationFrame(()=>warning.classList.add("visible"))
+  function confirmDisco() {
+    discoWarningOpen = false
+    warning.classList.remove("visible")
+    setTimeout(() => { warning.remove(); startDisco() }, 80)
+    cleanup()
+  }
 
-    document.getElementById("disco-confirm").addEventListener("click",()=>{
-      warning.classList.remove("visible")
-      setTimeout(() => {
-        warning.remove()
-        startDisco()
-      }, 150);
-    })
+  function cancelDisco() {
+    discoWarningOpen = false
+    discoMode = false
+    setModeBtn("d", false)
+    warning.classList.remove("visible")
+    setTimeout(() => warning.remove(), 80)
+    cleanup()
+  }
 
-    document.getElementById("disco-cancel").addEventListener("click",()=>{
-      warning.classList.remove("visible")
-      discoMode=false
-      setModeBtn("d",false)
-      setTimeout(() => {
-        warning.remove()
-      }, 150);
-    })
+  function warningKeyHandler(e) {
+    if (discoWarningOpen) {
+      e.stopImmediatePropagation()
+      if (e.key === "y" || e.key === "Y") confirmDisco()
+      if (e.key === "n" || e.key === "N" || e.key === "Escape") cancelDisco()
+    }
+  }
+
+  function cleanup() {
+    document.getElementById("disco-confirm")?.removeEventListener("click", confirmDisco)
+    document.getElementById("disco-cancel")?.removeEventListener("click", cancelDisco)
+    window.removeEventListener("keydown", warningKeyHandler, true)
+  }
+
+  document.getElementById("disco-confirm").addEventListener("click", confirmDisco)
+  document.getElementById("disco-cancel").addEventListener("click", cancelDisco)
+  window.addEventListener("keydown", warningKeyHandler, true)
 }
 
 function startDisco() {
+  if(bubbleMode){
+    bubbleMode=false
+    setModeBtn("n",false)
+    disableBubbleMode()
+    hidePopup()
+  }
   showToast("disco mode ON",true)
   discoInterval=setInterval(()=>{
     if(!discoMode){

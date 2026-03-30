@@ -635,6 +635,11 @@ window.addEventListener("keydown", (e) => {
   }
 
   if(e.key==="d"||e.key==="D"){
+    if(discoWarningOpen) true
+    if(bubbleMode) {
+      showToast("exit bubble mode first");
+      return
+    }
     discoMode=!discoMode
     setModeBtn("d",discoMode)
     if(discoMode){
@@ -774,6 +779,12 @@ window.addEventListener("keydown", (e) => {
 
   if(e.key==="n"||e.key==="N"){
     bubbleMode=!bubbleMode;
+
+    if(discoMode){
+      discoMode=false
+      setModeBtn("d",false)
+      stopDisco()
+    }
     setModeBtn("n", bubbleMode)
     if (bubbleMode) {
       enableBubbleMode()
