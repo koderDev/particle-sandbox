@@ -69,7 +69,6 @@ function drawStory() {
     ctx.fillText(story.text, (canvas.width / 2), canvas.height / 2)
 
 
-    // hint arrow pulse
     ctx.globalAlpha = storyAlpha * 0.5
     ctx.fillStyle = "#aaa"
     ctx.font = "14px Space Grotesk"
@@ -118,7 +117,6 @@ function fireTrigger(key) {
   const story = stories[currentStory]
   if (story.trigger === key && waitingForTrigger) {
     storyTriggered = true
-    // advance after short delay
     setTimeout(() => {
       storyState = "fadein"
       storyAlpha = 0

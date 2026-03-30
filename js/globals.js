@@ -65,6 +65,13 @@ const COLOR_SCHEMES = {
 let currentScheme = "default"
 
 const MILESTONES=new Set([50,100,200,300,400])
+const MILESTONE_COLORS = {
+    50: "#62ff9c",
+    100: "#beff62",
+    200: "#fffa62",
+    300: "#ffcb62",
+    400: "#ff6262",
+}
 let lastMilestone = 0
 
 

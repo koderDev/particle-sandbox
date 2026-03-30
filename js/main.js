@@ -40,6 +40,14 @@ function loop() {
           400: "400 particles! MAXIMUM CHAOSSSSS"
         }
         showToast(msgs[m],true)
+
+        const pcountEle = document.getElementById("pcount")
+        pcountEle.style.color=MILESTONE_COLORS[m]
+        pcountEle.style.transition="color 0.5s ease"
+
+        setTimeout(()=>{
+          pcountEle.style.color=""
+        },3000)
       }
     } 
     
