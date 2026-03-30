@@ -97,6 +97,7 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - add simple, but fun, animations on the dice and camera button in the screen. (dice is for random mode generator and camera is for snapping a quick screenshot.) used css keyframes animation for this.
 - change the new update badge to CHANGELOGS button which redirects to github repo readme link.
 - show an epilepsy warning window when disco mode is turned on. 
+- the pcount text changes its colors based on the number of particles ( more towards shades of red if the count is high enough). these colors show for 3 seconds only. sth that needs fixing in the next update (hopefully), is that the pcount text changes color only for the 1st time they reach the number of partciles, after that the pcount text doesnot change color. so yeah, needs some fixinnn.
 
 
 #### bug 🐛 fixes
