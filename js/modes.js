@@ -457,6 +457,16 @@ function drawRepel() {
 
 function enableDiscoMode() {
   if (discoWarningOpen) return
+
+  if(currentScheme==="mono"){
+    discoWarningOpen=false
+    discoMode=false
+    setModeBtn("d",false)
+    showToast("heads up! disco mode doesn't work with mono palette",false)
+    return
+  }
+
+
   discoWarningOpen = true
 
   const warning = document.createElement("div")
@@ -516,6 +526,7 @@ function startDisco() {
     disableBubbleMode()
     hidePopup()
   }
+
   showToast("disco mode ON",true)
   discoInterval=setInterval(()=>{
     if(!discoMode){

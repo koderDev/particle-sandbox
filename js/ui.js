@@ -1,18 +1,15 @@
 const DICE_PRESETS = [
-  { modes: ["z", "l"],        label: "space web" },
-  { modes: ["z", "l", "t"],   label: "web trails" },
-  { modes: ["t", "b"],        label: "black hole trails" },
-  { modes: ["o", "t"],        label: "solar trails" },
-  { modes: ["z", "t"],        label: "ghost drift" },
-  { modes: ["l", "m"],        label: "merge web" },
-  { modes: ["c", "z"],        label: "space cyclone" },
-  { modes: ["c", "l"],        label: "cyclone web" },
-  { modes: ["w", "t"],        label: "wave trails" },
-  { modes: ["w", "l"],        label: "wave network" },
-  { modes: ["g", "t"],        label: "flip trails" },
-  { modes: ["g", "l", "z"],   label: "floating web" },
-  { modes: ["z", "l", "m"],   label: "space network" },
-  { modes: ["o", "l"],        label: "orbital web" },
+  { modes: ["z", "l"],        label: "spaceNweb" },
+  { modes: ["z", "l", "t"],   label: "line0grav" },
+  { modes: ["t", "b"],        label: "blackTrailHole" },
+  { modes: ["o", "t"],        label: "orbiTrail" },
+  { modes: ["z", "t"],        label: "trail0grav" },
+  { modes: ["l", "m"],        label: "mergeLine" },
+  { modes: ["c", "z"],        label: "cycl0gravityy" },
+  { modes: ["c", "l"],        label: "cycLine" },
+  { modes: ["g", "t"],        label: "flipGravTrailsss" },
+  { modes: ["z", "l", "m"],   label: "mergeLine0grav" },
+  { modes: ["o", "l"],        label: "orbitaLine" },
 ]
 
 const shutterSound = new Audio("assets/sound/shutter.mp3");
@@ -157,6 +154,8 @@ function restartSimulation(){
   cyclones=[]
   explosionMode=false;
   setModeBtn("e",false)
+  discoMode=false;
+  setModeBtn("d",false)
 
   grabbedParticle=null
   chargedParticle=null
@@ -190,7 +189,12 @@ document.querySelectorAll(".scheme-dot").forEach(dot => {
   dot.addEventListener("click", () => {
 
     const nextScheme=dot.dataset.scheme
-    // currentScheme = dot.dataset.scheme
+
+    if(nextScheme==="mono"&&discoMode){
+      showToast("heads up! can't use mono palette in disco mode", false)
+      return
+    }
+
     if(currentScheme==="mono"&&nextScheme!=="mono"){
       currentScheme="default"
       particles.forEach(p=>{

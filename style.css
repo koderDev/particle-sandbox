@@ -554,7 +554,7 @@ label {
 
 #tutorial-skip {
   position: fixed;
-  bottom: 80px;
+  bottom: 70%;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: #1e1e1ee6;
