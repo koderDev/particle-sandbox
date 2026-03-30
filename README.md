@@ -37,6 +37,9 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - `Repel (x)`: particles are repelled by the mouse pointer. they try to run away as much as they can...
 
+- `Disco (d)`: particles change their colors like there's no tomorrow. its the time to disco woo hoooo!! 
+
+
 #### sliders
 
 |slider name|function|
@@ -61,6 +64,8 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 #### new mode
 - repel (x): the mouse pointer changes to a no entry sign like symbol and all the particles are repelled by the mouse pointer. they try to escape and run away from the mouse pointer as much as they can.
 
+- disco (d): in this mode, the particles change their color continuously (every 0.8s fyi). also added an epilepsy warning before the starting of this mode so that it doesnot cause any harm to anyone *[ it was suggested by a voter in the previous updates ].*
+
 #### code
 - i have finally refactored the code. took a while to do this cause everything was jumbled in the same file. finally, the project files are getting a good structure. i have made a new `js` folder which comprises all the js code in it. the `script.js` has been broken down into 6 js files. 
 
@@ -84,7 +89,6 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - `Q` -> screenshot. it snaps a pic of the current simulation you are doing. it ignores all the UI elements and shows your particles and their fun behaviors only. it took a bit too long to add this but finally it has been added. yay!
 
 
-
 #### ui
 
 - add new color palette system. i have introduced 5 color palettes (default/rainbow, ice, fire, neon and mono). there is a section in the UI panel for color palettes. color of all the particles will change to the selected palette on selecting it.
@@ -92,13 +96,14 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 -improve the panel UI and add new space for 2 more modes.
 - add simple, but fun, animations on the dice and camera button in the screen. (dice is for random mode generator and camera is for snapping a quick screenshot.) used css keyframes animation for this.
 - change the new update badge to CHANGELOGS button which redirects to github repo readme link.
+- show an epilepsy warning window when disco mode is turned on. 
 
 
 #### bug 🐛 fixes
 - cyclone mode has been fixed. in the previous version, the particles that get into the cyclone mode were being kicked out as soon as they enter the cyclone. they were thrown out tangentially from the cyclone. a voter pointed this out in the feedbacks so I have fixed it in this update. now, the particles that get into the cyclone revolve around it continuously.
 - explosion mode was causing particles to have organish color and it took a while fixing it. now, the neighboring particles change their color based on the current palette.
 - cursor was being hidden in the dice mode, this issue has been fixed simply by doing `cursor: default` inside the rollDice() function.
-
+- disco mode was causing issues with the mono colorscheme so had to disable disco mode when mono is selected, to save performance and fix some bugs. similar issue were found with bubble mode and disco mode so disabled disco mode when bubble is turned on.
 
 ### [1.0.3]
 
