@@ -453,8 +453,7 @@ function rollDice(){
           { x: canvas.width * 0.7, y: canvas.height * 0.6, id: Date.now()+1 },
         ];
       }
-  
-      
+        
       if(key==="e"){
         explosionMode=true;
         setModeBtn("e",true);
@@ -632,6 +631,16 @@ window.addEventListener("keydown", (e) => {
         overlay.remove()
         screenshotPaused=false
     },50)
+    }
+  }
+
+  if(e.key==="d"||e.key==="D"){
+    discoMode=!discoMode
+    setModeBtn("d",discoMode)
+    if(discoMode){
+      enableDiscoMode()
+    } else {
+      stopDisco()
     }
   }
 

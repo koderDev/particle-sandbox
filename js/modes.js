@@ -454,3 +454,28 @@ function drawRepel() {
   ctx.restore()
   ctx.globalAlpha = 1
 }
+
+function enableDiscoMode() {
+  startDisco()
+}
+
+function startDisco() {
+  showToast("disco mode ON",true)
+  discoInterval=setInterval(()=>{
+    if(!discoMode){
+      clearInterval(discoInterval)
+      return
+    }
+    particles.forEach(p=>{
+      p.hue=COLOR_SCHEMES[currentScheme]()
+    })
+  },200)
+}
+
+function stopDisco() {
+  if(discoInterval){
+    clearInterval(discoInterval)
+    discoInterval=null
+  }
+  showToast("disco mode OFF", false);
+}

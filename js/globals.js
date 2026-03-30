@@ -27,6 +27,10 @@ let interactMode = false;
 let bubbleMode = false
 let orbitMode = false
 let explosionMode=false
+let discoMode = false
+
+let discoInterval = null
+let discoWarningShown = false
 
 let shockwaves = [];
 
