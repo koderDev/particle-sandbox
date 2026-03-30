@@ -456,7 +456,38 @@ function drawRepel() {
 }
 
 function enableDiscoMode() {
-  startDisco()
+  const warning=document.createElement("div")
+  warning.id="disco-warning"
+  warning.innerHTML=`
+    <div id="disco-warning-content">
+      <span id="disco-warning-title">epilepsy warning</span>
+      <span id="disco-warning-text">disco mode causes rapidly flashing colors. donot proceed if you are sensitive to flashing lights..</span>
+      <div id="disco-warning-buttons">
+        <button id="disco-confirm">i understand, let's discooo</button>
+        <button id="disco-cancel">cancel</button>
+      </div>
+    </div>
+      `
+
+    document.body.appendChild(warning)
+    requestAnimationFrame(()=>warning.classList.add("visible"))
+
+    document.getElementById("disco-confirm").addEventListener("click",()=>{
+      warning.classList.remove("visible")
+      setTimeout(() => {
+        warning.remove()
+        startDisco()
+      }, 150);
+    })
+
+    document.getElementById("disco-cancel").addEventListener("click",()=>{
+      warning.classList.remove("visible")
+      discoMode=false
+      setModeBtn("d",false)
+      setTimeout(() => {
+        warning.remove()
+      }, 150);
+    })
 }
 
 function startDisco() {
@@ -469,7 +500,7 @@ function startDisco() {
     particles.forEach(p=>{
       p.hue=COLOR_SCHEMES[currentScheme]()
     })
-  },200)
+  },80)
 }
 
 function stopDisco() {
@@ -478,4 +509,4 @@ function stopDisco() {
     discoInterval=null
   }
   showToast("disco mode OFF", false);
-}
+} 

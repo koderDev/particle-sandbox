@@ -31,6 +31,7 @@ let discoMode = false
 
 let discoInterval = null
 let discoWarningShown = false
+let discoWarningOpen = false
 
 let shockwaves = [];
 

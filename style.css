@@ -110,6 +110,7 @@ label {
 #btn-x.active .mode-key { color: #f84; }
 #btn-c.active .mode-key { color: rgb(255, 170, 248); }
 #btn-e.active .mode-key { color: #f84; }
+#btn-d.active .mode-key { color: #f0f; }
 
 #panel-indicator {
   position: fixed;
@@ -575,4 +576,91 @@ label {
 
 #skip-content {
   padding-bottom: 10px;
+}
+
+#disco-warning {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  pointer-events: none;
+}
+
+#disco-warning.visible {
+  background-color: rgba(0,0,0,0.85);
+  pointer-events: all;
+}
+
+#disco-warning-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 30px 40px;
+  max-width: 400px;
+  text-align: center;
+  font-family: 'Space Grotesk',monospace;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.2s transform 0.2s;
+}
+
+#disco-warning.visible #disco-warning-content {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#disco-warning-title {
+  color: #ff4444;
+  font-size: 18px;
+}
+
+#disco-warning-text {
+  color: #888;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+#disco-warning-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+#disco-confirm {
+  background-color: #1f3628;
+  color: #4cff8f;
+  border: none;
+  border-radius: 8px;
+  corner-shape: squircle;
+  padding: 8px 20px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#disco-confirm:hover { background-color: #256b3f;}
+
+#disco-cancel {
+  background-color: #391b1b;
+  color: #ff4c4c;
+  border: none;
+  border-radius: 8px;
+  corner-shape: squircle;
+  padding: 8px 20px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#disco-cancel:hover {
+  background-color: #711818;
 }
