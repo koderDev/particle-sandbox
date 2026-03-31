@@ -86,3 +86,6 @@ let chalOn = false
 let currChal = null
 let chalTimeRem = 0
 let chalCheckInt = null
+
+let nextchalin=0
+let nextchaltimer=null

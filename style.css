@@ -865,3 +865,23 @@ label {
   accent-color: #4cff8f;
   cursor: pointer;
 }
+
+#chal-panel-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+#next-chal-label{
+  background-color: rgb(72, 72, 72);
+  color: #dedede;
+  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  corner-shape: squircle;
+  min-width: 70px;
+  text-align: center;
+  height: 20px;
+}

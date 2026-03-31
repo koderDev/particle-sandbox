@@ -54,12 +54,13 @@ function showChal(){
 
     document.body.appendChild(chalElem)
     requestAnimationFrame(()=>chalElem.classList.add("visible"))
-
     document.getElementById("challenge-border").style.display="block"
-
     chalCheckInt=setInterval(()=>{
 
-        if(!currChal) { clearInterval(chalCheckInt); return}
+        if(!currChal) { 
+            clearInterval(chalCheckInt); 
+            return
+        }
 
         if(currChal.check && currChal.check()){
             chalwon()
@@ -84,7 +85,9 @@ function chalwon(){
     document.getElementById("challenge-border").style.display="none"
     const msg=winchaltext[Math.floor(Math.random()*winchaltext.length)]
     showChalRizzult(msg,true)
-    setTimeout(showChal,5000);
+    // 2-3 minute ko gap ma arko challenge dine, maybe i can improve this in future versions
+    const delay=Math.floor(Math.random()*60000)+120000
+    schedulenextchal(delay);
 }
 
 function removeChal(){
@@ -101,8 +104,8 @@ function challost(){
     document.getElementById("challenge-border").style.display="none"
     const msg=losschaltext[Math.floor(Math.random()*losschaltext.length)]
     showChalRizzult(msg,false)
-    setTimeout(showChal,5000)
-
+    const delay=Math.floor(Math.random()*60000)+120000
+    schedulenextchal(delay)
 }
 
 function showChalRizzult(msg,won){
@@ -119,10 +122,47 @@ function showChalRizzult(msg,won){
     setTimeout(()=>{
         rizzltElem.classList.remove("visible")
         setTimeout(()=>rizzltElem.remove(),300)
-    },5000)
+    },8000)
 }
 
 function startChal(){
     if(!chalOn) return
-    setTimeout(showChal,1000)
+    const delay=Math.floor(Math.random()*45000)+45000;
+    // nextchalin=Math.floor(delay/1000) yesko kaam xaina yaha
+    schedulenextchal(delay)
 }
+
+function schedulenextchal(delay){
+    if(!chalOn) return
+    nextchalin=Math.floor(delay/1000)
+
+    if(nextchaltimer) clearInterval(nextchaltimer)
+    nextchaltimer=setInterval(() => {
+        if(!chalOn) { 
+            clearInterval(nextchaltimer); 
+            return
+        }
+        if(currChal) return
+        nextchalin--
+        updatenextchal()
+        if(nextchalin<=0){
+            clearInterval(nextchaltimer)
+            showChal()
+        }
+    }, 1000);
+}
+
+function updatenextchal() {
+    const label=document.getElementById("next-chal-label");
+    if(!label) return
+    if(currChal){
+        label.textContent="challenge active!"
+        label.style.color="#fa0"
+    } else if (!chalOn) {
+        label.textContent=""
+    } else {
+        label.textContent=`next: ${nextchalin}s`
+        label.style.color="#fff"
+    }
+}
+
