@@ -5,7 +5,7 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top: 30px;
+  top:20px;
   left: 20px;
   display: flex;
   flex-direction: column;
@@ -561,7 +561,7 @@ label {
   border-radius: 12px;
   padding: 12px 20px 0px 20px;
   font-family: 'Space Grotesk', monospace;
-  z-index: 998;
+  z-index: 996;
   opacity: 0;
   transition: opacity 0.4s ease, transform 0.4s ease;
   min-width: 280px;
@@ -685,7 +685,7 @@ label {
 }
 
 #challenge-popup.visible {
-  top: 30px;
+  top: 20px;
 }
 
 #challenge-tag {
@@ -748,7 +748,7 @@ label {
 }
 
 #challenge-result.visible {
-  top: 30px;
+  top: 20px;
 }
 
 #challenge-result.won {
@@ -759,4 +759,109 @@ label {
 #challenge-result.lost {
   background: #4d1a1a;
   color: #ff6b6b;
+}
+
+#challenge-optin {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 997;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s;
+  pointer-events: none;
+}
+
+#challenge-optin.visible {
+  background: rgba(0,0,0,0.75);
+  pointer-events: all;
+}
+
+#challenge-optin-in {
+  background: #0f0f0f;
+  border-radius: 14px;
+  corner-shape: squircle;
+  padding: 30px 36px;
+  max-width: 380px;
+  text-align: center;
+  font-family: 'Space Grotesk', monospace;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transform:scale(0.35);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+#challenge-optin.visible #challenge-optin-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#optin-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#optin-text {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#optin-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+#optin-yes {
+  background: #1a4d2e;
+  color: #4cff8f;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 8px;
+  corner-shape: squircle;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#optin-yes:hover {
+  background: #256b3f;
+}
+
+#optin-no {
+  background-color: #8c1d1dc6;
+  color: #ff4c4c;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 8px;
+  corner-shape: squircle;
+  font-family: 'Space Grotesk',monospace;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#optin-no:hover {
+  background-color: #b50e0eba;
+}
+
+#chal-panel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 5px;
+  border-top: 1px solid #2a2a2a;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 14px;
+}
+
+#chal-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #4cff8f;
+  cursor: pointer;
 }

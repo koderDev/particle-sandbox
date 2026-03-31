@@ -493,7 +493,7 @@ function rollDice(){
   },100)
 }
 
-function showTutorialSkipPrompt() {
+function showTutorialskipprompt() {
   const prompt = document.createElement("div")
   prompt.id="tutorial-skip"
   prompt.innerHTML=`
@@ -1015,10 +1015,41 @@ canvas.addEventListener("mouseup",(e)=>{
   }
 })
 
-setTimeout(showTutorialSkipPrompt,10000)
+setTimeout(showTutorialskipprompt,10000)
 
+document.getElementById("chal-checkbox").addEventListener("change",(evt)=>{
+  chalOn=evt.target.checked
+  if(chalOn){
+    showToast("challenges ON!!",true)
+    startChal()
+  } else {
+    if(currChal){
+      clearInterval(chalCheckInt)
+      currChal=null
+      removeChal()
+      document.getElementById("challenge-border").style.display="none"
+    }
+    showToast("challenges OFFFF",false)
+  }
+})
 
-setTimeout(()=>{
-  chalOn=true
-  startChal()
-},1000)
+function showChaloptin(){
+  const optInelem=document.getElementById("challenge-optin");
+  requestAnimationFrame(()=>optInelem.classList.add("visible"))
+  document.getElementById("optin-yes").addEventListener("click",()=>{
+    chalOn=true
+    document.getElementById("chal-checkbox").checked=true;
+    optInelem.classList.remove("visible");
+    setTimeout(()=>optInelem.style.display="none",300)
+    showToast("challenges enabled!! first one in 45 seconds", true)
+    startChal()
+  })
+
+  document.getElementById("optin-no").addEventListener("click",()=>{
+    optInelem.classList.remove("visible")
+    setTimeout(()=>optInelem.style.display="none",300)
+    showToast("no worries, explore the sandbox!",null)
+  })
+}
+
+setTimeout(showChaloptin,1000)
