@@ -1016,3 +1016,9 @@ canvas.addEventListener("mouseup",(e)=>{
 })
 
 setTimeout(showTutorialSkipPrompt,10000)
+
+
+setTimeout(()=>{
+  chalOn=true
+  startChal()
+},1000)
