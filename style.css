@@ -729,3 +729,34 @@ label {
     box-shadow: inset 0 0 40px rgba(255, 203, 130, 0.307);
   }
 }
+
+#challenge-result {
+  position: fixed;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  corner-shape: squircle;
+  padding: 12px 22px;
+  z-index: 1000;
+  font-family: 'Space Grotesk',monospace;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: top 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+#challenge-result.visible {
+  top: 30px;
+}
+
+#challenge-result.won {
+  background-color: #1a4d2e;
+  color: #4cff8f;
+}
+
+#challenge-result.lost {
+  background: #4d1a1a;
+  color: #ff6b6b;
+}
