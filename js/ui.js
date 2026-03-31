@@ -1017,28 +1017,14 @@ canvas.addEventListener("mouseup",(e)=>{
 
 setTimeout(showTutorialskipprompt,15000)
 
-document.getElementById("chal-checkbox").addEventListener("change",(evt)=>{
-  chalOn=evt.target.checked
-  if(chalOn){
-    showToast("challenges ON!!",true)
-    startChal()
-  } else {
-    if(currChal){
-      clearInterval(chalCheckInt)
-      currChal=null
-      removeChal()
-      document.getElementById("challenge-border").style.display="none"
-    }
-    showToast("challenges OFFFF",false)
-  }
-})
+
 
 function showChaloptin(){
   const optInelem=document.getElementById("challenge-optin");
   requestAnimationFrame(()=>optInelem.classList.add("visible"))
   document.getElementById("optin-yes").addEventListener("click",()=>{
     chalOn=true
-    document.getElementById("chal-checkbox").checked=true;
+    document.getElementById("chal-panel-row").style.display="flex"
     optInelem.classList.remove("visible");
     setTimeout(()=>optInelem.style.display="none",300)
     startChal()

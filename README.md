@@ -59,6 +59,14 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 ## changelogs 🛠
 
+### [1.0.5]
+
+#### CHALLENGESSSS
+- challenges have been introduced in this update. a popup shows in the game after a few seconds of starting, to ask the user if they want to opt in for the challenges and if they choose yes then they better be ready for a fun challenges. *sadly, i have not come up with fun challenges yet though, the current challenges quite simple actually.*
+- there is a separate UI style for the challenge mode which includes a thick yellow border around the screen with the challenge info menu at the top and time ticking fast. 
+- if the user wins the challenge, they are greeted with fun msges but if they lose then they may be roasted a bit.
+- challenges are continuous, they donot stop. they keep coming one after another. for now, i have onl made 5 challenges so after all these finish, they will circulate again randomly. but it will not happen in future versions, im thinking to make it so that the user gets some kind of achevement like thing if they finish all challenges. not sure how i would implement it though.
+
 ### [1.0.4]
 
 #### new mode
