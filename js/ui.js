@@ -1015,7 +1015,7 @@ canvas.addEventListener("mouseup",(e)=>{
   }
 })
 
-setTimeout(showTutorialskipprompt,10000)
+setTimeout(showTutorialskipprompt,15000)
 
 document.getElementById("chal-checkbox").addEventListener("change",(evt)=>{
   chalOn=evt.target.checked
@@ -1041,8 +1041,8 @@ function showChaloptin(){
     document.getElementById("chal-checkbox").checked=true;
     optInelem.classList.remove("visible");
     setTimeout(()=>optInelem.style.display="none",300)
-    showToast("challenges enabled!! first one in 45 seconds", true)
     startChal()
+    showToast(`challenges enabled!! first one will be after ${nextchalin} seconds`, true)
   })
 
   document.getElementById("optin-no").addEventListener("click",()=>{
@@ -1052,4 +1052,4 @@ function showChaloptin(){
   })
 }
 
-setTimeout(showChaloptin,1000)
+setTimeout(showChaloptin,5000)

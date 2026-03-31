@@ -5,8 +5,8 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top:20px;
-  left: 20px;
+  top:15px;
+  left:15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -14,11 +14,11 @@ canvas { display: block; }
   font-size: 14px;
   border-radius: 8px;
   corner-shape: squircle;
-  color: rgb(255, 255, 255);
+  color:rgb(255, 255, 255);
   background: #1e1e1ee6;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  padding: 14px;
+  padding:14px;
   width: 260px;
   
 }
@@ -26,15 +26,15 @@ canvas { display: block; }
 label {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content:space-between;
   gap: 5px;
   color: #afafaf;
 }
 
 
 #modeGrid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
   gap: 6px;
 }
 
@@ -764,7 +764,6 @@ label {
 #challenge-optin {
   position: fixed;
   inset: 0;
-  background: #000;
   z-index: 997;
   display: flex;
   justify-content: center;
