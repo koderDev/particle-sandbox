@@ -156,7 +156,7 @@ label {
   transform: scale(0.9);
 }
 
-@keyframes diceRoll {
+@keyframes diceanim {
   0%   { transform: rotate(0deg)   scale(1); }
   20%  { transform: rotate(72deg)  scale(1.2); }
   40%  { transform: rotate(144deg) scale(0.9); }
@@ -166,7 +166,7 @@ label {
 }
 
 #dice-btn.rolling {
-  animation: diceRoll 0.5s ease-out forwards;
+  animation: diceanim 0.5s ease-out forwards;
   background: #ff2828e6;
 }
 
@@ -197,7 +197,7 @@ label {
 }
 
 
-@keyframes ssBtnAnim {
+@keyframes ssanim {
   0%   { transform: scale(1); }
   12%  { transform: scale(0.95); }
   25%  { transform: scale(0.8); }
@@ -207,7 +207,7 @@ label {
 }
 
 #ss-btn.clickin {
-  animation: ssBtnAnim 0.2s ease-in forwards;
+  animation: ssanim 0.2s ease-in forwards;
   background: #ffbb00;
   box-shadow: inset 2px 1px 50px 50px rgba(239, 200, 43, 0.689);
 }
@@ -472,11 +472,10 @@ label {
 #popup {
   display: none;
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255,255,255,0.08);
-  /* border: 1px solid rgba(255,255,255,0.1); */
   color: #aaa;
   text-align: center;
   font-family: 'Space Grotesk', monospace;
@@ -663,4 +662,70 @@ label {
 
 #disco-cancel:hover {
   background-color: #711818;
+}
+
+#challenge-popup {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  corner-shape: squircle;
+  padding: 14px 22px;
+  z-index: 999;
+  font-family: 'Space Grotesk', monospace;
+  border: 3px solid #fa0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: top 0.3s cubic-bezier(0.24, 1.6, 0.64, 1);
+  min-width: 320px;
+}
+
+#challenge-popup.visible {
+  top: 30px;
+}
+
+#challenge-tag {
+  color: #fa0;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+#challenge-text {
+  color: #fff;
+  font-size: 16px;
+}
+
+#challenge-timer-text {
+  color: #ffffff;
+  font-size: 15px;
+}
+
+#challenge-seconds {
+  color: #fa0;
+  font-weight: bold;
+}
+
+#challenge-border {
+  display: none;
+  position: fixed;
+  inset: 0;
+  border: 3px solid #fa0;
+  pointer-events: none;
+  z-index: 998;
+  box-shadow: inset 0 0 30px rgba(255, 255, 154, 0.307);
+  animation: borderanim 1s ease-in-out infinite;
+}
+
+@keyframes borderanim {
+  0%,100% { border-color: #fa0;}
+  50% {
+    border-color: #fa0;
+    box-shadow: inset 0 0 40px rgba(255, 203, 130, 0.307);
+  }
 }
