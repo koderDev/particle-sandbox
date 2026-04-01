@@ -546,3 +546,29 @@ function stopDisco() {
   }
   showToast("disco mode OFF", false);
 } 
+
+function applySlitherPhysiks() {
+  if(!slithermode) return
+  slithertime+=0.02;
+
+
+  particles.forEach((p,i)=>{
+    const wiggle=Math.sin(slithertime*2+i*0.8)*0.15 // harek particle ko farak trail banyo
+    const wiggleY = Math.cos(slithertime*1.5+i*0.6)*0.15
+    p.vx+=wiggle
+    p.vy+=wiggleY
+    if(Math.random()<0.02){
+      p.vx+=(Math.random()-0.5)*1.2
+      p.vy+=(Math.random()-0.5)*1.2
+    }
+    const speed=Math.sqrt(p.vx*p.vx+p.vy*p.vy)
+    const speedmaxm=2.5
+    if(speed>speedmaxm){
+      p.vx=(p.vx/speed)*speedmaxm
+      p.vy=(p.vy/speed)*speedmaxm
+    }
+    p.vx*=0.96 //spontaneous dekhiyos bhanera halya ho
+    p.vy*=0.96
+  })
+
+}

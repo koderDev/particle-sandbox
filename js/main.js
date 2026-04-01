@@ -1,7 +1,8 @@
 function loop() {
 
   if(!screenshotPaused){
-    ctx.globalAlpha = trailMode ? 0.15 : 1;
+    const currentalpha=slithermode?0.04:(trailMode?0.15:1);
+    ctx.globalAlpha = currentalpha;
     ctx.fillStyle = "#0a0a0a";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -17,11 +18,11 @@ function loop() {
     
     applyBlackHole();
     applyCyclones();
+    applySlitherPhysiks()
     drawOrbit()
     drawBlackHole();
     drawCyclones();
     checkBubblePop()
-    
     drawRepel();
     applyRepel();
     drawShockwaves();

@@ -111,6 +111,7 @@ label {
 #btn-c.active .mode-key { color: rgb(255, 170, 248); }
 #btn-e.active .mode-key { color: #f84; }
 #btn-d.active .mode-key { color: #f0f; }
+#btn-p.active .mode-key { color: #8f8; }
 
 #panel-indicator {
   position: fixed;

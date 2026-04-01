@@ -57,6 +57,7 @@ function togglePanel() {
   }
 }
 
+
 function takeSS(){
   if(screenshotPaused) return
 
@@ -547,11 +548,6 @@ document.getElementById("dice-btn").addEventListener("click",()=>{
 
 })
 
-
-
-
-
-
 const sliders = [
   { slider: pullSlider, display: document.getElementById("pull-val") },
   { slider: dampenSlider, display: document.getElementById("dampen-val") },
@@ -569,6 +565,7 @@ canvas.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
+
 
 canvas.addEventListener("click", (e) => {
   if(interactMode) return
@@ -636,6 +633,24 @@ window.addEventListener("keydown", (e) => {
         screenshotPaused=false
     },50)
     }
+  }
+
+  if(e.key==="p"||e.key==="P"){
+    slithermode=!slithermode
+    setModeBtn("p",slithermode);
+    if(slithermode){
+      pullSlider.dataset.slithersaved=pullSlider.value
+      pullSlider.value=0 //gravity0 banayo
+      particles.forEach(p=> {
+        p.vx=(Math.random()-0.5)*1.5
+        p.vy=(Math.random()-0.5)*1.5
+      })
+      showToast("slither mode ONN",true)
+    } else {
+      pullSlider.value=pullSlider.dataset.slithersaved||0.9
+      showToast("slither mode OFF",false)
+    }
+    fireTrigger("p")
   }
 
   if(e.key==="d"||e.key==="D"){

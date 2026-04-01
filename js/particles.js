@@ -2,12 +2,12 @@ function createParticle(x, y) {
   return {
     x,
     y,
-    vx: (Math.random() - 0.5) * 6,
+    vx:(Math.random() - 0.5) * 6,
     vy: (Math.random() - 0.5) * 6,
-    size: Math.random() * parseFloat(sizeSlider.value) + 6,
+    size:Math.random() * parseFloat(sizeSlider.value) + 6,
     mass: 1,
     // hue: Math.random() * 360,
-    hue: COLOR_SCHEMES[currentScheme]()
+    hue:COLOR_SCHEMES[currentScheme]()
   };
 }
 
@@ -15,14 +15,14 @@ function updateParticle(p) {
   if (p.grabbed) return
 
   if (p.isBubble) {
-    p.vx += (Math.random() - 0.5) * 0.1  
-    p.vx *= 0.98
+    p.vx +=(Math.random() - 0.5) * 0.1  
+    p.vx *=0.98
     p.vy *= 0.98
 
     p.x += p.vx
     p.y += p.vy
 
-    // bounce off walls softly
+    // walls bata bounce hunxa halka halka
     if (p.x - p.size < 0) { p.x = p.size; p.vx *= -0.5 }
     if (p.x + p.size > canvas.width) { p.x = canvas.width - p.size; p.vx *= -0.5 }
     if (p.y - p.size < 0) { p.y = p.size; p.vy *= -0.5 }
@@ -32,9 +32,11 @@ function updateParticle(p) {
 
   applyGravity(p)
 
-  const friction=1-parseFloat(dampenSlider.value)
-  p.vx*=friction
-  p.vy*=friction
+  if(!slithermode){
+    const friction=1-parseFloat(dampenSlider.value)
+    p.vx*=friction
+    p.vy*=friction
+  }
 
   p.x += p.vx
   p.y += p.vy
@@ -66,18 +68,16 @@ function drawParticle(p) {
     ctx.arc(p.x - r * 0.3, p.y - r * 0.3, r * 0.25, 0, Math.PI * 2)
     ctx.fill()
 
-    ctx.globalAlpha = 0.15
+    ctx.globalAlpha =0.15
     ctx.fillStyle = "rgba(255,255,255,0.6)"
     ctx.beginPath()
     ctx.arc(p.x + r * 0.25, p.y + r * 0.25, r * 0.1, 0, Math.PI * 2)
     ctx.fill()
 
-    ctx.globalAlpha = 1
+    ctx.globalAlpha =1
     return
   }
-
-  // normal draw below...
-  const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy)
+  const speed =Math.sqrt(p.vx * p.vx + p.vy * p.vy)
   const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size)
   
   if(currentScheme === "mono") {
@@ -88,8 +88,8 @@ function drawParticle(p) {
     gradient.addColorStop(1, `hsl(${p.hue}, 100%, 40%)`)
   }
   
-  ctx.globalAlpha = 1
-  ctx.fillStyle = gradient
+  ctx.globalAlpha =1
+  ctx.fillStyle =gradient
   ctx.beginPath()
   ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
   ctx.fill()
@@ -110,9 +110,9 @@ function resolveMergeOrCollide() {
   const grid = buildGrid(cellSize)
 
   grid.forEach((cell, key) => {
-    const [gx, gy] = key.split(",").map(Number)
+    const [gx, gy] =key.split(",").map(Number)
 
-    // only check neighboring cells
+    // najeek ko cells matra check garxa
     const neighbors = []
     for (let dx = -1; dx <= 1; dx++) {
       for (let dy = -1; dy <= 1; dy++) {

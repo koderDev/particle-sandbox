@@ -67,6 +67,8 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - if the user wins the challenge, they are greeted with fun msges but if they lose then they may be roasted a bit.
 - challenges are continuous, they donot stop. they keep coming one after another. for now, i have onl made 5 challenges so after all these finish, they will circulate again randomly. but it will not happen in future versions, im thinking to make it so that the user gets some kind of achevement like thing if they finish all challenges. not sure how i would implement it though.
 
+- for future updates, i want to make sure the challenge info is shown even when the panel is closed, in the top left corner of the screen along with other infos.
+
 ### [1.0.4]
 
 #### new mode

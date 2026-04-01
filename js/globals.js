@@ -89,3 +89,6 @@ let chalCheckInt = null
 
 let nextchalin=0
 let nextchaltimer=null
+
+let slithermode=false
+let slithertime=0
