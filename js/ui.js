@@ -133,6 +133,8 @@ function restartSimulation(){
   blackHole=false;
   setModeBtn("b",false);
   bhAlpha=0
+  slithermode=false
+  setModeBtn("p",false);
   trailMode=false;
   setModeBtn("t",false)
   mergeMode=false;
@@ -636,6 +638,15 @@ window.addEventListener("keydown", (e) => {
   }
 
   if(e.key==="p"||e.key==="P"){
+
+    if(!slithermode){
+      if(blackHole) {blackHole=false; setModeBtn("b",false),bhAlpha=0}
+      if(trailMode) {trailMode=false; setModeBtn("t",false)}
+      if(gravityFlip) {gravityFlip=false; setModeBtn("g",false)}
+      if(bubbleMode) {bubbleMode=false; setModeBtn("n",false),disableBubbleMode()}
+
+    }
+
     slithermode=!slithermode
     setModeBtn("p",slithermode);
     if(slithermode){
@@ -1030,7 +1041,7 @@ canvas.addEventListener("mouseup",(e)=>{
   }
 })
 
-setTimeout(showTutorialskipprompt,15000)
+setTimeout(showTutorialskipprompt,25000)
 
 
 
@@ -1053,4 +1064,4 @@ function showChaloptin(){
   })
 }
 
-setTimeout(showChaloptin,5000)
+setTimeout(showChaloptin,20000)

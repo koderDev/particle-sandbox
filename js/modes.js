@@ -547,27 +547,41 @@ function stopDisco() {
   showToast("disco mode OFF", false);
 } 
 
-function applySlitherPhysiks() {
+function applySlitherPhysiks() { 
   if(!slithermode) return
-  slithertime+=0.02;
-
-
+  slithertime+=0.018;
   particles.forEach((p,i)=>{
-    const wiggle=Math.sin(slithertime*2+i*0.8)*0.15 // harek particle ko farak trail banyo
-    const wiggleY = Math.cos(slithertime*1.5+i*0.6)*0.15
-    p.vx+=wiggle
-    p.vy+=wiggleY
-    if(Math.random()<0.02){
-      p.vx+=(Math.random()-0.5)*1.2
-      p.vy+=(Math.random()-0.5)*1.2
+
+    //unique phase harek particle ko lagi
+    const phasei=i*1.3
+    const phaseii= i*0.7
+    const phaseiii =i*2.1
+    const wiggleX=Math.sin(slithertime*2.2+phasei)*0.12
+    const wiggleY=Math.sin(slithertime*1.7+phaseii)*0.12
+    const slowx= Math.cos(slithertime*0.8+phaseiii)*0.06
+    const slowy=Math.sin(slithertime*0.6+phasei)*0.06
+    p.vx+=wiggleX+slowx
+    p.vy+=wiggleY+slowy
+
+    if(Math.random()<0.03){
+      const angle=Math.random()*Math.PI*2
+      const kick= Math.random()*0.8+0.3
+      p.vx+=Math.cos(angle)*kick
+      p.vy+=Math.sin(angle)*kick
     }
-    const speed=Math.sqrt(p.vx*p.vx+p.vy*p.vy)
-    const speedmaxm=2.5
+
+    if(Math.random()*0.4){
+      p.vx += (Math.random()-0.5)*3
+      p.vy+=(Math.random()-0.5)*3
+    }
+
+    const speed= Math.sqrt(p.vx*p.vx+p.vy*p.vy)
+    const speedmaxm=2.67
     if(speed>speedmaxm){
-      p.vx=(p.vx/speed)*speedmaxm
+      p.vx= (p.vx/speed)*speedmaxm
       p.vy=(p.vy/speed)*speedmaxm
     }
-    p.vx*=0.96 //spontaneous dekhiyos bhanera halya ho
+    p.vx *=0.96 //spontaneous dekhiyos bhanera halya ho
     p.vy*=0.96
   })
 

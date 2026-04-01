@@ -39,6 +39,8 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - `Disco (d)`: particles change their colors like there's no tomorrow. its the time to disco woo hoooo!! 
 
+- `slither(p):` particles slither and wiggle around the screen as if they've been reptilified..!!sssssssssssss...
+
 
 #### sliders
 
@@ -61,6 +63,8 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 ### [1.0.5]
 
+#### new mode
+- slither mode (p): in this mode, the particles tend to wiggle and slither around the screen. i have tried my best to make it look as much spontaneous as i can. it still is not that much spontaneous and you can see patterns on it but still, i guess its quite fun. this mode is best when played with 0 gravity mode turned on. also, when disco mode is turned along with these, you will get to see a whole new dimension heheehe. *did not find any other key so made it p.* 
 #### CHALLENGESSSS
 - challenges have been introduced in this update. a popup shows in the game after a few seconds of starting, to ask the user if they want to opt in for the challenges and if they choose yes then they better be ready for a fun challenges. *sadly, i have not come up with fun challenges yet though, the current challenges quite simple actually.*
 - there is a separate UI style for the challenge mode which includes a thick yellow border around the screen with the challenge info menu at the top and time ticking fast. 
