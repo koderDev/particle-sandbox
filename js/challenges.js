@@ -193,6 +193,7 @@ function schedulenextchal(delay){
 
 function updatenextchal() {
     const label=document.getElementById("next-chal-label");
+    const indicator=document.getElementById("panel-indicator")
     if(!label) return
     if(currChal){
         label.textContent="challenge active!"
@@ -202,6 +203,11 @@ function updatenextchal() {
     } else {
         label.textContent=`next: ${nextchalin}s`
         label.style.color="#fff"
+    }
+
+    if(indicator && !panelVisible){
+        const challengeappendtext=currChal ? ` | challenge ACTIVE!` : chalOn? ` | next challenge in: ${nextchalin}s` : ""
+        indicator.textContent="PANEL(h): OFF | RESTART (R) | SCREENSHOT (Q) | LMB (SPAWN) | RMB (SHOCKWAVE)"+challengeappendtext
     }
 }
 

@@ -52,7 +52,7 @@ function togglePanel() {
   } else {
     panel.style.display = "none"
     indicator.style.display="flex"
-    indicator.textContent="PANEL(h): OFF | RESTART (R) | SCREENSHOT (Q) | LMB (SPAWN) | RMB (SHOCKWAVE)"
+    indicator.textContent=`PANEL(h): OFF | RESTART (R) | SCREENSHOT (Q) | LMB (SPAWN) | RMB (SHOCKWAVE)`
     indicator.style.color="#828282"
   }
 }
