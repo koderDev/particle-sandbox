@@ -138,7 +138,16 @@
             <label id="chal-panel-label" for="chal-checkbox">challenges</label>
             <span id="next-chal-label">no challenges..</span>
         </div>
-        <div id="counter">particles: <span id="pcount">0</span></div>
+        <div id="counter">
+            <div id="counter-row">
+                <span>particles: <span id="pcount">0</span></span>
+                <div id="maxpart-row">
+                    <span id="maxpart-label">max</span>
+                    <input type="range" id="maxpart" min="100" max="600" step="50" value="420">
+                    <button class="reset-btn" data-id="maxpart" data-default="420">↺</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="challenge-border"></div>

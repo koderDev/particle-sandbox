@@ -5,7 +5,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
-const MAX_PARTICLES = 420;
+let MAX_PARTICLES = 420;
+
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 
 const pullSlider = document.getElementById("pull");

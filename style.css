@@ -5,11 +5,11 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top:15px;
-  left:15px;
+  top: 7px;
+  left: 7px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 7px;
   font-family: 'Space Grotesk', monospace;
   font-size: 14px;
   border-radius: 8px;
@@ -18,24 +18,24 @@ canvas { display: block; }
   background: #1e1e1ee6;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  padding:14px;
+  padding:10px 12px;
   width: 260px;
-  
 }
 
 label {
   display: flex;
   flex-direction: row;
   justify-content:space-between;
-  gap: 5px;
+  gap: 4px;
   color: #afafaf;
+  margin-top: 3px;
 }
 
 
 #modeGrid {
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap: 6px;
+  gap: 4px;
 }
 
 .mode-btn{
@@ -48,7 +48,7 @@ label {
   corner-shape: squircle;
   background-color: #141414;
   cursor: pointer;
-  gap: 3px;
+  gap: 4px;
   transition: border-color 0.2s, background 0.2s;
   user-select: none;
 }
@@ -347,10 +347,11 @@ label {
 
 
 #title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   align-self: center;
   color: #fff;
+  margin-bottom: 5px;
 }
 
 /* #hints {
@@ -363,7 +364,7 @@ label {
 #hints {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 8px;
 }
 
 .hint-chip {
@@ -373,7 +374,7 @@ label {
   background-color: #555;
   border-radius: 6px;
   corner-shape: squircle;
-  padding: 2px 7px;
+  padding: 2px 6px;
   font-family: 'Space Grotesk', monospace;
   font-size: 11px;
   color: #fff;
@@ -389,7 +390,6 @@ label {
   align-items: center;
   justify-content: center;
   gap: 10px;
-
 }
 
 .row input {
@@ -404,17 +404,41 @@ label {
 }
 
 #modes {
-    color: #f1f1f1;
-    padding-top: 10px;
-    border-top: 1px solid #2a2a2a;
-}
-
-#counter {
   color: #f1f1f1;
-  padding-top: 8px;
+  padding-top: 7px;
   border-top: 1px solid #2a2a2a;
 }
 
+#counter {
+  color: #dedede;
+  padding-top: 8px;
+  border-top: 1px solid #2a2a2a;
+  font-size: 13px;
+}
+
+#counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px
+}
+
+#maxpart-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#maxpart-label {
+  font-size: 11px;
+  color: #dedede;
+  font-family: 'Space Grotesk',monospace;
+}
+
+#maxpart-row input {
+  width: 70px;
+  accent-color: #fff;
+}
 
 #scheme-row {
   display: flex;
@@ -422,6 +446,7 @@ label {
   justify-content: space-between;
   color: #afafaf;
   font-size: 13px;
+  padding-top: 4px;
 }
 
 #schemePicker {
@@ -853,7 +878,7 @@ label {
   display: none;
   align-items: center;
   justify-content: space-between;
-  padding-top: 8px;
+  padding-top: 6px;
   border-top: 1px solid #2a2a2a;
   font-family: 'Space Grotesk', monospace;
   font-size: 14px;

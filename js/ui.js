@@ -259,6 +259,11 @@ document.getElementById("spawn-btn").addEventListener("click",()=>{
 })
 
 
+document.getElementById("maxpart").addEventListener("input",(evnt)=>{
+  MAX_PARTICLES=parseInt(evnt.target.value)
+  showToast(`max particles set to ${MAX_PARTICLES}.`,null)
+})
+
 function showToast(msg, isOn=null){
   const toast=document.getElementById("toast")
 
