@@ -44,16 +44,19 @@ function playShutter() {
 function togglePanel() {
   panelVisible=!panelVisible
   const panel=document.getElementById("panel")
-  const indicator=document.getElementById("panel-indicator")
+  const btn=document.getElementById("panel-hidebtn")
+  let isOpen
 
-  if(panelVisible) {
-    panel.style.display="flex"
-    indicator.style.display="none"
-  } else {
-    panel.style.display = "none"
-    indicator.style.display="flex"
-    indicator.textContent=`PANEL(h): OFF | RESTART (R) | SCREENSHOT (Q) | LMB (SPAWN) | RMB (SHOCKWAVE)`
-    indicator.style.color="#828282"
+  panel.classList.toggle("hidden")
+  isOpen=!panel.classList.contains("hidden")
+
+  if(isOpen){
+    btn.textContent="<";
+    btn.classList.remove("panel-closed");
+  }
+  else {
+    btn.textContent=">";
+    btn.classList.add("panel-closed");
   }
 }
 

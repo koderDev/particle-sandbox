@@ -94,12 +94,17 @@ let nextchaltimer=null
 let slithermode=false
 let slithertime=0
 
-function resizeCanvas(){
-    canvas.width=window.innerWidth
-    canvas.height=window.innerHeight
-}
+let resizetimeout;
 
-window.addEventListener("resize",resizeCanvas)
-window.addEventListener("orientatioonchange",()=>{
-    setTimeout(resizeCanvas,100)
+window.addEventListener("resize",()=>{
+    clearTimeout(resizetimeout)
+
+    resizetimeout=setTimeout(()=>{
+        handleResize()
+    },200)
 })
+
+function handleResize() {
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+}

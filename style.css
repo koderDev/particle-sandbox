@@ -34,34 +34,46 @@ canvas { display: block; }
   scrollbar-width: thin;
   scrollbar-width: #333 transparent;
   box-sizing: border-box;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  z-index: 1000;
 }
 
-@media (max-height:500px){
-  #panel {
-    gap: 4px;
-    font-size: 10px;
-  }
-
-  #title {
-    font-size: 12px;
-  }
-
-  .hint-chip {
-    display: none;
-  }
-
-  .mode-btn {
-    padding: 5px 4px;
-  }
-
-  .mode-key {
-    font-size: 12px;
-  }
-
-  label {
-    font-size: 12px;
-  }
+#panel.hidden {
+  transform: translateX(-100%);
 }
+
+#panel-hidebtn {
+  position: fixed;
+  left: 258px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  background: #1e1e1ee6;
+  border: none;
+  color: #dedede;
+  border-radius: 8px;
+  border-radius: #afafaf;
+  font-size: 16px;
+  corner-shape: squircle;
+  cursor: pointer;
+  padding: 10px 6px;
+  font-family: 'Space Grotesk',monospace;
+  line-height: 1;
+  transition: left 0.3s ease;
+  letter-spacing: 1px;
+  user-select: none;
+}
+
+#panel-hidebtn:hover {
+  background:#2a2a2ae6;
+  color:#fff;
+}
+
+
+#panel.hidden + #panel-hidebtn {
+  left:10px
+}
+
 
 
 label {
@@ -974,6 +986,42 @@ label {
 @media (orientation: portrait) and (max-width: 900px) {
   #asktorotate { display: flex; }
 }
+
+
+@media (max-width: 768px){
+  #panel-hidebtn.panel-open {
+    left:200px;
+  }
+
+}
+
+@media (max-height:500px){
+  #panel {
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  #title {
+    font-size: 12px;
+  }
+
+  .hint-chip {
+    display: none;
+  }
+
+  .mode-btn {
+    padding: 5px 4px;
+  }
+
+  .mode-key {
+    font-size: 12px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+}
+
 
 @media (max-height: 500px) {
   #hints {
