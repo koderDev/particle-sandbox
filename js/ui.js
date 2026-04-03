@@ -258,7 +258,6 @@ document.getElementById("spawn-btn").addEventListener("click",()=>{
   fireTrigger("click")
 })
 
-
 document.getElementById("maxpart").addEventListener("input",(evnt)=>{
   MAX_PARTICLES=parseInt(evnt.target.value)
   showToast(`max particles set to ${MAX_PARTICLES}.`,null)
@@ -1068,5 +1067,36 @@ function showChaloptin(){
     showToast("no worries, explore the sandbox!",null)
   })
 }
+
+//mobile ko lagi optimized hos bhanera
+canvas.addEventListener("touchstart",(evnt)=>{
+  evnt.preventDefault()
+  const touch=evnt.touches[0]
+  mouse.x=touch.clientX
+  mouse.y=touch.clientY
+  if(particles.length>=MAX_PARTICLES) return
+  const count=Math.floor(parseFloat(countSlider.value)/10)
+  for(let i=0;i<count;i++){
+    particles.push(createParticle(touch.clientX,touch.clientY))
+  }
+  fireTrigger("click")
+},{passive:false})
+
+canvas.addEventListener("touchmove",(e)=>{
+  e.preventDefault()
+  const touch=e.touches[0]
+  mouse.x=touch.clientX
+  mouse.y=touch.clientY
+  if(particles.length<MAX_PARTICLES){
+    particles.push(createParticle(touch.clientX,touch.clientY))
+  }
+},{passive:false})
+
+canvas.addEventListener("touchend",(evnt)=>{
+  evnt.preventDefault()
+},{passive:false})
+
+
+
 
 setTimeout(showChaloptin,20000)
