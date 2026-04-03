@@ -13,8 +13,8 @@ canvas { display: block; }
 
 #panel {
   position: fixed;
-  top: 7px;
-  left: 7px;
+  top: 0px;
+  left: 0px;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -26,9 +26,43 @@ canvas { display: block; }
   background: #1e1e1ee6;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  padding:10px 12px;
+  padding:14px;
   width: 260px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-width: #333 transparent;
+  box-sizing: border-box;
 }
+
+@media (max-height:500px){
+  #panel {
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  #title {
+    font-size: 12px;
+  }
+
+  .hint-chip {
+    display: none;
+  }
+
+  .mode-btn {
+    padding: 5px 4px;
+  }
+
+  .mode-key {
+    font-size: 12px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+}
+
 
 label {
   display: flex;
@@ -911,45 +945,38 @@ label {
 }
 
 
-@media (max-width: 768px) {
-  #panel {
-    width: 200px;
-    font-size: 12px;
-    padding: 10px;
-    max-height: 100vh;
-    overflow-y: auto;
-    top: 0;
-    left: 0;
-    border-radius: 0;
-  }
+#asktorotate{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: 'Space Grotesk',monospace;
+  color: #afafaf;
+  font-size: 16px;
+  text-align: center;
+}
 
-  .mode-key {
-    font-size: 14px;
-  }
+#rotate-icon {
+  font-size: 48px;
+  animation: rotateHint 1.5s ease-in-out infinite;
+}
 
-  .mode-label {
-    font-size: 9px;
-  }
+@keyframes rotateHint {
+    0%,100% {transform: rotate(0deg);}
+    50%{transform:rotate(90deg)}
+}
 
-  #modeGrid {
-    grid-template-columns: repeat(3,1fr);
-    gap: 4px;
-  }
+@media (orientation: portrait) and (max-width: 900px) {
+  #asktorotate { display: flex; }
+}
 
-  #spawn-btn {
-    bottom: 10px;
-    right: 10px;
-    font-size: 14px;
-    padding: 8px 12px;
-  }
-
-  #dice-btn {
-    bottom: 60px;
-    right: 10px;
-  }
-
-  #ss-btn {
-    bottom: 110px;
-    right: 10px;
+@media (max-height: 500px) {
+  #hints {
+    display: none;
   }
 }
