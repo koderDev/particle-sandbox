@@ -987,14 +987,6 @@ label {
   #asktorotate { display: flex; }
 }
 
-
-@media (max-width: 768px){
-  #panel-hidebtn.panel-open {
-    left:200px;
-  }
-
-}
-
 @media (max-height:500px){
   #panel {
     gap: 4px;

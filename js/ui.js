@@ -1071,35 +1071,49 @@ function showChaloptin(){
   })
 }
 
-//mobile ko lagi optimized hos bhanera
-canvas.addEventListener("touchstart",(evnt)=>{
-  evnt.preventDefault()
-  const touch=evnt.touches[0]
-  mouse.x=touch.clientX
-  mouse.y=touch.clientY
-  if(particles.length>=MAX_PARTICLES) return
-  const count=Math.floor(parseFloat(countSlider.value)/10)
-  for(let i=0;i<count;i++){
-    particles.push(createParticle(touch.clientX,touch.clientY))
-  }
-  fireTrigger("click")
-},{passive:false})
 
-canvas.addEventListener("touchmove",(e)=>{
-  e.preventDefault()
-  const touch=e.touches[0]
-  mouse.x=touch.clientX
-  mouse.y=touch.clientY
-  if(particles.length<MAX_PARTICLES){
-    particles.push(createParticle(touch.clientX,touch.clientY))
-  }
-},{passive:false})
+let touchTimer;
+let isLongPress = false;
 
-canvas.addEventListener("touchend",(evnt)=>{
-  evnt.preventDefault()
-},{passive:false})
+canvas.addEventListener("touchstart", (evnt) => {
+    evnt.preventDefault();
+    const touch = evnt.touches[0];
+    mouse.x = touch.clientX;
+    mouse.y = touch.clientY;
+    
+    // right click long press not work
+    isLongPress = false;
+    touchTimer = setTimeout(() => {
+        isLongPress = true;
+        if (typeof createShockwave === "function") {
+            createShockwave(mouse.x, mouse.y);
+            showToast("Shockwave triggered!", false);
+        }
+    }, 500); 
+}, { passive: false });
 
+canvas.addEventListener("touchend", (evnt) => {
+    clearTimeout(touchTimer);
+    
+    if (!isLongPress) {
+        if (particles.length >= MAX_PARTICLES) return;
 
+        const count = Math.floor(parseFloat(countSlider.value) / 10);
+        let i;
+        for (i = 0; i < count; i++) {
+            particles.push(createParticle(mouse.x, mouse.y));
+        }
+        
+        if (typeof fireTrigger === "function") fireTrigger("click");
+    }
+    
+    isLongPress = false;
+});
 
+canvas.addEventListener("touchmove", (evnt) => {
+    const touch = evnt.touches[0];
+    mouse.x = touch.clientX;
+    mouse.y = touch.clientY;
+    }, { passive: false });
 
 setTimeout(showChaloptin,20000)
