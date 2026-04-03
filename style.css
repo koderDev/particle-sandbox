@@ -909,3 +909,47 @@ label {
   text-align: center;
   /* height: 20px; */
 }
+
+
+@media (max-width: 768px) {
+  #panel {
+    width: 200px;
+    font-size: 12px;
+    padding: 10px;
+    max-height: 100vh;
+    overflow-y: auto;
+    top: 0;
+    left: 0;
+    border-radius: 0;
+  }
+
+  .mode-key {
+    font-size: 14px;
+  }
+
+  .mode-label {
+    font-size: 9px;
+  }
+
+  #modeGrid {
+    grid-template-columns: repeat(3,1fr);
+    gap: 4px;
+  }
+
+  #spawn-btn {
+    bottom: 10px;
+    right: 10px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  #dice-btn {
+    bottom: 60px;
+    right: 10px;
+  }
+
+  #ss-btn {
+    bottom: 110px;
+    right: 10px;
+  }
+}
