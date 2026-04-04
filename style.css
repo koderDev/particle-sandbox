@@ -996,6 +996,10 @@ label {
   #panel {
     gap: 4px;
     font-size: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: 100dvh; 
+    padding-bottom: 60px; 
   }
 
   #title {
@@ -1040,6 +1044,10 @@ label {
     transform: scale(0.9);
   }
   
+  .mobile-hidden {
+    display: none !important;
+  }
+  
 }
 
 
@@ -1050,11 +1058,5 @@ label {
 
   #btn-c{
     display: none;
-  }
-}
-
-@media (max-width: 768px ){
-  .mobile-hidden {
-    display: none !important;
   }
 }
