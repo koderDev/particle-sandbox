@@ -96,9 +96,10 @@ let slithertime=0
 
 let resizetimeout;
 
+let isLongPress=false;
+
 window.addEventListener("resize",()=>{
     clearTimeout(resizetimeout)
-
     resizetimeout=setTimeout(()=>{
         handleResize()
     },200)
@@ -108,3 +109,6 @@ function handleResize() {
     canvas.width=window.innerWidth;
     canvas.height=window.innerHeight;
 }
+
+const isMobile = ('ontouchstart' in window) && window.matchMedia("(max-width: 768px)").matches;
+console.log(isMobile);

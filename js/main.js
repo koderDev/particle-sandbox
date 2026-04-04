@@ -59,5 +59,8 @@ function loop() {
 
 }
 
-setModeBtn("s", true)
+if(!isMobile) setModeBtn("s", true)
+else {
+  storyMode=false;
+}
 loop();

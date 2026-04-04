@@ -10,6 +10,7 @@ const DICE_PRESETS = [
   { modes: ["g", "t"],        label: "flipGravTrailsss" },
   { modes: ["z", "l", "m"],   label: "mergeLine0grav" },
   { modes: ["o", "l"],        label: "orbitaLine" },
+  { modes: ["l","x","o"],  label:"repelOrbitLINE"}
 ]
 
 const shutterSound = new Audio("assets/sound/shutter.mp3");
@@ -175,8 +176,8 @@ function restartSimulation(){
   canvas.style.cursor="default"
   hidePopup()
 
-  storyMode=true;
-  setModeBtn("s",true)
+  storyMode=!isMobile;
+  setModeBtn("s",!isMobile)
   currentStory=0
   storyAlpha=0
   storyState="fadein"
@@ -398,7 +399,7 @@ function rollDice(){
         dot.classList.add("active");
       }
     })
-  
+
     const preset = DICE_PRESETS[Math.floor(Math.random()*DICE_PRESETS.length)];
   
     preset.modes.forEach(key=>{
@@ -504,6 +505,7 @@ function rollDice(){
 }
 
 function showTutorialskipprompt() {
+  if(isMobile) return
   const prompt = document.createElement("div")
   prompt.id="tutorial-skip"
   prompt.innerHTML=`
@@ -736,6 +738,7 @@ window.addEventListener("keydown", (e) => {
 
   if (e.key === "s" || e.key === "S") {
     if(window._skipPromptDismiss) window._skipPromptDismiss()
+    if(isMobile) return
     storyMode = !storyMode;
     setModeBtn("s", storyMode)
     showToast(storyMode ? "tutorial ON" : "tutorial OFF", storyMode)
@@ -873,7 +876,7 @@ window.addEventListener("keydown", (e) => {
   if(e.key==="c"||e.key==="C"){
     if(bubbleMode){ showToast("exit bubble mode first"); return}
     if(blackHole){ showToast("exit black hole mode first"); return}
-
+    if(isMobile) return
     cycloneMode=!cycloneMode
     setModeBtn("c",cycloneMode)
     if(cycloneMode) 
@@ -900,6 +903,7 @@ window.addEventListener("keydown", (e) => {
 
   if(e.key==="e"||e.key==="E"){
     if(bubbleMode) {showToast("exit bubble mode first");return}
+    if(isMobile) return
     explosionMode=!explosionMode
     setModeBtn("e",explosionMode)
     if(explosionMode){
@@ -1073,47 +1077,50 @@ function showChaloptin(){
 
 
 let touchTimer;
-let isLongPress = false;
 
-canvas.addEventListener("touchstart", (evnt) => {
-    evnt.preventDefault();
-    const touch = evnt.touches[0];
-    mouse.x = touch.clientX;
-    mouse.y = touch.clientY;
-    
-    // right click long press not work
-    isLongPress = false;
-    touchTimer = setTimeout(() => {
-        isLongPress = true;
-        if (typeof createShockwave === "function") {
-            createShockwave(mouse.x, mouse.y);
-            showToast("Shockwave triggered!", false);
-        }
-    }, 500); 
+canvas.addEventListener("touchstart", (ev) => {
+  ev.preventDefault();
+  const touch=ev.touches[0];
+  mouse.x=touch.clientX;
+  mouse.y=touch.clientY;
+  isLongPress=false;
+  touchTimer=setTimeout(()=>{
+    shockwaves.push({x:mouse.x,y:mouse.y,radius:0,alpha:0.6})
+    particles.forEach(p=>{
+      const dx=p.x-mouse.x;
+      const dy=p.y-mouse.y;
+      const dist=Math.sqrt(dx*dx+dy*dy)||1;
+      if(dist<200){
+        const force=(1-dist/200)*18;
+        p.vx+=(dx/dist)*force;
+        p.vy+=(dy/dist)*force
+      }
+    })
+  },500)
 }, { passive: false });
 
-canvas.addEventListener("touchend", (evnt) => {
-    clearTimeout(touchTimer);
-    
-    if (!isLongPress) {
-        if (particles.length >= MAX_PARTICLES) return;
-
-        const count = Math.floor(parseFloat(countSlider.value) / 10);
-        let i;
-        for (i = 0; i < count; i++) {
-            particles.push(createParticle(mouse.x, mouse.y));
-        }
-        
-        if (typeof fireTrigger === "function") fireTrigger("click");
-    }
-    
-    isLongPress = false;
+canvas.addEventListener("touchend", (ev) => {
+  clearTimeout(touchTimer);
+  
+  if (!isLongPress) {
+      if (particles.length >= MAX_PARTICLES) return;
+      const count = Math.floor(parseFloat(countSlider.value) / 10);
+      let i;
+      for (i = 0; i < count; i++) {
+          particles.push(createParticle(mouse.x, mouse.y));
+      }
+      if (typeof fireTrigger === "function") fireTrigger("click");
+  }
+  isLongPress = false;
 });
 
-canvas.addEventListener("touchmove", (evnt) => {
-    const touch = evnt.touches[0];
-    mouse.x = touch.clientX;
-    mouse.y = touch.clientY;
-    }, { passive: false });
+canvas.addEventListener("touchmove", (ev) => {
+  ev.preventDefault();
+  const touch = ev.touches[0];
+  mouse.x = touch.clientX;
+  mouse.y = touch.clientY;
+
+
+}, { passive: false });
 
 setTimeout(showChaloptin,20000)

@@ -19,6 +19,7 @@
     <a id="new-badge" class="new-badge" href="https://github.com/koderDev/particle-sandbox?tab=readme-ov-file#changelogs-" target="_blank">changelogs</a>
     <div id="ss-flash"></div>
     <div id="toast"></div>
+    <button id="mobile-restartbtn" title="restart simulation" onclick="restartSimulation()">🔄</button>
     <button id="ss-btn" title="take a screenshot">📷</button>
     <button id="dice-btn" title="random modes generator">🎲</button>
     <button id="spawn-btn" title="spawn particles">+ spawn</button>
@@ -66,7 +67,7 @@
                 <span class="mode-key">B</span>
                 <span class="mode-label">black hole</span>
             </div>
-            <div class="mode-btn" id="btn-s" onclick="toggleMode('s')">
+            <div class="mode-btn mobile-hidden" id="btn-s" onclick="toggleMode('s')">
                 <span class="mode-key">S</span>
                 <span class="mode-label">tutorial</span>
             </div>
@@ -94,7 +95,7 @@
                 <span class="mode-key">L</span>
                 <span class="mode-label">line</span>
             </div>
-            <div class="mode-btn" id="btn-c" onclick="toggleMode('c')">
+            <div class="mode-btn mobile-hidden" id="btn-c" onclick="toggleMode('c')">
                 <span class="mode-key">C</span>
                 <span class="mode-label">cyclone</span>
             </div>
@@ -102,7 +103,7 @@
                 <span class="mode-key">G</span>
                 <span class="mode-label">grav flip</span>
             </div>
-            <div class="mode-btn" id="btn-e" onclick="toggleMode('e')">
+            <div class="mode-btn mobile-hidden" id="btn-e" onclick="toggleMode('e')">
                 <span class="mode-key">E</span>
                 <span class="mode-label">explosion</span>
             </div>
