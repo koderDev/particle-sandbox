@@ -110,5 +110,5 @@ function handleResize() {
     canvas.height=window.innerHeight;
 }
 
-const isMobile = ('ontouchstart' in window) && window.matchMedia("(max-width: 768px)").matches;
+const isMobile = ('ontouchstart' in window) && window.matchMedia("(max-height: 500px)").matches;
 console.log(isMobile);

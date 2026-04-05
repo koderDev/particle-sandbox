@@ -52,6 +52,7 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 |size|sets the upper limit for size of particles to spawn|
 
 #### others [ UI buttons]
+- `restart`: (only shown in mobile phones) for restarting the simulation
 - `spawn`: this button in the bottom-right corner of the screen lets you spawn particles when clicked
 - `🎲` (dice button): this button sitting just above the `spawn` button, when clicked, turns on a few modes randomly and lets you experience chaos in god mode. 
 
@@ -60,6 +61,19 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 <img width="1366" height="655" alt="image" src="https://github.com/user-attachments/assets/318c7c1e-c228-412d-bde0-e16014e52713" />
 
 ## changelogs 🛠
+
+### [1.0.6]
+
+MOBILE RESPONSIVENESS ADDED :D
+
+#### changes
+- yayy i have finally made this game mobile responsive. yep. you've heard it right, it works perfectly in mobile phones. i have attached a demo video to this devlog showcasing how it works in phones.this was the most asked feature to add, so i had to add it. 
+- also, i have added a slider which lets you select maximum particles based on your choice. the particles max threshold is not limited now. its upto you. *asked by a voter*
+- panels are not toggelable. i mean, you can toggle to hide and unhide the panels now. more screen territory, more fun i guess.
+- added a refresh button too which refreshes the game.
+- story mode is a bit shortened cause a voter asked for it.
+- in mobile phones, game only works in landscape view so that makes it more fun i guess. story mode, explosion mode and cyclone mode are not available in mobile phone cause i had some issues implementing them ( sometimes u may get cyclone mode using the dice but u cant rlly add new cyclones as im confused about implementing it in mobile ) so will do it in next versions.
+
 
 ### [1.0.5]
 
