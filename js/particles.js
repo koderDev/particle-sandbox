@@ -1,15 +1,33 @@
-function createParticle(x, y) {
-  return {
-    x,
-    y,
-    vx:(Math.random() - 0.5) * 6,
-    vy: (Math.random() - 0.5) * 6,
-    size:Math.random() * parseFloat(sizeSlider.value) + 6,
-    mass: 1,
-    // hue: Math.random() * 360,
-    hue:COLOR_SCHEMES[currentScheme]()
-  };
+//purano, unoptimized
+// function createParticle(x, y) {
+//   return {
+//     x,
+//     y,
+//     vx:(Math.random() - 0.5) * 6,
+//     vy: (Math.random() - 0.5) * 6,
+//     size:Math.random() * parseFloat(sizeSlider.value) + 6,
+//     mass: 1,
+//     // hue: Math.random() * 360,
+//     hue:COLOR_SCHEMES[currentScheme]()
+//   };
+// }
+
+function createParticle(x,y){
+  const p = particlePool.legnth>0?particlePool.pop():{}
+  p.x=x
+  p.y=y
+  p.vx=(Math.random()-0.5)*6
+  p.vy=(Math.random()-0.5)*6
+  p.size=Math.random()*parseFloat(sizeSlider.value)+6
+  p.mass=1
+  p.hue=COLOR_SCHEMES[currentScheme]()
+  p.isBubble=false
+  p.grabbed=false
+  p._origSize=p.size
+  return p
+
 }
+
 
 function updateParticle(p) {
   if (p.grabbed) return
@@ -45,6 +63,15 @@ function updateParticle(p) {
 }
 
 function drawParticle(p) {
+
+  const margin=p.size*2.5
+  //screen bhanda bahira no pticle
+  if(
+    p.x+margin<0 ||
+    p.x-margin>canvas.width ||
+    p.y+margin<0 ||
+    p.y-margin>canvas.height
+  ) return
 
   if (p.isBubble) {
     const r = p.size
@@ -229,7 +256,9 @@ function checkBubblePop()
       const py=p.y
       const psize=p.size
 
-      particles.splice(i,1)
+      // particles.splice(i,1) //purano code
+      const removed=particles.splice(i,1)[0]
+      recycleParticle(removed)
 
       if(bubbleMode && particles.filter(p=>p.isBubble).length===0){
         bubbleMode = false

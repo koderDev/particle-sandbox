@@ -1,12 +1,26 @@
+let fps=0
+let lastfpstime=performance.now()
+
 function loop() {
+  //performacne check garna
+  fpsCount++;
+  const now=performance.now()
+  if(now-lastfpstime>=1000){
+    fps=fpsCount;
+    fpsCount=0;
+    lastfpstime=now
+    console.log(`fps:${fps}, particles: ${particles.length} | pool:${particlePool.length}`)
+  }
 
   if(!screenshotPaused){
+
     const currentalpha=slithermode?0.04:(trailMode?0.15:1);
     ctx.globalAlpha = currentalpha;
     ctx.fillStyle = "#0a0a0a";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    resolveMergeOrCollide();
+    resolveMergeOrCollide()
+
     applyOrbit();
     drawStory();
 
@@ -15,7 +29,6 @@ function loop() {
       drawParticle(p);
     });
     if (lineMode) drawConnections();
-    
     applyBlackHole();
     applyCyclones();
     applySlitherPhysiks()
@@ -53,10 +66,10 @@ function loop() {
     } 
     
     if(count<50) lastMilestone=0
+
   }
+
   requestAnimationFrame(loop);
-
-
 }
 
 if(!isMobile) setModeBtn("s", true)

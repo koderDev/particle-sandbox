@@ -4,6 +4,21 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const POOL_SIZE=300
+const particlePool=[]
+for(let i=0;i<POOL_SIZE;i++){
+    particlePool.push({
+        x:0,y:0,vx:0,vy:0,size:0,mass:1,hue:0,isBubble:false,grabbed:false,_origSize:0
+    })
+}
+
+function recycleParticle(p){
+    p.isBubble=false;
+    p.grabbed=false;
+    if(particlePool.length<POOL_SIZE) particlePool.push(p)
+}
+
+
 let particles = [];
 let MAX_PARTICLES = 420;
 
@@ -95,7 +110,7 @@ let slithermode=false
 let slithertime=0
 
 let resizetimeout;
-
+let fpsCount=0
 let isLongPress=false;
 
 window.addEventListener("resize",()=>{

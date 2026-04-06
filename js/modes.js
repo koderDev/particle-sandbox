@@ -22,7 +22,9 @@ function applyBlackHole() {
       p.vy=(p.vy/speed)*30;
     }
     if (dist < 80 && blackHole) {
-      particles.splice(particles.indexOf(p), 1);
+      // particles.splice(particles.indexOf(p), 1); //puraanooo
+      const idx=particles.indexOf(p)
+      if(idx>-1) recycleParticle(particles.splice(idx,1)[0])
     }
   });
 }
