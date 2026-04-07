@@ -12,7 +12,7 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 
 - `R`: restart simulation. start again with a blank canvas to get your creative juices flowing again ;)
 
-#### modes
+#### modes 
 - `Tutorial (s)`: shows an interactive tutorial of this simulator in the center of the screen.
 
 - `Black hole (b)`: pulls all the particles into the mouse pointer (black hole)
@@ -59,6 +59,41 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 ## img preview
 <img width="1366" height="660" alt="image" src="https://github.com/user-attachments/assets/62e07fee-f9c5-4241-8e27-4df1a96ef2b0" />
 <img width="1366" height="655" alt="image" src="https://github.com/user-attachments/assets/318c7c1e-c228-412d-bde0-e16014e52713" />
+
+
+## Optimization 
+
+i have optimized this sandbox to handle hundreds of particles at 60fps. the techniques of optimization that have been used in this project are:
+
+#### spatial grid partitioning [ O(n^2) -> O(n)]
+
+-the problem was that, in the previous version (v1.0.0), every particle checked every other particle for collisions which lead to the game being slowed down a lot when new particles were added. 
+- to solve it, i have implemented a special hash grid. it divides the canvas into a lot of cells. each particle only checkes for collisions with neighbors in its own or neighboring cells. this brough the time complexity down to nearly linear, which allowed more particles to be spawned with smooth gameplay. :)
+- also, in grid systems, particles in a cell generally dont see the other particles in another cell even if they are right across each other but in this sandbox, i have implemented 3x3 neighbor search so that it checks all surrounding cells i.e. 8 cells.
+
+
+#### object pooling 
+- the spawned particles have to be destroyed in some modes like explosion, blackhole and bubble mode. this constant creating and destroying of objects for particles cause GC spikes which lead to micropauses and stutters hindering the gameplay exp.
+- to fix this i implemented a particle pool which recycles the particles instead of deleting them and reinitializes them when needed. this made those modes quite smoother than before.
+
+#### Line mode caching
+- in the previous version, the loop actually checked if particles are close and drew lines between them. This caused the `ctx.stroke()` function to be called 2 times for every single connection and required caching to solve. for 100 particles it called 200 draw calls.
+- to fix this i used a bitwise pair key which checked for existing pair of lines and will skip the second draw. this means the cpu usage is reduced by 50% for the lines. that is A LOTT. 
+
+
+### [FPS] - can be checked at the bottom left of the screen
+
+##### LINE MODE
+considered line mode cause it is the most demanding one, as it has to draw lines connecting each n every neighboring particle.
+
+| no. of particles | before spatial grid system (fps) | after spatial grid system (fps) | after line mode caching (fps) *LATEST* |
+| -------- | -------- | -------- | -------- |
+| 100 | ~40 | ~60 | ~60 | 
+| 200 | ~8 | ~45 | ~60 |
+| 300 | ~2 | ~25 | ~45 |
+| 400 | DEAD | ~20 | ~30 |
+
+
 
 ## changelogs 🛠
 
@@ -198,41 +233,3 @@ and a lot of bug fixes
 - [x] Particles spawn, repulse and collide
 - [x] Toggle particle properties using sliders
 - [x] Implemented core features
-
-## Optimization 
-
-i have optimized this sandbox to handle hundreds of particles at 60fps. the techniques of optimization that have been used in this project are:
-
-#### spatial grid partitioning [ O(n^2) -> O(n)]
-
--the problem was that, in the previous version (v1.0.0), every particle checked every other particle for collisions which lead to the game being slowed down a lot when new particles were added. 
-- to solve it, i have implemented a special hash grid. it divides the canvas into a lot of cells. each particle only checkes for collisions with neighbors in its own or neighboring cells. this brough the time complexity down to nearly linear, which allowed more particles to be spawned with smooth gameplay. :)
-- also, in grid systems, particles in a cell generally dont see the other particles in another cell even if they are right across each other but in this sandbox, i have implemented 3x3 neighbor search so that it checks all surrounding cells i.e. 8 cells.
-
-
-
-
-#### object pooling 
-- the spawned particles have to be destroyed in some modes like explosion, blackhole and bubble mode. this constant creating and destroying of objects for particles cause GC spikes which lead to micropauses and stutters hindering the gameplay exp.
-- to fix this i implemented a particle pool which recycles the particles instead of deleting them and reinitializes them when needed. this made those modes quite smoother than before.
-
-#### Line mode caching
-- in the previous version, the loop actually checked if particles are close and drew lines between them. This caused the `ctx.stroke()` function to be called 2 times for every single connection and required caching to solve. for 100 particles it called 200 draw calls.
-- to fix this i used a bitwise pair key which checked for existing pair of lines and will skip the second draw. this means the cpu usage is reduced by 50% for the lines. that is A LOTT. 
-
-
-### [FPS] - can be checked at the bottom left of the screen
-
-##### LINE MODE
-considered line mode cause it is the most demanding one, as it has to draw lines connecting each n every neighboring particle
-
-| no. of particles | before | after |
-| -------- | -------- | -------- |
-| 100 | ~60 | ~60 |
-| 200 | ~45 | ~60 |
-| 300 | ~25 | ~45 |
-| 400 | ~20 | ~30 |
-
-
-
-
