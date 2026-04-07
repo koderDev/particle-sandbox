@@ -13,7 +13,7 @@
 // }
 
 function createParticle(x,y){
-  const p = particlePool.legnth>0?particlePool.pop():{}
+  const p = particlePool.length>0?particlePool.pop():{}
   p.x=x
   p.y=y
   p.vx=(Math.random()-0.5)*6
@@ -135,6 +135,7 @@ function drawParticle(p) {
 function resolveMergeOrCollide() {
   const cellSize = 80
   const grid = buildGrid(cellSize)
+  const toRemove=new Set()
 
   grid.forEach((cell, key) => {
     const [gx, gy] =key.split(",").map(Number)
@@ -154,6 +155,7 @@ function resolveMergeOrCollide() {
         const b = neighbors[j]
         if (a === b) continue
         if (!a || !b) continue
+        if(toRemove.has(a)||toRemove.has(b)) continue
 
         const dx = b.x - a.x
         const dy = b.y - a.y
@@ -167,8 +169,7 @@ function resolveMergeOrCollide() {
             a.vy = (a.vy * a.size + b.vy * b.size) / totalMass
             a.size = Math.min(totalMass * 0.6, 80)
             a.hue = Math.random() * 360
-            const bi = particles.indexOf(b)
-            if (bi > -1) particles.splice(bi, 1)
+            toRemove.add(b)
           } else {
             const angle = Math.atan2(dy, dx)
             const overlap = minDist - dist
@@ -193,6 +194,11 @@ function resolveMergeOrCollide() {
       }
     }
   })
+
+  if(toRemove.size>0){
+    for(const p of toRemove) recycleParticle(p)
+    particles=particles.filter(p=>!toRemove.has(p))
+  }
 }
 
 function buildGrid(cellSize) {
@@ -362,8 +368,11 @@ function drawConnections() {
   if (!lineMode) return
   const cellSize = 100
   const grid = buildGrid(cellSize)
-
   const checked = new Set()
+
+  for (let i = 0; i < particles.length; i++) particles[i]._idx = i
+
+  ctx.globalAlpha=1
 
   grid.forEach((cell, key) => {
     const [gx, gy] = key.split(",").map(Number)
@@ -378,18 +387,21 @@ function drawConnections() {
     cell.forEach(a => {
       neighbors.forEach(b => {
         if (a === b) return
-        const pairKey = a < b ? `${particles.indexOf(a)}-${particles.indexOf(b)}` : `${particles.indexOf(b)}-${particles.indexOf(a)}`
+        const ai=a._idx
+        const bi=b._idx
+        const pairKey=ai<bi?(ai<<16|bi):(bi << 16|ai)
         if (checked.has(pairKey)) return
         checked.add(pairKey)
 
         const dx = b.x - a.x
         const dy = b.y - a.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
+        const distsq = dx * dx + dy * dy
 
-        if (dist < 100) {
+        if (distsq < 10000) {
+          const dist=Math.sqrt(distsq);
           const alpha = (1 - dist / 100) * 0.5
           ctx.globalAlpha = alpha
-          ctx.strokeStyle = `hsl(${(a.hue + b.hue) / 2}, 100%, 70%)`
+          ctx.strokeStyle = _getlineColor(a.hue,b.hue)
           ctx.lineWidth = 3
           ctx.beginPath()
           ctx.moveTo(a.x, a.y)
@@ -400,6 +412,17 @@ function drawConnections() {
     })
   })
   ctx.globalAlpha = 1
+}
+
+const _lineColorcache=new Map()
+function _getlineColor(hueA,hueB){
+  const key=(Math.round(hueA/5)*5)<<16|(Math.round(hueB/5)*5)
+  if(_lineColorcache.has(key)) return _lineColorcache.get(key)
+  const avg=Math.round((hueA+hueB)/2)
+  const color=`hsl(${avg},100%,70%)`
+  if(_lineColorcache.size>500) _lineColorcache.clear()
+  _lineColorcache.set(key,color)
+  return color
 }
 
 function spawnTrail(){
