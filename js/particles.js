@@ -28,7 +28,6 @@ function createParticle(x,y){
 
 }
 
-
 function updateParticle(p) {
   if (p.grabbed) return
 

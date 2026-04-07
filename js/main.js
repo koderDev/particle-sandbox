@@ -2,14 +2,13 @@ let fps=0
 let lastfpstime=performance.now()
 
 function loop() {
-  //performacne check garna
   fpsCount++;
   const now=performance.now()
   if(now-lastfpstime>=1000){
     fps=fpsCount;
     fpsCount=0;
     lastfpstime=now
-    console.log(`fps:${fps}, particles: ${particles.length} | pool:${particlePool.length}`)
+    document.getElementById("fps-counter").textContent=`fps: ${fps}`;
   }
 
   if(!screenshotPaused){
@@ -28,6 +27,7 @@ function loop() {
       updateParticle(p);
       drawParticle(p);
     });
+
     if (lineMode) drawConnections();
     applyBlackHole();
     applyCyclones();

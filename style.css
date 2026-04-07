@@ -74,7 +74,17 @@ canvas { display: block; }
   left:10px
 }
 
-
+#fps-counter{
+  position: fixed;
+  bottom: 10px;
+  left: 15px;
+  font-family: 'Space Grotesk',monospace;
+  font-size: 11px;
+  color: rgba(221, 221, 221, 0.616);
+  z-index: 5000;
+  pointer-events: none;
+  user-select: none;
+}
 
 label {
   display: flex;

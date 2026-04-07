@@ -505,7 +505,7 @@ function rollDice(){
 }
 
 function showTutorialskipprompt() {
-  if(isMobile) return
+  if(isMobile||!storyMode) return
   const prompt = document.createElement("div")
   prompt.id="tutorial-skip"
   prompt.innerHTML=`
