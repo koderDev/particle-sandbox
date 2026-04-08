@@ -522,7 +522,7 @@ canvas.addEventListener("touchstart",()=>{
       if(granted){
         tiltMode=true
         setModeBtn("tilt",true)
-        showToast("tilt your device, particles tilt with it :))",true);
+        showToast("tilt your device, particles move with it :))",true);
       }
     })
   }, 1500);
