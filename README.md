@@ -93,7 +93,7 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 | 300 | ~2 | ~25 | ~45 |
 | 400 | DEAD | ~20 | ~30 |
 
-
+*these performance checks were done in a i3 8GB RAM laptop, the code used to check the fps can be found in the `main.js` file.*
 
 ## changelogs 🛠
 

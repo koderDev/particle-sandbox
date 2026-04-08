@@ -504,6 +504,14 @@ function rollDice(){
   },100)
 }
 
+function toggleTiltmode(){
+  if(tiltMode){
+    disableTilt();
+  } else {
+    enableTilt()
+  }
+}
+
 function showTutorialskipprompt() {
   if(isMobile||!storyMode) return
   const prompt = document.createElement("div")

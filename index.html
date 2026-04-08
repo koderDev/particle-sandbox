@@ -63,6 +63,10 @@
         <p id="modes">MODES [ press the key ] </p>
     
         <div id="modeGrid">
+            <div class="mode-btn mobile-only" id="btn-tilt" onclick="toggleTiltmode()">
+                <span class="mode-key">t</span>
+                <span class="mode-label">tilt</span>
+            </div>
             <div class="mode-btn" id="btn-b" onclick="toggleMode('b')">
                 <span class="mode-key">B</span>
                 <span class="mode-label">black hole</span>
@@ -174,6 +178,7 @@
     <script src="js/globals.js"></script>
     <script src="js/challenges.js"></script>
     <script src="js/particles.js"></script>
+    <script src="js/tilt.js"></script>
     <script src="js/modes.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/stories.js"></script>

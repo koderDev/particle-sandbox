@@ -998,6 +998,10 @@ label {
     50%{transform:rotate(90deg)}
 }
 
+.mobile-only{
+  display: none;
+}
+
 @media (orientation: portrait) and (max-width: 900px) {
   #asktorotate { display: flex; }
 }
@@ -1056,6 +1060,10 @@ label {
   
   .mobile-hidden {
     display: none !important;
+  }
+
+  .mobile-only {
+    display: flex;
   }
   
 }
