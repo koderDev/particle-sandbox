@@ -128,7 +128,7 @@ function handleResize() {
 let tiltMode=false
 let tiltGravX=0
 let tiltGravY=0
-let tiltPerms=true
+let tiltPerms=false
 
 
 const isMobile = ('ontouchstart' in window) && window.matchMedia("(max-height: 500px)").matches;
