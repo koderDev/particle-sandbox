@@ -512,6 +512,23 @@ function toggleTiltmode(){
   }
 }
 
+let tiltAutoask=false
+canvas.addEventListener("touchstart",()=>{
+  if(tiltAutoask) return
+  tiltAutoask=true
+
+  setTimeout(() => {
+    requestTiltperm().then(granted =>{
+      if(granted){
+        tiltMode=true
+        setModeBtn("tilt",true)
+        showToast("tilt your device, particles tilt with it :))",true);
+      }
+    })
+  }, 1500);
+}, {once:true})
+
+
 function showTutorialskipprompt() {
   if(isMobile||!storyMode) return
   const prompt = document.createElement("div")

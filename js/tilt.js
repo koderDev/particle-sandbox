@@ -7,12 +7,51 @@ function applyDeviceMotion(evnt){
     tiltGravY=(accn.y||0)*scale
 }
 
+async function requestTiltperm(){
+    //ios13+ lai perms chahincha
+    if(typeof DeviceMotionEvent!=="undefined"&& typeof DeviceMotionEvent.requestPermission==="function"){
+        try {
+            const result= await DeviceMotionEvent.requestPermission()
+            if(result==="granted"){
+                tiltPerms=true
+                window.addEventListener("devicemotion",applyDeviceMotion)
+                return true
+            } else {
+                showToast("tilt perms denieddd :(",false)
+                return false
+            }
+        } catch(ev){
+            showToast("tilt not available. maybe some errorss",false)
+            return false
+        }
+    } else if(typeof DeviceMotionEvent!=="undefined"){
+        //non ios lai perms chaidaina
+        tiltPerms=true;
+        window.addEventListener("devicemotion",applyDeviceMotion)
+        return true
+    } else {
+        showToast("tilt not supported on this device",false)
+        return false
+    }
+}
+
 function enableTilt(){
     tiltMode=true
-    if(tiltPerms){
-        showToast("tilt mode ON, move device and particles move acccordingly",true)
+    setModeBtn("tilt",true)
+
+   if(tiltPerms){
+        showToast("tilt mode ON, tilt device and particles move acccordingly",true)
         return
     }
+
+    requestTiltperm().then(granted=>{
+        if(granted){
+            showToast("tilt mode ONN, tilt device and particles move too",true)
+        } else {
+            tiltMode=false
+            setModeBtn("tilt",false)
+        }
+    })
 }
 
 function disableTilt(){
