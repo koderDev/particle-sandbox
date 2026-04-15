@@ -13,6 +13,7 @@ function loop() {
 
   if(!screenshotPaused){
 
+    
     const currentalpha=slithermode?0.04:(trailMode?0.15:1);
     ctx.globalAlpha = currentalpha;
     ctx.fillStyle = "#0a0a0a";
@@ -42,6 +43,8 @@ function loop() {
     drawCharge();
     pcount.textContent = particles.length;
 
+    checkAchievements();
+
     const count = particles.length;
     for(const m of MILESTONES) {
       if(count>=m&&lastMilestone<m){
@@ -66,9 +69,7 @@ function loop() {
     } 
     
     if(count<50) lastMilestone=0
-
   }
-
   requestAnimationFrame(loop);
 }
 

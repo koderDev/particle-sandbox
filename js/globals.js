@@ -4,6 +4,49 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const ACHIEVEMENTS=[
+    { id: 'chaos_masterrr', text: 'Reach 10 particles!', check: () => particles.length >= 10 }
+];
+
+const savedAchievements= JSON.parse(localStorage.getItem('unlockedAchievements')) || [];
+const unlockedAchievements = new Set(savedAchievements);
+
+function checkAchievements() {
+    ACHIEVEMENTS.forEach(ach=>{
+        if(!unlockedAchievements.has(ach.id) && ach.check()){
+            unlockAch(ach.id);
+            console.log(`unlocked:${ach.id}`);
+        }
+    })
+}
+
+function unlockAch(id){
+    if(unlockedAchievements.has(id)) return;
+    unlockedAchievements.add(id);
+    localStorage.setItem('unlockedAchievements',JSON.stringify([...unlockedAchievements]));
+    const ach=ACHIEVEMENTS.find(ach=>ach.id===id);
+    if(!ach) return;
+    showAchievementToast(ach);
+}
+
+function showAchievementToast(ach){
+    const elem=document.createElement("div")
+    elem.id="achievement-toast"
+    elem.innerHTML=`
+        <div id="ach-text">
+            <span id="ach-title">achievement unlocked</span>
+            <span id="ach-desc">${ach.text}</span>
+        </div>
+    `
+    document.body.appendChild(elem)
+    requestAnimationFrame(()=>elem.classList.add("visible"))
+    setTimeout(()=>{
+        elem.classList.remove("visible")
+        setTimeout(()=>elem.remove(),400)
+    },4000)
+}
+
+
 const POOL_SIZE=300
 const particlePool=[]
 for(let i=0;i<POOL_SIZE;i++){
@@ -17,7 +60,6 @@ function recycleParticle(p){
     p.grabbed=false;
     if(particlePool.length<POOL_SIZE) particlePool.push(p)
 }
-
 
 let particles = [];
 let MAX_PARTICLES = 420;
@@ -129,7 +171,6 @@ let tiltMode=false
 let tiltGravX=0
 let tiltGravY=0
 let tiltPerms=false
-
 
 const isMobile = ('ontouchstart' in window) && window.matchMedia("(max-height: 500px)").matches;
 console.log(isMobile);

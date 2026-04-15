@@ -479,6 +479,50 @@ label {
   color: #dedede;
 }
 
+#achievement-toast {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #1e1e1e;
+  padding: 12px 24px;
+  border-radius: 12px;
+  corner-shape: squircle;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  z-index: 10000;
+  transition: top 0.6s cubic-bezier(0.075, 0.82, 0.165, 1.2);
+  pointer-events: none;
+}
+
+#achievement-toast.visible {
+  top: 40px;
+}
+
+#ach-text {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-direction: column;
+}
+
+#ach-title {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62ff9c;
+  font-weight: bold;
+}
+
+#ach-desc {
+  font-size: 15px;
+  color: #e1e1e1;
+}
+
+
 .row {
   display: flex;
   align-items: center;
@@ -1091,6 +1135,14 @@ label {
     display: flex;
   }
   
+  #achievement-toast {
+    width: 90%;
+    padding: 10px 18px;
+  }
+
+  #ach-desc {
+    font-size: 13px;
+  }
 }
 
 

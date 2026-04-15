@@ -439,3 +439,31 @@ function spawnTrail(){
     particles.push(createParticle(mouse.x,mouse.y))
   }
 }
+
+function applyWindowShake() {
+  if(isMobile) return
+  if(particles.length>250) return
+
+  const curlX=window.screenX
+  const curlY=window.screenY
+
+  winVelX=curlX-lastWinX
+  winvelY=curlY-lastWinY
+
+  lastWinX=curlX
+  lastWinY=curlY
+
+  const moved=Math.abs(winVelX)+Math.abs(winvelY)
+  if(moved<2) return
+  const strength=0.4
+  const impulsemaxm=18
+
+  const ix=Math.max(-impulsemaxm,Math.min(impulsemaxm,-winVelX*strength))
+  const iy=Math.max(-impulsemaxm,Math.min(impulsemaxm,-winVelY*strength))
+
+  particles.forEach(p=>{
+    p.vx+=ix
+    p.vy+=iy
+  })
+
+}
