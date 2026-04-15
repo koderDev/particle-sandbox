@@ -35,6 +35,7 @@
             <div class="hint-chip">H <span>panel</span></div>
         </div>
         
+        <div class="panel-section-label">physics</div>
         <label>gravity
             <div class="row">
                 <input type="range" id="pull" min="0" max="2" step="0.1" value="0.9">
@@ -60,7 +61,8 @@
             </div>
         </label>
 
-        <p id="modes">MODES [ press the key ] </p>
+        <div class="panel-section-label">modes</div>
+        <!-- <p id="modes">MODES [ press the key ] </p> -->
     
         <div id="modeGrid">
             <div class="mode-btn mobile-only" id="btn-tilt" onclick="toggleTiltmode()">
@@ -133,16 +135,16 @@
             </div>
         </div>
 
-        <div id="scheme-row">
-        <span id="scheme-label">PALETTE <br><span style="font-size: 10px; margin-top: 0px;padding-top:0px">(choose one)</span></span>
-        <div id="schemePicker">
-            <div class="scheme-dot active" data-scheme="default" title="rainbow"></div>
-            <div class="scheme-dot" data-scheme="fire" title="fire"></div>
-            <div class="scheme-dot" data-scheme="ice" title="ice"></div> 
-            <div class="scheme-dot" data-scheme="neon" title="neon"></div>
-            <div class="scheme-dot" data-scheme="mono" title="mono"></div>
+        <div class="panel-section-label palette" >palette 
+            <div id="schemePicker">
+                <div class="scheme-dot active" data-scheme="default" title="rainbow"></div>
+                <div class="scheme-dot" data-scheme="fire" title="fire"></div>
+                <div class="scheme-dot" data-scheme="ice" title="ice"></div> 
+                <div class="scheme-dot" data-scheme="neon" title="neon"></div>
+                <div class="scheme-dot" data-scheme="mono" title="mono"></div>
+            </div>
         </div>
-        </div>
+        
         <div id="chal-panel-row">
             <label id="chal-panel-label" for="chal-checkbox">challenges</label>
             <span id="next-chal-label">no challenges..</span>
@@ -158,6 +160,7 @@
             </div>
         </div>
     </div>
+
 
     <button id="panel-hidebtn" class="panel-open" onclick="togglePanel()"><</button>
 

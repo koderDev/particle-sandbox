@@ -240,16 +240,13 @@ function applyGravity(p) {
   if(orbitMode){
     return
   }
-
   if(tiltMode && tiltPerms){
     p.vx+=tiltGravX
     p.vy+=tiltGravY
     return
   }
-
   const dir=gravityFlip?-1:1
   p.vy+=dir*parseFloat(pullSlider.value)*0.3
-  
 }
 
 function checkBubblePop()
