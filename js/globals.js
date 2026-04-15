@@ -4,11 +4,19 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+
+let diceRolls=0
+let gravityToggles= 0
+let lastGravToggleTime=0
+let totalBubblesPopped =0
+let sessionMaxParticles= 0
+
 const ACHIEVEMENTS=[
-    { id: 'chaos_masterrr', text: 'Reach 10 particles!', check: () => particles.length >= 10 }
+    { id: 'chaos_masterrr', text: 'Spawn more than 10 particles!', check: () => particles.length >= 10 }
 ];
 
-const savedAchievements= JSON.parse(localStorage.getItem('unlockedAchievements')) || [];
+
+const savedAchievements= JSON.parse(sessionStorage.getItem('unlockedAchievements')) || [];
 const unlockedAchievements = new Set(savedAchievements);
 
 function checkAchievements() {
@@ -23,7 +31,7 @@ function checkAchievements() {
 function unlockAch(id){
     if(unlockedAchievements.has(id)) return;
     unlockedAchievements.add(id);
-    localStorage.setItem('unlockedAchievements',JSON.stringify([...unlockedAchievements]));
+    sessionStorage.setItem('unlockedAchievements',JSON.stringify([...unlockedAchievements]));
     const ach=ACHIEVEMENTS.find(ach=>ach.id===id);
     if(!ach) return;
     showAchievementToast(ach);
