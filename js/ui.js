@@ -64,26 +64,46 @@ function togglePanel() {
 let sstimeout;
 let currentssData;
 
+const SS_TITLES = [
+  "snapshot taken!!",
+  "screen has been shot!",
+  "universe captured!!",
+  "BEHOLD!! a screenshot!",
+  "yepp, you shot it",
+  "screenshot-ified ;)",
+  "cosmic selfie frrr",
+  "got 'em!!!",
+  "freeezeee frameee",
+  "evidence preserved..",
+  "moment memorized!"
+]
+
 function takeSS(){
   if(screenshotPaused) return
 
   const imgData=canvas.toDataURL("image/png");
   currentssData=imgData;
+
+  const titleIndex=Math.floor(Math.random()*SS_TITLES.length);
+  const titleText=SS_TITLES[titleIndex];
+
+  const titleElem=document.getElementById("ss-title");
   const preview=document.getElementById("ss-preview");
   const popup= document.getElementById("ss-popup");
 
+  titleElem.textContent=titleText;
   preview.src=imgData;
-  popup.classList.remove("hidden");
+  popup.classList.add("visible");
 
-  if(shutterSound){
+  if(typeof shutterSound!== 'undefined'){
     shutterSound.currentTime=0
     shutterSound.play()
   }
 
   clearTimeout(sstimeout);
   sstimeout = setTimeout(()=>{
-    popup.classList.add("hidden")
-  },10000)
+    popup.classList.remove("visible")
+  },10000);
   screenshotPaused=false;
 }
 
@@ -94,7 +114,7 @@ document.getElementById("view-ss-btn").addEventListener("click",()=>{
 
   largeImg.src=currentssData;
   viewer.classList.remove("hidden");
-  popup.classList.add("hidden");
+  popup.classList.remove("visible");
 })
 
 document.getElementById("dl-ss-btn").addEventListener("click",()=>{
@@ -103,11 +123,24 @@ document.getElementById("dl-ss-btn").addEventListener("click",()=>{
   link.href=currentssData;
   link.click();
 
-  document.getElementById("ss-popup").classList.add("hidden");
+  document.getElementById("ss-popup").classList.remove("visible");
+  showToast("universe saved!!",true);
+})
+
+document.getElementById("dl-large-btn").addEventListener("click",()=>{
+  const link=document.createElement("a");
+  link.download=`my-simulation-${Date.now()}.png`;
+  link.href=currentssData;
+  link.click();
+
+  showToast("universe saved!!",true);
+  document.getElementById("large-viewer").classList.add("hidden");
+  screenshotPaused=false;
 })
 
 document.getElementById("close-viewer").addEventListener("click",()=>{
   document.getElementById("large-viewer").classList.add("hidden");
+  screenshotPaused=false;
 })
 
 function setModeBtn(key,isOn){

@@ -483,21 +483,54 @@ label {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: rgba(30,30,30,0.9);
+  background: rgba(20,20,20,0.9);
   border: 1px solid #62ff9c;
-  border-radius: 12px;
+  border-radius: 14px;
   corner-shape: squircle;
-  padding: 10px;
+  padding: 0;
   display: flex;
-  flex-direction: row;
-  gap: 10px;
+  flex-direction: column;
   z-index: 11000;
-  transition: transform 0.3 ease, opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(-40px) scale(0.9);
+  opacity: 0;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#ss-popup.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#ss-header {
+  background: rgba(40,40,40,0.9);
+  border-bottom: 1px solid rgba(98,255,156,0.3);
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#ss-title {
+  font-family: 'Space Grotesk',sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  color: #62ff9c;
+  letter-spacing: 1.2px;
+}
+
+#popup-content {
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 #ss-preview {
-  width: 150px;
+  width: 130px;
   border-radius: 6px;
   border: 1px solid #444;
 }
@@ -511,16 +544,26 @@ label {
 #popup-ctrl button {
   background: #1c1c1c;
   color: #e3e3e3;
-  padding: 10px 28px;
+  padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid #292929;
   font-family: 'Space Grotesk', monospace;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   corner-shape: squircle;
   transition: background 0.2s, transform 0.1s, border 0.2s;
   letter-spacing: 0.5px;
 }
+
+#popup-ctrl button:hover {
+  background: #252525;
+  border-color: #62ff9c;
+}
+
+#popup-ctrl button:active {
+  transform: scale(0.95);
+}
+
 
 #large-viewer {
   position: fixed;
@@ -535,29 +578,48 @@ label {
   z-index: 12000;
 }
 #large-img {
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 75%;
+  max-height: 75%;
   border-radius: 8px;
   corner-shape: squircle;
   border: 2px solid #62ff9c
 }
 
-#close-viewer {
+#viewer-controls {
   position: absolute;
   top: 20px;
-  right: 30px;
-  font-size: 28px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  z-index: 12001;
+}
+
+#dl-large-btn, #close-viewer {
+  font-size: 16px;
   color: #e3e3e3;
   background: none;
   cursor: pointer;
+  font-weight: bold;
   background: #1e1e1e;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: 1px solid #292929;
   border-radius: 8px;
   font-family: 'Space Grotesk', monospace;
   font-size: 16px;
   corner-shape: squircle;
-  transition: background 0.2s, transform 0.1s, border 0.2s;
+  transition: all 0.2s ease;
+}
+
+#dl-large-btn:active, #close-viewer:active {
+  transform: scale(0.95);
+}
+
+#close-viewer:hover {
+  border-color: #ff4c4c;
+}
+
+#dl-large-btn:hover {
+  border-color: #62ff9c;
 }
 
 .hidden {

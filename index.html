@@ -25,16 +25,24 @@
     <button id="spawn-btn" title="spawn particles">+ spawn</button>
     <div id="popup"></div>f
 
-    <div id="ss-popup" class="hidden">
-        <img id="ss-preview" src="" alt="snapshot">
-        <div id="popup-ctrl">
-            <button id="view-ss-btn">view</button>
-            <button id="dl-ss-btn">download</button>
+    <div id="ss-popup">
+        <div id="ss-header">
+            <span id="ss-title">snapshot taken!!</span>
+        </div>
+        <div id="popup-content">
+            <img id="ss-preview" src="" alt="snapshot">
+            <div id="popup-ctrl">
+                <button id="view-ss-btn">view</button>
+                <button id="dl-ss-btn">download</button>
+            </div>
         </div>
     </div>
 
     <div id="large-viewer" class="hidden">
-        <button id="close-viewer">x</button>
+        <div id="viewer-controls">
+            <button id="dl-large-btn">download</button>
+            <button id="close-viewer">x</button>
+        </div>
         <img id="large-img" src="" alt="full view">
     </div>
 

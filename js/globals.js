@@ -12,11 +12,6 @@ let sessionMaxParticles=0
 const ACHIEVEMENTS=[
     // { id: 'chaos_masterrr', text: 'Spawn more than 10 particles!', check: () => particles.length >= 10 } //just for testin
     {
-        id: 'big_bang',
-        text: 'reset from chaos!!',
-        check: () => particles.length ===0 && sessionMaxParticles >=0
-    },
-    {
         id: 'rolly_molly',
         text: 'rolled the dice 5 times!',
         check: () => diceRolls >= 5
