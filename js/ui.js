@@ -577,7 +577,7 @@ document.getElementById("dice-btn").addEventListener("click",()=>{
   void btn.offsetWidth
   btn.classList.add("rolling")
   btn.addEventListener("animationend",()=>btn.classList.remove("rolling"), {once:true})
-
+  diceRolls++;
   setTimeout(()=>{
     rollDice()
   }, 150)
@@ -791,8 +791,16 @@ window.addEventListener("keydown", (e) => {
     setModeBtn("g", gravityFlip)
     showToast(gravityFlip ? "gravity flip ON" : "gravity flip OFF", gravityFlip)
     fireTrigger("g");
+    
+    const now=Date.now()
+    if(now-lastGravTime>5000){
+      gravityToggles=1;
+    } else {
+      gravityToggles++;     
+    }
+    lastGravTime=now;
   }
-
+ 
   if (e.key === "l" || e.key === "L") {
     if(trailMode){
       showToast("exit trail mode first")

@@ -69,6 +69,11 @@ function loop() {
     } 
     
     if(count<50) lastMilestone=0
+
+    
+    if(particles.length >sessionMaxParticles){
+      sessionMaxParticles=particles.length;
+    }
   }
   requestAnimationFrame(loop);
 }

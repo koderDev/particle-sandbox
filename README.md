@@ -105,11 +105,22 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 - now you can see fps count on bottom left on your screen, i have tried my best to keep it on the higher end even in high demanidng modes like the line mode and trace mode.
 - skip the tutorial prompt was being asked even when the tutorial was turned off, fixed that.
 
+### achievements system
+
+- you get various achievements based on awkwardly random interactions that you do. for e.g. u may get an achievement for pressing the dice button more the X number of times or so, or for spawning more than Y particles in Z mode. i have added this to make the games fun. 
+- im using session storage to store info about achievements. i tried using local storage but i wanted it to reset achievements each time the simulation is opened so i switched to session storage.
+- you may find the achievements through the code and try it or get into detective mode and try each and every mode searching for new achievements. ;) 
+
+### ui
+
+- panel ui has been improved a bit. i have added small headings in the panel sections like the sliders section or the `PHYSICS` section may i call. the palette section has also been improved / reduced in vertical height for more screen space for the panel ui to breathe easily. 
+
 ### new mode: tilt mode [only for mobile phones]
 - finally added tilt mode which moves the particles here n there based on the tilt of the device. i have made it so that this works only on mobile phones. it basically enables device tilt control (works magically for non-ios devices. i have added motion permission request for ios devices, hope it works). then it reads the acceleration and changes the graviy of the game based on the acceleration. this is just a try to make the game more interactive on mobile phones. it moves particles based on the phone movement when tilt mode is on.
 - it is on by default. it turns on after a few seconds when you click the screen, then the real fun beginsss!!!
 - you can turn it off from the panel window.
 - i have tried to make it as smooth as possible by adjusting the scale of the gravity change in proportion with the tilt acceleration of the device. hope it works man!!
+
 
 ### [1.0.6]
 

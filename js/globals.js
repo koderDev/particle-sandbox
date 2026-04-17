@@ -4,17 +4,44 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-
-let diceRolls=0
-let gravityToggles= 0
-let lastGravToggleTime=0
-let totalBubblesPopped =0
-let sessionMaxParticles= 0
+let diceRolls = 0
+let gravityToggles = 0
+let lastGravTime=0
+let sessionMaxParticles=0
 
 const ACHIEVEMENTS=[
-    { id: 'chaos_masterrr', text: 'Spawn more than 10 particles!', check: () => particles.length >= 10 }
+    // { id: 'chaos_masterrr', text: 'Spawn more than 10 particles!', check: () => particles.length >= 10 } //just for testin
+    {
+        id: 'big_bang',
+        text: 'reset from chaos!!',
+        check: () => particles.length ===0 && sessionMaxParticles >=0
+    },
+    {
+        id: 'rolly_molly',
+        text: 'rolled the dice 5 times!',
+        check: () => diceRolls >= 5
+    },
+    {
+        id: 'heavyweight',
+        text:'maximum particle size!!!',
+        check:()=>parseFloat(sizeSlider.value)>=parseFloat(sizeSlider.max)
+    },
+    {
+        id:'flippity',
+        text:'quick gravity toggerr',
+        check: ()=>gravityToggles>=10
+    },
+    {
+        id: 'ice_skater',
+        text: 'MAXIMUM friction achieved!',
+        check: ()=>parseFloat(dampenSlider.value)===parseFloat(dampenSlider.max)
+    },
+    {
+        id:'super_massive',
+        text:'MAX GRAVITY. HAIL NEWTON!!',
+        check:()=> parseFloat(pullSlider.value)===parseFloat(pullSlider.max)
+    }
 ];
-
 
 const savedAchievements= JSON.parse(sessionStorage.getItem('unlockedAchievements')) || [];
 const unlockedAchievements = new Set(savedAchievements);
