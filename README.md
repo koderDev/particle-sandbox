@@ -114,6 +114,7 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 ### ui
 
 - panel ui has been improved a bit. i have added small headings in the panel sections like the sliders section or the `PHYSICS` section may i call. the palette section has also been improved / reduced in vertical height for more screen space for the panel ui to breathe easily. 
+- popup in the top right when screenshot is taken. it has a title which changes each time you take screenshot to make it feel fun!! it has a view and a download button which do their work as their name suggests. this took a while to implement and im really happy how this turned out to be. 
 
 ### new mode: tilt mode [only for mobile phones]
 - finally added tilt mode which moves the particles here n there based on the tilt of the device. i have made it so that this works only on mobile phones. it basically enables device tilt control (works magically for non-ios devices. i have added motion permission request for ios devices, hope it works). then it reads the acceleration and changes the graviy of the game based on the acceleration. this is just a try to make the game more interactive on mobile phones. it moves particles based on the phone movement when tilt mode is on.
