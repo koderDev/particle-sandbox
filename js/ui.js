@@ -61,69 +61,54 @@ function togglePanel() {
   }
 }
 
+let sstimeout;
+let currentssData;
 
 function takeSS(){
   if(screenshotPaused) return
 
-  playShutter()
-  setTimeout(()=>{
+  const imgData=canvas.toDataURL("image/png");
+  currentssData=imgData;
+  const preview=document.getElementById("ss-preview");
+  const popup= document.getElementById("ss-popup");
 
-    takingScreenshot=true
-  
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        const dataUrl=canvas.toDataURL("image/png")
-        takingScreenshot=false
-        screenshotPaused=true
-        const overlay=document.createElement("div")
-        overlay.id = "ss-overlay"
-        document.body.appendChild(overlay)
-  
-        const img = document.createElement("img")
-        img.id="ss-preview"
-        img.src=dataUrl
-        overlay.appendChild(img)
-  
-        const actions = document.createElement("div")
-        actions.id = "ss-actions"
-        actions.innerHTML = `
-        <span id="ss-label">screenshot captured!!</span>
-        <div id="ss-actions-buttons">
-        <button id="ss-download">download</button>
-        <button id="ss-close">resume</button>
-        </div>
-        `
-        overlay.appendChild(actions)
-  
-        requestAnimationFrame(()=>{
-          overlay.classList.add("visible")
-          img.classList.add("visible")
-          actions.classList.add("visible")
-        })
-  
-        document.getElementById("ss-download").addEventListener("click",()=>{
-          const a = document.createElement("a")
-          a.href=dataUrl
-          a.download = `particle-sandbox-${Date.now()}.png`
-          a.click()
-          showToast("screenshot saved!", true)
-        })
-  
-        document.getElementById("ss-close").addEventListener("click",()=>{
-          overlay.classList.remove("visible")
-          img.classList.remove("visible")
-          actions.classList.remove("visible")
-          setTimeout(()=>{
-            overlay.remove()
-            screenshotPaused=false
-          }, 50)
-        })
-      })
-    })
-  },100)
-  
+  preview.src=imgData;
+  popup.classList.remove("hidden");
+
+  if(shutterSound){
+    shutterSound.currentTime=0
+    shutterSound.play()
+  }
+
+  clearTimeout(sstimeout);
+  sstimeout = setTimeout(()=>{
+    popup.classList.add("hidden")
+  },10000)
+  screenshotPaused=false;
 }
 
+document.getElementById("view-ss-btn").addEventListener("click",()=>{
+  const largeImg=document.getElementById("large-img")
+  const viewer=document.getElementById("large-viewer")
+  const popup=document.getElementById("ss-popup")
+
+  largeImg.src=currentssData;
+  viewer.classList.remove("hidden");
+  popup.classList.add("hidden");
+})
+
+document.getElementById("dl-ss-btn").addEventListener("click",()=>{
+  const link=document.createElement("a");
+  link.download=`my-simulation-${Date.now()}.png`;
+  link.href=currentssData;
+  link.click();
+
+  document.getElementById("ss-popup").classList.add("hidden");
+})
+
+document.getElementById("close-viewer").addEventListener("click",()=>{
+  document.getElementById("large-viewer").classList.add("hidden");
+})
 
 function setModeBtn(key,isOn){
   const btn=document.getElementById(`btn-${key}`)
