@@ -127,6 +127,10 @@ document.getElementById("dl-ss-btn").addEventListener("click",()=>{
   showToast("universe saved!!",true);
 })
 
+document.getElementById("share-btn").addEventListener("click",()=>{
+  cpyShareUrl()
+})
+
 document.getElementById("dl-large-btn").addEventListener("click",()=>{
   const link=document.createElement("a");
   link.download=`my-simulation-${Date.now()}.png`;
