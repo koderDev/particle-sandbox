@@ -82,4 +82,5 @@ if(!isMobile) setModeBtn("s", true)
 else {
   storyMode=false;
 }
+loadfromUrl();
 loop();
