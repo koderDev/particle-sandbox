@@ -1,5 +1,18 @@
 function getSimState(){
     return {
+        modes: {
+            s:storyMode,
+            b:blackHole,
+            t:trailMode,
+            m:mergeMode,
+            g:gravityFlip,
+            l: lineMode,
+            z: zeroGravity,
+            o: orbitMode,
+            x: repelMode,
+            d: discoMode,
+            p:slithermode,
+        },
         sliders: {
             pull: pullSlider.value,
             dampen:dampenSlider.value,
@@ -31,6 +44,43 @@ function cpyShareUrl(){
         console.error("copy failed", err);
         showToast("copy failed. please try again",false);
     })
+}
+
+function applyModes(modes){
+    if(!modes) return
+    const modeMap={
+       b:"B",t:"T",m:"M",g:"G",l:"L",z:"Z",o:"O",x:"X",p:"P"
+    }
+    if(modes.s===false&&storyMode){
+        storyMode=false
+        setModeBtn("s",false)
+    } else if(modes.s===true&&!storyMode){
+        storyMode=true
+        setModeBtn("s",true)
+        currentStory=0
+        storyAlpha=0
+        storyState="fadein"
+        storyTimer=0
+        waitingForTrigger=false
+        storyTriggered=false;
+    }
+    
+    Object.entries(modes).forEach(([key,isOn])=>{
+        if(isOn&&modeMap[key]){
+            window.dispatchEvent(new KeyboardEvent("keydown",{ key: modeMap[key]}))
+        }
+    })
+}
+
+function spawnParticles(count){
+    if(!count||count<=0) return
+    const n=Math.min(count,MAX_PARTICLES)
+    for(let i=0;i<n;i++){
+        particles.push(createParticle(
+            Math.random()*canvas.width*0.7+canvas.width*0.15,
+            Math.random()*canvas.height*0.7+canvas.height*0.15
+        ))
+    }  
 }
 
 function decodeState(encoded){
@@ -75,7 +125,12 @@ function loadfromUrl(){
     setTimeout(()=>{
         applySliders(state.sliders)
         applyPalette(state.scheme)
-        showToast("loading shared simulation.. 🔥",null)
+        spawnParticles(state.pcount)
+
+        setTimeout(()=>{
+            applyModes(state.modes)
+            showToast("shared simulation loaded!! 🔥",true)
+        },100);
         window.history.replaceState({},"",window.location.pathname)
-    },400)
+    },500)
 }
