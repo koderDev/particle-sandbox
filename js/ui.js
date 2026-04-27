@@ -128,7 +128,12 @@ document.getElementById("dl-ss-btn").addEventListener("click",()=>{
 })
 
 document.getElementById("share-btn").addEventListener("click",()=>{
-  cpyShareUrl()
+  const btn = document.getElementById("share-btn")
+  btn.classList.remove("shareanim")
+  void btn.offsetWidth
+  btn.classList.add("shareanim")
+  btn.addEventListener("animationend",()=>btn.classList.remove("shareanim"),{once:true})
+  cpyShareUrl()  
 })
 
 document.getElementById("dl-large-btn").addEventListener("click",()=>{

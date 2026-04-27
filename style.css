@@ -248,6 +248,28 @@ label {
   transform: scale(0.9);
 }
 
+@keyframes shareanim {
+  0% {
+    transform: scale(1) rotate(0deg);
+    background: #1e1e1ee6;
+  }
+  30%{
+    transform: scale(1.2) rotate(-15deg);
+    background: #1a4d2e;
+  }
+  60%{
+    transform: scale(0.9) rotate(10deg);
+  }
+  100%{
+    transform:scale(1) rotate(0deg);
+    background: #1e1e1ee6;
+  }
+}
+
+#share-btn.shareanim{
+  animation: shareanim 0.4s ease-out forwards;
+}
+
 #dice-btn {
   position: fixed;
   bottom: 82px;

@@ -12,6 +12,7 @@ function getSimState(){
             x: repelMode,
             d: discoMode,
             p:slithermode,
+            s: storyMode
         },
         sliders: {
             pull: pullSlider.value,
@@ -53,7 +54,7 @@ function applyModes(modes){
     }
     if(modes.s===false&&storyMode){
         storyMode=false
-        setModeBtn("s",false)
+        setModeBtn("s",false);
     } else if(modes.s===true&&!storyMode){
         storyMode=true
         setModeBtn("s",true)
@@ -62,7 +63,7 @@ function applyModes(modes){
         storyState="fadein"
         storyTimer=0
         waitingForTrigger=false
-        storyTriggered=false;
+        storyTriggered=false
     }
     
     Object.entries(modes).forEach(([key,isOn])=>{
@@ -70,6 +71,12 @@ function applyModes(modes){
             window.dispatchEvent(new KeyboardEvent("keydown",{ key: modeMap[key]}))
         }
     })
+
+    if(modes.d && currentScheme!=="mono"){
+        discoMode=true
+        setModeBtn("d",true)
+        startDisco()
+    }
 }
 
 function spawnParticles(count){
