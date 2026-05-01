@@ -59,8 +59,12 @@ this is a physics particle simulator that I am building, using Javascript!! I le
 - `🎲` (dice button): this button sitting just above the `spawn` button, when clicked, turns on a few modes randomly and lets you experience chaos in god mode. 
 
 ## img preview
-<img width="1366" height="660" alt="image" src="https://github.com/user-attachments/assets/62e07fee-f9c5-4241-8e27-4df1a96ef2b0" />
-<img width="1366" height="655" alt="image" src="https://github.com/user-attachments/assets/318c7c1e-c228-412d-bde0-e16014e52713" />
+<img width="1366" height="656" alt="testing a random mode from the dice btn" src="https://github.com/user-attachments/assets/5b0ea6c5-3919-4492-8508-484049c48a95" />
+
+<img width="1366" height="656" alt="random mode from dice btn" src="https://github.com/user-attachments/assets/736a98f7-886f-4751-bb1b-6b2af2a876e0" />
+
+<img width="1364" height="657" alt="clicked a screenshot while on mono colorscheme with line mode on" src="https://github.com/user-attachments/assets/8b3a95c1-26e8-4bf1-b33a-76de8f2ac9d4" />
+
 
 
 ## Optimization 
@@ -96,12 +100,6 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 | 400 | DEAD | ~20 | ~30 |
 
 *these performance checks were done in a i3 8GB RAM laptop, the code used to check the fps can be found in the `main.js` file.*
-
-## latest updates
-<img width="1366" height="656" alt="testing a random mode from the dice btn" src="https://github.com/user-attachments/assets/5b0ea6c5-3919-4492-8508-484049c48a95" />
-<img width="1366" height="656" alt="random mode from dice btn" src="https://github.com/user-attachments/assets/736a98f7-886f-4751-bb1b-6b2af2a876e0" />
-<img width="1364" height="657" alt="clicked a screenshot while on mono colorscheme with line mode on" src="https://github.com/user-attachments/assets/8b3a95c1-26e8-4bf1-b33a-76de8f2ac9d4" />
-
 
 
 ## changelogs 🛠
