@@ -97,6 +97,13 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 
 *these performance checks were done in a i3 8GB RAM laptop, the code used to check the fps can be found in the `main.js` file.*
 
+## latest updates
+<img width="1366" height="656" alt="testing a random mode from the dice btn" src="https://github.com/user-attachments/assets/5b0ea6c5-3919-4492-8508-484049c48a95" />
+<img width="1366" height="656" alt="random mode from dice btn" src="https://github.com/user-attachments/assets/736a98f7-886f-4751-bb1b-6b2af2a876e0" />
+<img width="1364" height="657" alt="clicked a screenshot while on mono colorscheme with line mode on" src="https://github.com/user-attachments/assets/8b3a95c1-26e8-4bf1-b33a-76de8f2ac9d4" />
+
+
+
 ## changelogs 🛠
 
 ## [1.0.7]
