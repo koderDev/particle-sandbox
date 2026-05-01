@@ -726,7 +726,7 @@ window.addEventListener("keydown", (e) => {
   }
 
   if(e.key==="d"||e.key==="D"){
-    if(discoWarningOpen) true
+    if(discoWarningOpen) return
     if(bubbleMode) {
       showToast("exit bubble mode first");
       return

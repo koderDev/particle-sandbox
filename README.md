@@ -99,7 +99,7 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 
 ## changelogs 🛠
 
-### [1.0.7]
+## [1.0.7]
 
 - spent a lot of time on optimization. more about it in the optimization section of this readme.md file
 - now you can see fps count on bottom left on your screen, i have tried my best to keep it on the higher end even in high demanidng modes like the line mode and trace mode.
@@ -110,6 +110,14 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 - you get various achievements based on awkwardly random interactions that you do. for e.g. u may get an achievement for pressing the dice button more the X number of times or so, or for spawning more than Y particles in Z mode. i have added this to make the games fun. 
 - im using session storage to store info about achievements. i tried using local storage but i wanted it to reset achievements each time the simulation is opened so i switched to session storage.
 - you may find the achievements through the code and try it or get into detective mode and try each and every mode searching for new achievements. ;) 
+
+### shareable link
+- i have made a button in the bottom right of the screen, right above the dice button, shows a popup when clicked, saying that the url has been copied and is ready to be shared!! 
+- the button has a fun lil animation when it is clicked.
+- the current game state which is a json at first, is convered to a simple string which is encoded to a base64 type string.
+- this string is added to the copied url which when opened on a new tab restores the game.
+
+TODO: i will have to make it so that if a user shares a link with disco mode enabled then the game asks the epilepsy thing before loading the simulation on the new tab to the new user.
 
 ### ui
 
@@ -122,8 +130,11 @@ considered line mode cause it is the most demanding one, as it has to draw lines
 - you can turn it off from the panel window.
 - i have tried to make it as smooth as possible by adjusting the scale of the gravity change in proportion with the tilt acceleration of the device. hope it works man!!
 
+## bug fixes:
+- in the sharing functionality,i encountered A LOT of bugs which were triggered due to mode conflicts during enconding to a link. it took quite a while to fix those but finally they are all fixed, i hope!!
 
-### [1.0.6]
+
+## [1.0.6]
 
 MOBILE RESPONSIVENESS ADDED :D
 
@@ -136,7 +147,7 @@ MOBILE RESPONSIVENESS ADDED :D
 - in mobile phones, game only works in landscape view so that makes it more fun i guess. story mode, explosion mode and cyclone mode are not available in mobile phone cause i had some issues implementing them ( sometimes u may get cyclone mode using the dice but u cant rlly add new cyclones as im confused about implementing it in mobile ) so will do it in next versions.
 
 
-### [1.0.5]
+## [1.0.5]
 
 #### new mode
 - slither mode (p): in this mode, the particles tend to wiggle and slither around the screen. i have tried my best to make it look as much spontaneous as i can. it still is not that much spontaneous and you can see patterns on it but still, i guess its quite fun. this mode is best when played with 0 gravity mode turned on. also, when disco mode is turned along with these, you will get to see a whole new dimension heheehe. *did not find any other key so made it p.* 
@@ -148,7 +159,7 @@ MOBILE RESPONSIVENESS ADDED :D
 
 - for future updates, i want to make sure the challenge info is shown even when the panel is closed, in the top left corner of the screen along with other infos.
 
-### [1.0.4]
+## [1.0.4]
 
 #### new mode
 - repel (x): the mouse pointer changes to a no entry sign like symbol and all the particles are repelled by the mouse pointer. they try to escape and run away from the mouse pointer as much as they can.
@@ -195,7 +206,7 @@ MOBILE RESPONSIVENESS ADDED :D
 - cursor was being hidden in the dice mode, this issue has been fixed simply by doing `cursor: default` inside the rollDice() function.
 - disco mode was causing issues with the mono colorscheme so had to disable disco mode when mono is selected, to save performance and fix some bugs. similar issue were found with bubble mode and disco mode so disabled disco mode when bubble is turned on.
 
-### [1.0.3]
+## [1.0.3]
 
 #### new modes
 - orbit mode (o) -> particles orbit around the cursor as if they were planets and the mouse cursor behaves like the sun 🌞. it was fun to build. making sure the particles are always revolving around the orbit required a bit of physickks formulas and concepts though.
@@ -213,7 +224,7 @@ MOBILE RESPONSIVENESS ADDED :D
 ### 🐛🐛🐛
 and a lot of bug fixes 
 
-### [1.0.2]
+## [1.0.2]
 #### new modes
 - zero gravity mode (Z) - particles float freely in space
 - bubble mode (N) - particles transform into floating bubbles with a glassy shine effect. hovering over a bubble pops it and splits it into 2 smaller bubbles.
@@ -238,7 +249,7 @@ and a lot of bug fixes
 - particle cap at 420 to prevent browser crashes ;)
 
 
-### [1.0.1]
+## [1.0.1]
 
 - [x] Black hole mode i.e. mouse cursor -> black hole ;)
 - [x] Trail effect on particles

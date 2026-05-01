@@ -1,3 +1,5 @@
+const { jsx } = require("react/jsx-runtime")
+
 function getSimState(){
     return {
         modes: {
@@ -12,7 +14,6 @@ function getSimState(){
             x: repelMode,
             d: discoMode,
             p:slithermode,
-            s: storyMode
         },
         sliders: {
             pull: pullSlider.value,
@@ -49,34 +50,60 @@ function cpyShareUrl(){
 
 function applyModes(modes){
     if(!modes) return
+    // const modeMap={
+    //    b:"B",t:"T",m:"M",g:"G",l:"L",z:"Z",o:"O",x:"X",p:"P"
+    // }
+    
     const modeMap={
-       b:"B",t:"T",m:"M",g:"G",l:"L",z:"Z",o:"O",x:"X",p:"P"
-    }
-    if(modes.s===false&&storyMode){
-        storyMode=false
-        setModeBtn("s",false);
-    } else if(modes.s===true&&!storyMode){
-        storyMode=true
-        setModeBtn("s",true)
-        currentStory=0
-        storyAlpha=0
-        storyState="fadein"
-        storyTimer=0
-        waitingForTrigger=false
-        storyTriggered=false
+        b:"B",t:"T",m:"M",g:"G",l:"L",o:"O",x:"X"
     }
     
-    Object.entries(modes).forEach(([key,isOn])=>{
-        if(isOn&&modeMap[key]){
-            window.dispatchEvent(new KeyboardEvent("keydown",{ key: modeMap[key]}))
+    if(typeof modes.s!=='undefined'){
+        storyMode=modes.s
+        setModeBtn("s",storyMode)
+        if(storyMode){
+            currentStory=0
+            storyAlpha=0
+            storyState="fadein"
+            storyTimer=0
+            waitingForTrigger=false
+            storyTriggered=false
         }
+    }
+
+    Object.entries(modes).forEach(([key,isOn])=>{
+        if(!isOn||!modeMap[key]) return
+        if(key==="o" && particles.length===0) return;
+        if(key==="b" && orbitMode) return
+        window.dispatchEvent(new KeyboardEvent("keydown", {key: modeMap[key]}))
     })
 
-    if(modes.d && currentScheme!=="mono"){
-        discoMode=true
-        setModeBtn("d",true)
-        startDisco()
+    if(modes.z){
+        zeroGravity=true
+        setModeBtn("z",true)
+        pullSlider.dataset.saved=sliders?.pull || 0.9
+        pullSlider.value = 0
     }
+
+    if(modes.p){
+        slithermode=true
+        setModeBtn("p",true)
+        pullSlider.dataset.slithersaved=sliders?.pull|0.9
+        pullSlider.value=0
+        particles.forEach(p=>{
+            p.vx=(Math.random()-0.5)*1.5
+            p.vy=(Math.random()-0.5)*1.5
+        })
+    }
+
+    if(modes.d && currentScheme!=="mono"){
+        setTimeout(()=>{
+            discoMode=true
+            setModeBtn("d",true)
+            enableDiscoMode()
+        },1500)
+    }
+
 }
 
 function spawnParticles(count){
@@ -135,7 +162,7 @@ function loadfromUrl(){
         spawnParticles(state.pcount)
 
         setTimeout(()=>{
-            applyModes(state.modes)
+            applyModes(state.modes, state.sliders)
             showToast("shared simulation loaded!! 🔥",true)
         },100);
         window.history.replaceState({},"",window.location.pathname)

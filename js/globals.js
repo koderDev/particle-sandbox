@@ -38,6 +38,7 @@ const ACHIEVEMENTS=[
     }
 ];
 
+
 const savedAchievements= JSON.parse(sessionStorage.getItem('unlockedAchievements')) || [];
 const unlockedAchievements = new Set(savedAchievements);
 
